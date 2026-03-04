@@ -1,0 +1,48 @@
+<div class="container">
+
+  <h2>Crear Evento</h2>
+
+  <form (ngSubmit)="crearEvento()">
+
+    <input type="text"
+           placeholder="Nombre del evento"
+           [(ngModel)]="evento.nombreevento"
+           name="nombreevento"
+           required />
+
+    <textarea placeholder="Descripción"
+              [(ngModel)]="evento.descripcion"
+              name="descripcion"
+              required></textarea>
+
+    <label>Fecha inicio</label>
+    <input type="datetime-local"
+           [(ngModel)]="evento.fechainicio"
+           name="fechainicio"
+           required />
+
+    <label>Fecha fin</label>
+    <input type="datetime-local"
+           [(ngModel)]="evento.fechafin"
+           name="fechafin"
+           required />
+
+    <input type="text"
+           placeholder="Lugar"
+           [(ngModel)]="evento.lugar"
+           name="lugar"
+           required />
+
+    <input type="text"
+           placeholder="Aforo"
+           [(ngModel)]="evento.aforo"
+           name="aforo" />
+
+    <button type="submit">Crear Evento</button>
+
+  </form>
+
+  <p *ngIf="mensaje" style="color: green">{{ mensaje }}</p>
+  <p *ngIf="error" style="color: red">{{ error }}</p>
+
+</div>
