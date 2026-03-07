@@ -1,39 +1,48 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { LoginRequest } from '../models/login-request.model';
 import { LoginResponse } from '../models/login-response.model';
-import { environment } from '../../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl + '/api/auth';
 
   constructor(private http: HttpClient) {}
 
-  login(data: LoginRequest) {
-    return this.http.post<LoginResponse>(
-      this.apiUrl + '/auth/login',
-      data
+  login(credentials: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
+      tap(response => {
+        this.saveSession(response);
+      })
     );
   }
 
-  saveToken(token: string) {
-    localStorage.setItem('token', token);
+register(usuario: any) {
+  return this.http.post<any>(`${this.apiUrl}/register`, usuario);
+}
+
+  private saveSession(response: LoginResponse): void {
+    localStorage.setItem('token', response.token);
+    localStorage.setItem('rol', response.rol);
+    localStorage.setItem('idusuario', response.idusuario.toString());
   }
 
-  getToken() {
+  logout(): void {
+    localStorage.clear();
+  }
+
+  getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  logout() {
-    localStorage.removeItem('token');
+  getRol(): string | null {
+    return localStorage.getItem('rol');
   }
 
   isLoggedIn(): boolean {
-    return this.getToken() != null;
+    return !!this.getToken();
   }
-
 }

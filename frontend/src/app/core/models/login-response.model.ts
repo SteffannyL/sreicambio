@@ -1,7 +1,7 @@
 export interface LoginResponse {
-
   token: string;
-  username: string;
-  roles: string[];
-
+  idusuario: number;
+  nombres: string;
+  idtipousuario: number;
+  rol: string;        // ← Agrega esto
 }

@@ -1,1 +1,24 @@
-<p>lista-usuarios works!</p>
+<h2>Lista de Usuarios</h2>
+<ul>
+  @for (u of usuarios; track u.idusuario) {
+    <li>{{ u.nombres }} {{ u.apellidos }} - {{ u.correo }}</li>
+  } @empty {
+    <li>No hay usuarios</li>
+  }
+</ul>
+
+<h3>Crear Nuevo Usuario (solo ADMIN)</h3>
+<form (ngSubmit)="crearUsuario()">
+  <input placeholder="Nombres" [(ngModel)]="nuevoUsuario.nombres" name="nombres" required />
+  <input placeholder="Apellidos" [(ngModel)]="nuevoUsuario.apellidos" name="apellidos" required />
+  <input type="email" placeholder="Correo" [(ngModel)]="nuevoUsuario.correo" name="correo" required />
+  <input type="password" placeholder="Contraseña" [(ngModel)]="nuevoUsuario.contrasena" name="contrasena" required />
+  <select [(ngModel)]="nuevoUsuario.idtipousuario" name="idtipousuario">
+    <option value="1">Admin</option>
+    <option value="2">Coordinador</option>
+    <option value="3">Decano</option>
+    <option value="4">Usuario Externo</option>
+    <option value="5">Docente</option>
+  </select>
+  <button type="submit">Crear Usuario</button>
+</form>

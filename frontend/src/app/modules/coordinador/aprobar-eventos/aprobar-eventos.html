@@ -1,0 +1,19 @@
+<div style="padding: 2rem;">
+  <h2>Eventos Pendientes</h2>
+
+  <div *ngFor="let evento of eventos" style="border:1px solid #ccc; padding:1rem; margin-bottom:1rem;">
+    
+    <h3>{{ evento.nombreevento }}</h3>
+    <p>{{ evento.descripcion }}</p>
+    <p><strong>Fecha:</strong> {{ evento.fechainicio | date }}</p>
+
+    <textarea [(ngModel)]="evento.comentario"
+          placeholder="Comentario"
+          style="width:100%; margin-bottom:1rem;">
+</textarea>
+
+   <button (click)="aprobar(evento)">Aprobar</button>
+<button (click)="rechazar(evento)">Rechazar</button>
+
+  </div>
+</div>

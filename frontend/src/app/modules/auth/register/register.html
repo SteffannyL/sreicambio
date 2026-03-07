@@ -1,0 +1,60 @@
+<div class="register-container">
+
+  <h2>Registro</h2>
+
+  <form (ngSubmit)="register()">
+
+    <input type="text"
+           placeholder="Nombres"
+           [(ngModel)]="usuario.nombres"
+           name="nombres"
+           required />
+
+    <input type="text"
+           placeholder="Apellidos"
+           [(ngModel)]="usuario.apellidos"
+           name="apellidos"
+           required />
+
+    <input type="email"
+           placeholder="Correo"
+           [(ngModel)]="usuario.correo"
+           name="correo"
+           required />
+
+    <input type="password"
+           placeholder="Contraseña"
+           [(ngModel)]="usuario.contrasena"
+           name="contrasena"
+           required />
+
+    <!-- 🔥 Roles SIN ADMIN -->
+    <select [(ngModel)]="usuario.idtipousuario"
+            name="idtipousuario">
+
+      <option [value]="2">Coordinador</option>
+      <option [value]="3">Decano</option>
+      <option [value]="4">Usuario Externo</option>
+      <option [value]="5">Docente</option>
+
+    </select>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Registrando...' : 'Registrar' }}
+    </button>
+
+  </form>
+
+  @if (success) {
+    <p style="color: green">{{ success }}</p>
+  }
+
+  @if (error) {
+    <p style="color: red">{{ error }}</p>
+  }
+
+  <p>
+    <a routerLink="/auth/login">Volver al login</a>
+  </p>
+
+</div>

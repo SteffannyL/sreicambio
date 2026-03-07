@@ -1,1 +1,79 @@
-<p>navbar works!</p>
+<nav style="background: #1976d2; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+  
+  <div><strong>SREI</strong></div>
+
+  <ul style="list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0; align-items: center;">
+
+    @if (authService.isLoggedIn()) {
+
+      <li>
+        Bienvenido, {{ authService.getRol() || 'Usuario' }}
+      </li>
+
+      <!-- ADMIN -->
+      @if (authService.getRol() === 'ADMIN') {
+        <li>
+          <a routerLink="/usuarios"
+             style="color: white; text-decoration: none;">
+            Usuarios
+          </a>
+        </li>
+      }
+
+      <!-- DOCENTE -->
+      @if (authService.getRol() === 'DOCENTE') {
+        <li>
+          <a routerLink="/docente/crear-evento"
+             style="color: white; text-decoration: none;">
+            Crear Evento
+          </a>
+        </li>
+      }
+
+      <!-- EVENTOS (DOCENTE + ADMIN) -->
+      @if (authService.getRol() === 'DOCENTE' || authService.getRol() === 'ADMIN') {
+        <li>
+          <a routerLink="/eventos"
+             style="color: white; text-decoration: none;">
+            Eventos
+          </a>
+        </li>
+      }
+
+      <!-- COORDINADOR -->
+      @if (authService.getRol() === 'COORDINADOR') {
+        <li>
+          <a routerLink="/coordinador/aprobar-eventos"
+             style="color: white; text-decoration: none;">
+            Aprobar Eventos
+          </a>
+        </li>
+      }
+
+      <li>
+        <a (click)="logout()"
+           style="color: white; text-decoration: none; cursor: pointer;">
+          Cerrar Sesión
+        </a>
+      </li>
+
+    } @else {
+
+      <li>
+        <a routerLink="/auth/login"
+           style="color: white; text-decoration: none;">
+          Iniciar Sesión
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/auth/register"
+           style="color: white; text-decoration: none;">
+          Registrarse
+        </a>
+      </li>
+
+    }
+
+  </ul>
+</nav>
