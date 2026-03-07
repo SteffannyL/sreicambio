@@ -1,0 +1,24 @@
+<div class="form-container">
+  <h2>Editar Usuario</h2>
+
+  <form (ngSubmit)="guardar()">
+
+    <label>Nombres</label>
+    <input type="text" [(ngModel)]="usuario.nombres" name="nombres" required>
+
+    <label>Apellidos</label>
+    <input type="text" [(ngModel)]="usuario.apellidos" name="apellidos" required>
+
+    <label>Correo</label>
+    <input type="email" [(ngModel)]="usuario.correo" name="correo" required>
+
+    <label>Tipo Usuario</label>
+    <input type="text" [(ngModel)]="usuario.tipoUsuario" name="tipoUsuario">
+
+    <div class="botones">
+      <button type="submit" class="btn-guardar">Guardar</button>
+      <button type="button" (click)="cancelar()" class="btn-cancelar">Cancelar</button>
+    </div>
+
+  </form>
+</div>
