@@ -1,0 +1,212 @@
+/* Contenedor principal */
+.container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Título */
+h2 {
+  margin-bottom: 20px;
+  color: #0b7a3b; /* VERDE UTEQ */
+}
+
+/* Header usuarios */
+.header-usuarios {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Filtro + botones */
+.filtro-reporte {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filtro-reporte select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+/* TABLA */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+}
+
+/* ENCABEZADO */
+thead {
+  background: #0b7a3b; /* VERDE UTEQ */
+  color: white;
+}
+
+thead th {
+  padding: 14px;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* FILAS */
+tbody tr {
+  transition: background 0.2s ease;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+tbody tr:hover {
+  background-color: rgba(11,122,59,0.08);
+}
+
+/* CELDAS */
+td {
+  padding: 12px 14px;
+  color: #374151;
+}
+
+/* BOTONES GENERALES */
+button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ACTIVAR */
+.btn-activar {
+  background-color: #0b7a3b;
+  color: white;
+}
+
+.btn-activar:hover {
+  background-color: #08612f;
+}
+
+/* DESACTIVAR */
+.btn-desactivar {
+  background-color: #c62828;
+  color: white;
+}
+
+.btn-desactivar:hover {
+  background-color: #b71c1c;
+}
+
+/* EDITAR */
+.btn-editar {
+  background-color: #c59b2b; /* DORADO UTEQ */
+  color: #111;
+}
+
+.btn-editar:hover {
+  background-color: #b38a21;
+}
+
+/* ESTADO */
+.estado-activo {
+  color: #0b7a3b;
+  font-weight: bold;
+}
+
+.estado-inactivo {
+  color: #c62828;
+  font-weight: bold;
+}
+
+/* BOTÓN PDF */
+.btn-reporte {
+  background-color: #c59b2b;
+  color: #111;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.btn-reporte:hover {
+  background-color: #b38a21;
+}
+
+/* BOTÓN EXCEL */
+.btn-excel {
+  background: #0b7a3b;
+  color: white;
+  padding: 7px 14px;
+  border-radius: 8px;
+}
+
+.btn-excel:hover {
+  background: #08612f;
+}
+
+/* BARRA DE CONTROLES */
+.barra-controles{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+/* lado izquierdo */
+.filtro-reporte{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* buscador ancho */
+.filtro-reporte input{
+  padding:6px 10px;
+  border-radius:8px;
+  border:1px solid #e5e7eb;
+  width:300px;
+}
+
+/* lado derecho */
+.acciones-reporte{
+  display:flex;
+  gap:10px;
+}
+
+/* BUSCADOR */
+.buscador{
+  position:relative;
+}
+
+.buscador input{
+  padding:6px 10px 6px 30px;
+  border-radius:8px;
+  border:1px solid #e5e7eb;
+  width:320px;
+}
+
+/* icono lupa */
+.icono-buscar{
+  position:absolute;
+  left:8px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:14px;
+  color:#6b7280;
+}
+
+/* contador */
+.contador-resultados{
+  margin:10px 0;
+  font-size:14px;
+  color:#6b7280;
+}

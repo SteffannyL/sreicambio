@@ -1,0 +1,92 @@
+.layout-admin {
+  display: flex;
+  height: 100vh;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #0b7a3b; /* VERDE UTEQ */
+  color: white;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: white;
+  padding: 12px 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.menu a:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.menu a.activo {
+  background: white;
+  color: #0b7a3b;
+  font-weight: bold;
+}
+
+/* CONTENIDO */
+.contenido {
+  flex: 1;
+  background: #f6f7f9; /* fondo limpio */
+  display: flex;
+  flex-direction: column;
+}
+
+/* TOPBAR */
+.topbar {
+  padding: 20px 30px;
+  background: white;
+  border-bottom: 3px solid #c59b2b; /* DORADO UTEQ */
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 22px;
+  color: #0b7a3b;
+}
+
+/* CONTENIDO PRINCIPAL */
+.contenido-principal {
+  margin: 30px;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  overflow-y: auto;
+}
+
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  font-size: 20px;
+}
