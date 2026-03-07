@@ -1,0 +1,131 @@
+<div class="container">
+
+  <h2>Gestión de Usuarios</h2>
+
+  <!-- Barra de controles -->
+  <div class="barra-controles">
+
+    <!-- Filtros y buscador -->
+    <div class="filtro-reporte">
+
+      <label>Filtrar por:</label>
+
+      <select [(ngModel)]="filtroSeleccionado"
+              (change)="aplicarFiltro()">
+        <option value="todos">Todos</option>
+        <option value="activos">Solo Activos</option>
+        <option value="inactivos">Solo Inactivos</option>
+      </select>
+
+      <div class="buscador">
+        <span class="icono-buscar">🔍</span>
+
+        <input
+          type="text"
+          placeholder="Buscar usuario..."
+          [(ngModel)]="busqueda"
+          (input)="buscarUsuarios()"
+        />
+      </div>
+
+    </div>
+
+    <!-- Botones reportes -->
+    <div class="acciones-reporte">
+
+      <button class="btn-reporte"
+              (click)="generarPDF(filtroSeleccionado)">
+        Descargar PDF
+      </button>
+
+      <button class="btn-excel"
+              (click)="exportarExcel()">
+        Exportar Excel
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- contador -->
+  <p class="contador-resultados">
+    Mostrando {{ usuariosFiltrados.length }} usuarios
+  </p>
+
+  <!-- Tabla -->
+  <table>
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>Correo</th>
+        <th>Tipo</th>
+        <th>Estado</th>
+        <th>Acción</th>
+        <th>Editar</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let usuario of usuariosPagina">
+
+        <td>{{ usuario.idusuario }}</td>
+        <td>{{ usuario.nombres }}</td>
+        <td>{{ usuario.apellidos }}</td>
+        <td>{{ usuario.correo }}</td>
+        <td>{{ usuario.tipoUsuario }}</td>
+
+        <td>
+          <span
+            [ngClass]="usuario.activo ? 'estado-activo' : 'estado-inactivo'">
+            {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+
+        <td>
+          <button
+            [ngClass]="usuario.activo ? 'btn-desactivar' : 'btn-activar'"
+            (click)="cambiarEstado(usuario)">
+            {{ usuario.activo ? 'Desactivar' : 'Activar' }}
+          </button>
+        </td>
+
+        <td>
+          <button
+            class="btn-editar"
+            [routerLink]="['editar', usuario.idusuario]">
+            Editar
+          </button>
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <!-- PAGINACIÓN -->
+  <div class="paginacion">
+
+    <button
+      (click)="paginaAnterior()"
+      [disabled]="paginaActual === 1">
+      ◀ Anterior
+    </button>
+
+    <span>
+      Página {{ paginaActual }} de {{ totalPaginas }}
+    </span>
+
+    <button
+      (click)="paginaSiguiente()"
+      [disabled]="paginaActual === totalPaginas">
+      Siguiente ▶
+    </button>
+
+  </div>
+
+</div>
