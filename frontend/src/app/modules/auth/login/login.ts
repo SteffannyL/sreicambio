@@ -27,11 +27,12 @@ export class LoginComponent {
 
   error = '';
   loading = false;
-constructor(
-  private authService: AuthService,
-  private router: Router,
-  private sessionMonitor: SessionMonitorService
-) {}
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private sessionMonitor: SessionMonitorService
+  ) {}
 
   login(): void {
 
@@ -46,6 +47,7 @@ constructor(
 
         this.loading = false;
 
+        // Iniciar monitoreo de sesión
         this.sessionMonitor.iniciarMonitoreo();
 
         // Redirección según rol
@@ -56,7 +58,7 @@ constructor(
             break;
 
           case 'DOCENTE':
-            this.router.navigate(['/docente/crear-evento']);
+            this.router.navigate(['/docente/dashboard']);
             break;
 
           case 'COORDINADOR':

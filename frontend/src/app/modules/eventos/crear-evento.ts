@@ -8,7 +8,8 @@ import { environment } from '../../../environments/environment';
   standalone: true,
   selector: 'app-crear-evento',
   imports: [CommonModule, FormsModule],
-  templateUrl: './crear-evento.html'
+  templateUrl: './crear-evento.html',
+  styleUrls: ['./crear-evento.css']
 })
 export class CrearEventoComponent {
 
