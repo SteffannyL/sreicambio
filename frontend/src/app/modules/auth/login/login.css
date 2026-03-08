@@ -1,0 +1,88 @@
+/* CONTENEDOR PRINCIPAL */
+.login-container{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#0b7a3b,#0f9d58);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+
+/* TARJETA */
+.login-card{
+  background:white;
+  padding:40px;
+  border-radius:16px;
+  width:360px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  text-align:center;
+}
+
+/* TITULOS */
+.titulo{
+  margin:0;
+  font-size:32px;
+  color:#0b7a3b;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+.subtitulo{
+  margin-top:6px;
+  margin-bottom:30px;
+  font-size:14px;
+  color:#666;
+}
+
+/* CAMPOS */
+.campo{
+  text-align:left;
+  margin-bottom:18px;
+}
+
+.campo label{
+  font-size:14px;
+  font-weight:500;
+  color:#333;
+}
+
+.campo input{
+  width:100%;
+  margin-top:6px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+  transition:0.2s;
+}
+
+.campo input:focus{
+  outline:none;
+  border-color:#0b7a3b;
+}
+
+/* BOTON */
+.btn-login{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#c59b2b;
+  color:white;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.25s;
+}
+
+.btn-login:hover{
+  background:#a8831f;
+}
+
+/* ERROR */
+.error{
+  margin-top:15px;
+  color:#e53935;
+  font-size:14px;
+}

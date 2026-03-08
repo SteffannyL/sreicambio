@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.jdbc.core.JdbcTemplate;
 import srei.proyecto.srei.usuario.repository.UsuarioRepository;
 
 import java.io.IOException;
@@ -25,7 +24,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final UsuarioRepository usuarioRepository;
-    private final JdbcTemplate jdbcTemplate;
 
     @Override
     protected void doFilterInternal(
@@ -34,23 +32,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // 🔹 1️⃣ Permitir preflight
+        String requestURI = request.getRequestURI();
+
+        // Permitir CORS preflight
         if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String requestURI = request.getRequestURI();
-
-        // 🔹 2️⃣ Ignorar auth
-        if (requestURI.startsWith("/api/auth/")) {
+        // Permitir endpoints públicos
+        if (requestURI.startsWith("/api/auth/")
+                || requestURI.startsWith("/api/sesiones/validar/")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         final String authHeader = request.getHeader("Authorization");
 
-        // 🔹 3️⃣ Si no hay token
+        // Si no hay token, continuar
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -59,6 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         try {
+
             String correo = jwtService.extractUsername(token);
 
             if (correo != null &&
@@ -69,7 +69,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if (jwtService.isTokenValid(token, userDetails)) {
 
-                    // 🔥 SET VARIABLES PARA RLS
                     String rol = jwtService.extractRol(token);
 
                     Long idUsuario = usuarioRepository
@@ -77,9 +76,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             .orElseThrow()
                             .getIdusuario();
 
-                    // IMPORTANTE: usar SET normal (no LOCAL)
-                    jdbcTemplate.execute("SET app.currentuserid = '" + idUsuario + "'");
-                    jdbcTemplate.execute("SET app.currentuserrole = '" + rol.toLowerCase() + "'");
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(
                                     userDetails,
@@ -98,7 +94,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         } catch (Exception e) {
-            System.out.println("⚠ Token inválido: " + e.getMessage());
+            System.out.println("Token inválido: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

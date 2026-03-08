@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UsuarioAdmin } from '../models/usuario-admin.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
 
-  private apiUrl = 'http://localhost:8082/api/admin';
+  private apiUrl = environment.apiUrl + '/api/admin';
 
   constructor(private http: HttpClient) {}
 
@@ -37,15 +38,15 @@ export class AdminService {
   }
 
   obtenerEstadisticas() {
-  return this.http.get<any>(`${this.apiUrl}/dashboard`);
-}
+    return this.http.get<any>(`${this.apiUrl}/dashboard`);
+  }
 
-obtenerDashboard(): Observable<any>{
-  return this.http.get<any>('http://localhost:8082/api/admin/dashboard');
-}
+  obtenerDashboard(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/dashboard`);
+  }
 
-obtenerUsuariosPorMes(){
-  return this.http.get<any>('http://localhost:8082/api/admin/usuarios/registro-mensual');
-}
+  obtenerUsuariosPorMes() {
+    return this.http.get<any>(`${this.apiUrl}/usuarios/registro-mensual`);
+  }
 
 }

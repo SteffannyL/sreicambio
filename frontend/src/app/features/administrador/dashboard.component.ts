@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AdminService } from '../../core/services/admin.service';
 import { Chart } from 'chart.js/auto';
-import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +17,11 @@ export class DashboardComponent implements OnInit {
   meses: string[] = [];
   totalesMes: number[] = [];
 
+  // 🔹 Instancias de gráficos (para evitar duplicación)
+  pieChart: Chart | null = null;
+  barraChart: Chart | null = null;
+  lineaChart: Chart | null = null;
+
   constructor(
     private adminService: AdminService,
     private cd: ChangeDetectorRef
@@ -28,12 +32,6 @@ export class DashboardComponent implements OnInit {
     // 🔹 Carga inicial
     this.cargarEstadisticas();
     this.cargarUsuariosPorMes();
-
-    // 🔹 Actualización automática cada 3 segundos
-    interval(3000).subscribe(() => {
-      this.cargarEstadisticas();
-      this.cargarUsuariosPorMes();
-    });
 
   }
 
@@ -71,7 +69,11 @@ export class DashboardComponent implements OnInit {
 
   crearGraficoPie(): void {
 
-    new Chart("graficoPie", {
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
+
+    this.pieChart = new Chart("graficoPie", {
       type: 'pie',
       data: {
         labels: ['Activos', 'Inactivos'],
@@ -89,7 +91,11 @@ export class DashboardComponent implements OnInit {
 
   crearGraficoBarra(): void {
 
-    new Chart("graficoBarra", {
+    if (this.barraChart) {
+      this.barraChart.destroy();
+    }
+
+    this.barraChart = new Chart("graficoBarra", {
       type: 'bar',
       data: {
         labels: ['Total', 'Activos', 'Inactivos'],
@@ -113,7 +119,11 @@ export class DashboardComponent implements OnInit {
 
   crearGraficoLinea(): void {
 
-    new Chart("graficoLinea", {
+    if (this.lineaChart) {
+      this.lineaChart.destroy();
+    }
+
+    this.lineaChart = new Chart("graficoLinea", {
       type: 'line',
       data: {
         labels: this.meses,

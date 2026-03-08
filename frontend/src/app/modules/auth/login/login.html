@@ -1,33 +1,58 @@
 <div class="login-container">
 
-  <h2>Iniciar Sesión</h2>
+  <div class="login-card">
 
-  <form (ngSubmit)="login()">
-    <input
-      type="email"
-      placeholder="Correo"
-      [(ngModel)]="credentials.correo"
-      name="correo"
-      required />
+    <h2 class="titulo">SREI</h2>
+    <p class="subtitulo">Sistema de Registro de Eventos Interculturales</p>
 
-    <input
-      type="password"
-      placeholder="Contraseña"
-      [(ngModel)]="credentials.contrasena"
-      name="contrasena"
-      required />
+    <form (ngSubmit)="login()">
 
-    <button type="submit" [disabled]="loading">
-      {{ loading ? 'Ingresando...' : 'Entrar' }}
-    </button>
-  </form>
+      <div class="campo">
 
-  @if (error) {
-    <p class="error">{{ error }}</p>
-  }
+        <label>Correo</label>
 
-  <p>
-    <a routerLink="/auth/register">¿No tienes cuenta? Regístrate</a>
-  </p>
+        <div class="input-icon">
+          <span class="material-icons">mail</span>
+
+          <input
+            type="email"
+            [(ngModel)]="credentials.correo"
+            name="correo"
+            required
+          />
+
+        </div>
+
+      </div>
+
+      <div class="campo">
+
+        <label>Contraseña</label>
+
+        <div class="input-icon">
+          <span class="material-icons">lock</span>
+
+          <input
+            type="password"
+            [(ngModel)]="credentials.contrasena"
+            name="contrasena"
+            required
+          />
+
+        </div>
+
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loading">
+        {{ loading ? 'Ingresando...' : 'Iniciar Sesión' }}
+      </button>
+
+      <p class="error" *ngIf="error">
+        {{ error }}
+      </p>
+
+    </form>
+
+  </div>
 
 </div>

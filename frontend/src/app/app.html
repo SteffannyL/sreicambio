@@ -1,10 +1,17 @@
-
-<!-- src/app/app.html -->
-<app-navbar></app-navbar>
-
-<main style="padding: 20px;">
-  <router-outlet></router-outlet>
-</main>
+<app-navbar *ngIf="mostrarNavbar"></app-navbar>
 
 <router-outlet></router-outlet>
 
+<div *ngIf="sesionExpulsada" class="session-modal">
+
+  <div class="session-modal-content">
+
+    <h2>Sesión cerrada</h2>
+
+    <p>Un administrador expulsó tu sesión.</p>
+
+    <button (click)="irLogin()">Ir al login</button>
+
+  </div>
+
+</div>

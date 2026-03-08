@@ -14,6 +14,8 @@ import srei.proyecto.srei.security.JwtService;
 import srei.proyecto.srei.usuario.entity.Usuario;
 import srei.proyecto.srei.usuario.repository.UsuarioRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.sql.Types;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class AuthService {
     private final JdbcTemplate jdbcTemplate;
 
     @Transactional
-    public LoginResponseDTO login(LoginRequestDTO dto) {
+    public LoginResponseDTO login(LoginRequestDTO dto, HttpServletRequest request) {
 
         Usuario usuario = usuarioRepository
                 .findByCorreo(dto.getCorreo())
@@ -50,17 +52,38 @@ public class AuthService {
                 ? "user"
                 : roles.get(0).get("nombrerol").toString().toLowerCase();
 
-        // 🔹 Corregido: SET LOCAL directo, con validación de rol para seguridad
         if (!rolBd.matches("[a-zA-Z_]+")) {
-            rolBd = "user"; // fallback seguro
+            rolBd = "user";
         }
+
         jdbcTemplate.execute("SET LOCAL app.currentuserrole = '" + rolBd + "'");
         jdbcTemplate.execute("SET LOCAL app.currentuserid = " + usuario.getIdusuario());
 
         // Actualizar última conexión
         jdbcTemplate.update("CALL sp_actualizar_ultima_conexion(?)", usuario.getIdusuario());
 
+        // Generar JWT
         String token = jwtService.generarToken(usuario.getCorreo(), rolBd);
+
+      // Datos de conexión
+        String ip = request.getRemoteAddr();
+
+            // Normalizar localhost IPv6 → IPv4
+            if (ip != null && (ip.equals("0:0:0:0:0:0:0:1") || ip.equals("::1"))) {
+            ip = "127.0.0.1";
+         }
+
+        String userAgent = request.getHeader("User-Agent");
+        // Registrar sesión y obtener idSesion
+        Long idSesion = jdbcTemplate.queryForObject(
+                "SELECT sp_registrar_sesion(?, ?, ?, ?, ?)",
+                Long.class,
+                usuario.getIdusuario(),
+                token,
+                ip,
+                userAgent,
+                userAgent
+        );
 
         LoginResponseDTO response = new LoginResponseDTO();
         response.setToken(token);
@@ -68,6 +91,7 @@ public class AuthService {
         response.setNombres(usuario.getNombres());
         response.setIdtipousuario(usuario.getIdtipousuario());
         response.setRol(rolBd.toUpperCase());
+        response.setIdsesion(idSesion);
 
         return response;
     }
@@ -145,4 +169,13 @@ public class AuthService {
 
         return response;
     }
+
+    public void logout(Long idsesion) {
+
+    jdbcTemplate.update(
+        "CALL sp_banear_sesion(?)",
+        idsesion
+    );
+
+}
 }
