@@ -210,3 +210,25 @@ button {
   font-size:14px;
   color:#6b7280;
 }
+
+.input-icon{
+  display:flex;
+  align-items:center;
+  border:1px solid #ccc;
+  border-radius:8px;
+  padding:6px 10px;
+  margin-top:6px;
+}
+
+.input-icon input{
+  border:none;
+  outline:none;
+  flex:1;
+  font-size:14px;
+  padding:8px;
+}
+
+.material-icons{
+  color:#0b7a3b;
+  font-size:20px;
+}

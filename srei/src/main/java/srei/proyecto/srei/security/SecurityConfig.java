@@ -26,11 +26,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import srei.proyecto.srei.usuario.repository.UsuarioRepository;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Configuration
 @RequiredArgsConstructor
@@ -39,10 +35,12 @@ public class SecurityConfig {
 
     private final UsuarioRepository usuarioRepository;
     private final JdbcTemplate jdbcTemplate;
-@Bean
-public WebClient.Builder webClientBuilder() {
-    return WebClient.builder();
-}
+
+    @Bean
+    public WebClient.Builder webClientBuilder() {
+        return WebClient.builder();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
@@ -50,58 +48,43 @@ public WebClient.Builder webClientBuilder() {
     ) throws Exception {
 
         http
-            // 🔹 CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-            // 🔹 CSRF desactivado (JWT)
             .csrf(csrf -> csrf.disable())
 
-            // 🔹 Autorización limpia y clara
-            .authorizeHttpRequests(auth -> auth
+            .httpBasic(httpBasic -> httpBasic.disable())
+            .formLogin(form -> form.disable())
 
-                // Preflight
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .authorizeHttpRequests(auth -> auth
 
-                // Públicas
-                .requestMatchers("/api/auth/**").permitAll()
+              .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // ADMIN
-                .requestMatchers("/api/admin/**")
-                    .hasRole("ADMIN")
+                 // PUBLICOS
+                  .requestMatchers("/api/auth/**").permitAll()
+                 .requestMatchers("/api/sesiones/validar/**").permitAll()
 
-                // DOCENTE
-                // IA (igual que aprobar-evento pero flexible)
-// DOCENTE
-.requestMatchers(HttpMethod.POST, "/api/ia/preguntar")
-    .hasAnyRole("DOCENTE", "COORDINADOR")
+                 // ADMIN
+                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-.requestMatchers("/api/docente/**")
-    .hasRole("DOCENTE")
+                   // DOCENTE
+                 .requestMatchers("/api/docente/**").hasRole("DOCENTE")
 
-                // COORDINADOR
-                .requestMatchers(HttpMethod.POST, "/api/coordinador/aprobar-evento")
-.hasRole("COORDINADOR")
+                     // COORDINADOR
+                 .requestMatchers("/api/coordinador/**")
+                  .hasAnyRole("ADMIN", "COORDINADOR")
 
-.requestMatchers("/api/coordinador/**")
-.hasAnyRole("ADMIN", "COORDINADOR")
-
-                // DECANO
-                .requestMatchers("/api/decano/**")
+                     // DECANO
+                  .requestMatchers("/api/decano/**")
                     .hasRole("DECANO")
 
-                // Todo lo demás autenticado
-                .anyRequest().authenticated()
-            )
+                 .anyRequest().authenticated()
+)
 
-            // Stateless (JWT)
             .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // Provider
             .authenticationProvider(authenticationProvider())
 
-            // Filtro JWT
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -109,30 +92,38 @@ public WebClient.Builder webClientBuilder() {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
+
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider();
+
         provider.setUserDetailsService(userDetailsService());
         provider.setPasswordEncoder(passwordEncoder());
+
         return provider;
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
+
         return email -> usuarioRepository.findByCorreo(email)
                 .map(usuario -> {
 
@@ -140,10 +131,10 @@ public WebClient.Builder webClientBuilder() {
 
                     List<Map<String, Object>> rolesBd =
                             jdbcTemplate.queryForList(
-                                "SELECT nombrerol FROM usuariorol ur " +
-                                "JOIN rol r ON ur.idrol = r.idrol " +
-                                "WHERE ur.idusuario = ?",
-                                usuario.getIdusuario()
+                                    "SELECT nombrerol FROM usuariorol ur " +
+                                    "JOIN rol r ON ur.idrol = r.idrol " +
+                                    "WHERE ur.idusuario = ?",
+                                    usuario.getIdusuario()
                             );
 
                     for (Map<String, Object> row : rolesBd) {
@@ -152,12 +143,12 @@ public WebClient.Builder webClientBuilder() {
                                 ((String) row.get("nombrerol")).toLowerCase();
 
                         String rolApp = switch (rolBd) {
-                            case "admin"          -> "ADMIN";
-                            case "coordinador"    -> "COORDINADOR";
-                            case "decano"         -> "DECANO";
-                            case "docente"        -> "DOCENTE";
+                            case "admin" -> "ADMIN";
+                            case "coordinador" -> "COORDINADOR";
+                            case "decano" -> "DECANO";
+                            case "docente" -> "DOCENTE";
                             case "usuarioexterno" -> "USUARIOEXTERNO";
-                            default               -> "USER";
+                            default -> "USER";
                         };
 
                         authorities.add("ROLE_" + rolApp);
@@ -187,24 +178,5 @@ public WebClient.Builder webClientBuilder() {
             AuthenticationConfiguration config
     ) throws Exception {
         return config.getAuthenticationManager();
-    }
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-
-@Configuration
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
-            );
-
-        return http.build();
     }
 }

@@ -10,13 +10,14 @@ public class LoginResponseDTO {
     private String nombres;
     private Long idtipousuario;
     private String rol;
-public String getRol() {
-    return rol;
-}
+    private Long idsesion;
 
-public void setRol(String rol) {
-    this.rol = rol;
-}
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
 
 }
-

@@ -30,8 +30,8 @@
 
     </div>
 
-    <!-- Botones reportes -->
-    <div class="acciones-reporte">
+    <!-- Botones reportes (solo si hay datos) -->
+    <div class="acciones-reporte" *ngIf="usuariosFiltrados.length > 0">
 
       <button class="btn-reporte"
               (click)="generarPDF(filtroSeleccionado)">
@@ -103,12 +103,25 @@
 
       </tr>
 
+      <!-- mensaje si no hay resultados -->
+      <tr *ngIf="usuariosFiltrados.length === 0">
+        <td colspan="8" class="sin-resultados">
+          No se encontraron usuarios
+        </td>
+      </tr>
+
     </tbody>
 
   </table>
 
-  <!-- PAGINACIÓN -->
-  <div class="paginacion">
+  <!-- PAGINACIÓN (solo si hay más de una página) -->
+  <div class="paginacion" *ngIf="totalPaginas > 1">
+
+    <button
+      (click)="irPrimeraPagina()"
+      [disabled]="paginaActual === 1">
+      ⏮ Primera
+    </button>
 
     <button
       (click)="paginaAnterior()"
@@ -124,6 +137,12 @@
       (click)="paginaSiguiente()"
       [disabled]="paginaActual === totalPaginas">
       Siguiente ▶
+    </button>
+
+    <button
+      (click)="irUltimaPagina()"
+      [disabled]="paginaActual === totalPaginas">
+      Última ⏭
     </button>
 
   </div>

@@ -3,5 +3,6 @@ export interface LoginResponse {
   idusuario: number;
   nombres: string;
   idtipousuario: number;
-  rol: string;        // ← Agrega esto
+  rol: string;
+  idsesion: number;
 }

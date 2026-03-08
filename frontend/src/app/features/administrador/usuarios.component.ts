@@ -62,29 +62,36 @@ export class UsuariosComponent implements OnInit {
   }
 
   // 🔹 Buscar usuarios
-  buscarUsuarios() {
+buscarUsuarios() {
 
-    const texto = this.busqueda.toLowerCase();
+  const texto = (this.busqueda || '').toLowerCase().trim();
 
-    let base = [...this.usuarios];
+  let base = [...this.usuarios];
 
-    if (this.filtroSeleccionado === 'activos') {
-      base = base.filter(u => u.activo);
-    }
-    else if (this.filtroSeleccionado === 'inactivos') {
-      base = base.filter(u => !u.activo);
-    }
+  if (this.filtroSeleccionado === 'activos') {
+    base = base.filter(u => u.activo);
+  }
+  else if (this.filtroSeleccionado === 'inactivos') {
+    base = base.filter(u => !u.activo);
+  }
 
-    this.usuariosFiltrados = base.filter(u =>
-      u.nombres.toLowerCase().includes(texto) ||
-      u.apellidos.toLowerCase().includes(texto) ||
-      u.correo.toLowerCase().includes(texto)
+  this.usuariosFiltrados = base.filter(u => {
+
+    const nombres = (u.nombres || '').toLowerCase();
+    const apellidos = (u.apellidos || '').toLowerCase();
+    const correo = (u.correo || '').toLowerCase();
+
+    return (
+      nombres.includes(texto) ||
+      apellidos.includes(texto) ||
+      correo.includes(texto)
     );
 
-    // reiniciar página
-    this.paginaActual = 1;
-    this.actualizarPaginacion();
-  }
+  });
+
+  this.paginaActual = 1;
+  this.actualizarPaginacion();
+}
 
   // 🔹 actualizar paginación
   actualizarPaginacion(){
@@ -118,20 +125,24 @@ export class UsuariosComponent implements OnInit {
   // 🔹 Cambiar estado usuario
   cambiarEstado(usuario: UsuarioAdmin) {
 
-    const nuevoEstado = !usuario.activo;
+  const nuevoEstado = !usuario.activo;
 
-    this.adminService.cambiarEstado(usuario.idusuario, nuevoEstado)
-      .subscribe({
-        next: () => {
-          usuario.activo = nuevoEstado;
-          this.buscarUsuarios();
-          this.cd.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error cambiando estado', err);
-        }
-      });
-  }
+  this.adminService.cambiarEstado(usuario.idusuario, nuevoEstado)
+    .subscribe({
+      next: () => {
+
+        usuario.activo = nuevoEstado;
+
+        // 🔹 solo actualizar tabla, NO reiniciar búsqueda
+        this.actualizarPaginacion();
+
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error cambiando estado', err);
+      }
+    });
+}
 
   // 🔹 Generar PDF
   generarPDF(filtro: string) {
@@ -244,5 +255,17 @@ export class UsuariosComponent implements OnInit {
 
     saveAs(blob, 'reporte_usuarios.xlsx');
   }
+
+  // 🔹 ir a primera página
+irPrimeraPagina(){
+  this.paginaActual = 1;
+  this.actualizarPaginacion();
+}
+
+// 🔹 ir a última página
+irUltimaPagina(){
+  this.paginaActual = this.totalPaginas;
+  this.actualizarPaginacion();
+}
 
 }

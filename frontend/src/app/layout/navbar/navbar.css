@@ -1,0 +1,36 @@
+.navbar{
+  height:60px;
+  background:#0b7a3b;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 30px;
+  font-family:system-ui;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:bold;
+  letter-spacing:1px;
+}
+
+.menu{
+  display:flex;
+  list-style:none;
+  gap:20px;
+  margin:0;
+  padding:0;
+  align-items:center;
+}
+
+.menu a{
+  color:white;
+  text-decoration:none;
+  font-weight:500;
+}
+
+.menu a:hover{
+  text-decoration:underline;
+  opacity:0.9;
+}
