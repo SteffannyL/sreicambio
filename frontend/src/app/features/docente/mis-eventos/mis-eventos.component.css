@@ -1,0 +1,21 @@
+.estado{
+padding:4px 10px;
+border-radius:6px;
+font-size:12px;
+font-weight:bold;
+}
+
+.pendiente{
+background:#fef3c7;
+color:#92400e;
+}
+
+.aprobado{
+background:#d1fae5;
+color:#065f46;
+}
+
+.rechazado{
+background:#fee2e2;
+color:#991b1b;
+}

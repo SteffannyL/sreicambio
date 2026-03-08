@@ -34,8 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String requestURI = request.getRequestURI();
 
-        // Permitir CORS preflight
-        if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+        // Permitir preflight CORS
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -49,32 +49,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        // Si no hay token, continuar
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7);
-
         try {
 
+            String token = authHeader.substring(7);
             String correo = jwtService.extractUsername(token);
 
             if (correo != null &&
-                SecurityContextHolder.getContext().getAuthentication() == null) {
+                    SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 UserDetails userDetails =
                         userDetailsService.loadUserByUsername(correo);
 
                 if (jwtService.isTokenValid(token, userDetails)) {
-
-                    String rol = jwtService.extractRol(token);
-
-                    Long idUsuario = usuarioRepository
-                            .findByCorreo(correo)
-                            .orElseThrow()
-                            .getIdusuario();
 
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(
@@ -94,7 +85,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         } catch (Exception e) {
-            System.out.println("Token inválido: " + e.getMessage());
+            System.out.println("Error en JWT Filter: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

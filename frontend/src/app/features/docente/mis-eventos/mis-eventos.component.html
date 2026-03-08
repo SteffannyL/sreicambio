@@ -1,0 +1,72 @@
+<div class="form-container">
+
+  <h2>Mis Eventos</h2>
+
+  <p *ngIf="error" style="color:red;">
+    {{error}}
+  </p>
+
+  <table *ngIf="eventos.length > 0">
+
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Fecha inicio</th>
+        <th>Fecha fin</th>
+        <th>Lugar</th>
+        <th>Aforo</th>
+        <th>Estado</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let e of eventos">
+
+        <td>{{e.nombreevento}}</td>
+        <td>{{e.fechainicio}}</td>
+        <td>{{e.fechafin}}</td>
+        <td>{{e.lugar}}</td>
+        <td>{{e.aforo}}</td>
+
+        <td>
+
+          <span *ngIf="e.estado === 'PENDIENTE'" class="estado pendiente">
+            Pendiente
+            </span>
+
+            <span *ngIf="e.estado === 'APROBADO'" class="estado aprobado">
+            probado
+            </span>
+
+          <span *ngIf="e.estado === 'RECHAZADO'" class="estado rechazado">
+            Rechazado
+          </span>
+
+        </td>
+
+        <td>
+
+          <button class="btn-editar">
+            Editar
+          </button>
+
+          <button class="btn-eliminar">
+            Eliminar
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <p *ngIf="eventos.length === 0 && !error">
+    No tienes eventos registrados.
+  </p>
+
+</div>

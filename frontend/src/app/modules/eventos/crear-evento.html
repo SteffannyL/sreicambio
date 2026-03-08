@@ -1,48 +1,47 @@
-<div class="container">
+<div class="form-container">
 
   <h2>Crear Evento</h2>
 
   <form (ngSubmit)="crearEvento()">
 
-    <input type="text"
-           placeholder="Nombre del evento"
-           [(ngModel)]="evento.nombreevento"
-           name="nombreevento"
-           required />
+    <label>Nombre del evento</label>
+    <input type="text" [(ngModel)]="evento.nombreevento" name="nombreevento" required>
 
-    <textarea placeholder="Descripción"
-              [(ngModel)]="evento.descripcion"
-              name="descripcion"
-              required></textarea>
+    <label>Descripción</label>
+    <input type="text" [(ngModel)]="evento.descripcion" name="descripcion" required>
 
     <label>Fecha inicio</label>
-    <input type="datetime-local"
-           [(ngModel)]="evento.fechainicio"
-           name="fechainicio"
-           required />
+    <input type="date" [(ngModel)]="evento.fechainicio" name="fechainicio" required>
 
     <label>Fecha fin</label>
-    <input type="datetime-local"
-           [(ngModel)]="evento.fechafin"
-           name="fechafin"
-           required />
+    <input type="date" [(ngModel)]="evento.fechafin" name="fechafin" required>
 
-    <input type="text"
-           placeholder="Lugar"
-           [(ngModel)]="evento.lugar"
-           name="lugar"
-           required />
+    <label>Lugar</label>
+    <input type="text" [(ngModel)]="evento.lugar" name="lugar" required>
 
-    <input type="text"
-           placeholder="Aforo"
-           [(ngModel)]="evento.aforo"
-           name="aforo" />
+    <label>Aforo</label>
+    <input type="number" [(ngModel)]="evento.aforo" name="aforo" required>
 
-    <button type="submit">Crear Evento</button>
+    <div class="botones">
+
+      <button type="submit" class="btn-guardar">
+        Guardar evento
+      </button>
+
+      <button type="button" class="btn-cancelar" routerLink="/docente/dashboard">
+        Cancelar
+      </button>
+
+    </div>
 
   </form>
 
-  <p *ngIf="mensaje" style="color: green">{{ mensaje }}</p>
-  <p *ngIf="error" style="color: red">{{ error }}</p>
+  <p *ngIf="mensaje" style="color:green; margin-top:10px;">
+    {{mensaje}}
+  </p>
+
+  <p *ngIf="error" style="color:red; margin-top:10px;">
+    {{error}}
+  </p>
 
 </div>

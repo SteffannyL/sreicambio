@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { DocenteComponent } from './features/docente/docente.component';
+import { DocenteDashboardComponent } from './features/docente/dashboard/docente-dashboard.component';
 
 export const routes: Routes = [
 
@@ -20,12 +22,39 @@ export const routes: Routes = [
         .then(m => m.DashboardComponent)
   },
 
+  /* ================= DOCENTE ================= */
+
   {
-    path: 'docente/crear-evento',
-    loadComponent: () =>
-      import('./modules/eventos/crear-evento')
-        .then(m => m.CrearEventoComponent)
+    path: 'docente',
+    component: DocenteComponent,
+    canActivate: [authGuard],
+    children: [
+
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+
+      {
+        path: 'dashboard',
+        component: DocenteDashboardComponent
+      },
+
+      {
+        path: 'crear-evento',
+        loadComponent: () =>
+          import('./modules/eventos/crear-evento')
+            .then(m => m.CrearEventoComponent)
+      },
+
+      {
+        path: 'mis-eventos',
+        loadComponent: () =>
+          import('./features/docente/mis-eventos/mis-eventos.component')
+            .then(m => m.MisEventosComponent)
+      }
+
+    ]
   },
+
+  /* ================= COORDINADOR ================= */
 
   {
     path: 'coordinador/aprobar-eventos',
@@ -33,6 +62,8 @@ export const routes: Routes = [
       import('./modules/coordinador/aprobar-eventos/aprobar-eventos')
         .then(m => m.AprobarEventosComponent)
   },
+
+  /* ================= ADMIN ================= */
 
   {
     path: 'admin',
