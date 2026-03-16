@@ -1,10 +1,12 @@
 <div class="container">
 
-<h2>Eventos pendientes</h2>
+<h2>Gestión de Eventos</h2>
 
-<div *ngIf="cargando">
+<div *ngIf="cargando" class="loading">
 Cargando eventos...
 </div>
+
+<div class="tabla-container">
 
 <table *ngIf="!cargando">
 
@@ -23,24 +25,24 @@ Cargando eventos...
 <tr *ngFor="let e of eventos">
 
 <td>{{e.idevento}}</td>
-<td>{{e.nombreevento}}</td>
+<td class="evento">{{e.nombreevento}}</td>
 <td>{{e.descripcion}}</td>
 <td>{{e.fechainicio}}</td>
 
-<td>
+<td class="acciones">
 
 <button
-class="aprobar"
+class="btn aprobar"
 [disabled]="procesando"
 (click)="aprobarEvento(e.idevento)">
-Aprobar
+✔ Aprobar
 </button>
 
 <button
-class="rechazar"
+class="btn rechazar"
 [disabled]="procesando"
 (click)="abrirModalRechazo(e.idevento)">
-Rechazar
+✖ Rechazar
 </button>
 
 </td>
@@ -48,12 +50,14 @@ Rechazar
 </tr>
 
 <tr *ngIf="eventos.length===0">
-<td colspan="5">No hay eventos pendientes</td>
+<td colspan="5" class="vacio">No hay eventos pendientes</td>
 </tr>
 
 </tbody>
 
 </table>
+
+</div>
 
 </div>
 
@@ -71,14 +75,20 @@ Rechazar
 placeholder="Escriba la observación">
 </textarea>
 
-<div class="acciones">
+<div class="acciones-modal">
 
 <button
+class="btn confirmar"
 [disabled]="procesando"
 (click)="confirmarRechazo()">
 Confirmar
 </button>
-<button (click)="cerrarModal()">Cancelar</button>
+
+<button
+class="btn cancelar"
+(click)="cerrarModal()">
+Cancelar
+</button>
 
 </div>
 
