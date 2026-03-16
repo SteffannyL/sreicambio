@@ -12,6 +12,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  /* ================= LOGIN ================= */
+
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
@@ -20,49 +22,57 @@ export class AuthService {
     );
   }
 
+  /* ================= REGISTER ================= */
+
   register(usuario: any) {
     return this.http.post<any>(`${this.apiUrl}/register`, usuario);
   }
 
+  /* ================= GUARDAR SESIÓN ================= */
+
   private saveSession(response: LoginResponse): void {
 
     localStorage.setItem('token', response.token);
-    localStorage.setItem('rol', response.rol);
+    localStorage.setItem('rol', response.rol.toUpperCase());
     localStorage.setItem('idusuario', response.idusuario.toString());
 
     // 🔴 IMPORTANTE para expulsión de sesión
-    if(response.idsesion){
+    if (response.idsesion) {
       localStorage.setItem('idsesion', response.idsesion.toString());
     }
 
   }
 
-logout(): void {
+  /* ================= LOGOUT ================= */
 
-  const idSesion = localStorage.getItem('idsesion');
+  logout(): void {
 
-  if(idSesion){
+    const idSesion = localStorage.getItem('idsesion');
 
-    this.http.post(`${this.apiUrl}/logout/${idSesion}`, {})
-      .subscribe({
-        next: () => {
-          localStorage.clear();
-          window.location.href = '/auth/login';
-        },
-        error: () => {
-          localStorage.clear();
-          window.location.href = '/auth/login';
-        }
-      });
+    if (idSesion) {
 
-  } else {
+      this.http.post(`${this.apiUrl}/logout/${idSesion}`, {})
+        .subscribe({
+          next: () => {
+            this.clearSession();
+          },
+          error: () => {
+            this.clearSession();
+          }
+        });
 
-    localStorage.clear();
-    window.location.href = '/auth/login';
+    } else {
+      this.clearSession();
+    }
 
   }
 
-}
+  private clearSession() {
+    localStorage.clear();
+    window.location.href = '/auth/login';
+  }
+
+  /* ================= GETTERS ================= */
 
   getToken(): string | null {
     return localStorage.getItem('token');
@@ -76,8 +86,39 @@ logout(): void {
     return localStorage.getItem('idsesion');
   }
 
+  getIdUsuario(): string | null {
+    return localStorage.getItem('idusuario');
+  }
+
+  /* ================= ESTADO LOGIN ================= */
+
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  /* ================= REDIRECCIÓN POR ROL ================= */
+
+  redirigirSegunRol() {
+
+    const rol = this.getRol();
+
+    if (!rol) {
+      window.location.href = '/auth/login';
+      return;
+    }
+
+    if (rol === 'DOCENTE') {
+      window.location.href = '/docente/dashboard';
+    }
+
+    if (rol === 'COORDINADOR') {
+      window.location.href = '/coordinador/dashboard';
+    }
+
+    if (rol === 'ADMIN') {
+      window.location.href = '/admin/dashboard';
+    }
+
   }
 
 }

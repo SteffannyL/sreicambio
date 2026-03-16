@@ -1,0 +1,87 @@
+<div class="container">
+
+<h2>Eventos pendientes</h2>
+
+<div *ngIf="cargando">
+Cargando eventos...
+</div>
+
+<table *ngIf="!cargando">
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Evento</th>
+<th>Descripción</th>
+<th>Fecha</th>
+<th>Acciones</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr *ngFor="let e of eventos">
+
+<td>{{e.idevento}}</td>
+<td>{{e.nombreevento}}</td>
+<td>{{e.descripcion}}</td>
+<td>{{e.fechainicio}}</td>
+
+<td>
+
+<button
+class="aprobar"
+[disabled]="procesando"
+(click)="aprobarEvento(e.idevento)">
+Aprobar
+</button>
+
+<button
+class="rechazar"
+[disabled]="procesando"
+(click)="abrirModalRechazo(e.idevento)">
+Rechazar
+</button>
+
+</td>
+
+</tr>
+
+<tr *ngIf="eventos.length===0">
+<td colspan="5">No hay eventos pendientes</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- MODAL RECHAZO -->
+
+<div class="modal" *ngIf="mostrarModal">
+
+<div class="modal-content">
+
+<h3>Rechazar evento</h3>
+
+<textarea
+[(ngModel)]="observacion"
+placeholder="Escriba la observación">
+</textarea>
+
+<div class="acciones">
+
+<button
+[disabled]="procesando"
+(click)="confirmarRechazo()">
+Confirmar
+</button>
+<button (click)="cerrarModal()">Cancelar</button>
+
+</div>
+
+</div>
+
+</div>

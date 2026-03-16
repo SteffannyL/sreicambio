@@ -1,1 +1,93 @@
-<p>sidebar works!</p>
+<nav class="sidebar">
+
+<ul>
+
+<!-- DASHBOARD GENERAL -->
+
+<li>
+<a routerLink="/dashboard">
+Dashboard
+</a>
+</li>
+
+
+<!-- DOCENTE -->
+
+<li *ngIf="rol === 'DOCENTE'" class="menu-title">
+Docente
+</li>
+
+<li *ngIf="rol === 'DOCENTE'">
+<a routerLink="/docente/dashboard">
+Dashboard Docente
+</a>
+</li>
+
+<li *ngIf="rol === 'DOCENTE'">
+<a routerLink="/docente/crear-evento">
+Crear Evento
+</a>
+</li>
+
+<li *ngIf="rol === 'DOCENTE'">
+<a routerLink="/docente/mis-eventos">
+Mis Eventos
+</a>
+</li>
+
+
+<!-- COORDINADOR -->
+
+<li *ngIf="rol === 'COORDINADOR'" class="menu-title">
+Coordinador
+</li>
+
+<li *ngIf="rol === 'COORDINADOR'">
+<a routerLink="/coordinador/dashboard">
+Dashboard Coordinador
+</a>
+</li>
+
+<li *ngIf="rol === 'COORDINADOR'">
+<a routerLink="/coordinador/aprobar-eventos">
+Aprobar Eventos
+</a>
+</li>
+
+
+<!-- ADMIN -->
+
+<li *ngIf="rol === 'ADMIN'" class="menu-title">
+Administrador
+</li>
+
+<li *ngIf="rol === 'ADMIN'">
+<a routerLink="/admin/dashboard">
+Dashboard Admin
+</a>
+</li>
+
+<li *ngIf="rol === 'ADMIN'">
+<a routerLink="/admin/usuarios">
+Usuarios
+</a>
+</li>
+
+<li *ngIf="rol === 'ADMIN'">
+<a routerLink="/admin/sesiones">
+Sesiones
+</a>
+</li>
+
+
+<!-- LOGOUT -->
+
+<li class="logout">
+<button (click)="logout()">
+Cerrar sesión
+</button>
+</li>
+
+</ul>
+
+</nav>

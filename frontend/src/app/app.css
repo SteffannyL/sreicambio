@@ -1,3 +1,16 @@
+.layout{
+  display:flex;
+}
+
+.content{
+  flex:1;
+  padding:20px;
+  background:#f5f5f5;
+  min-height:100vh;
+}
+
+/* ===== Modal de sesión expulsada ===== */
+
 .session-modal {
   position: fixed;
   top: 0;

@@ -1,0 +1,50 @@
+.sidebar{
+width:220px;
+background:#2c3e50;
+height:100vh;
+color:white;
+padding-top:20px;
+}
+
+.sidebar ul{
+list-style:none;
+padding:0;
+margin:0;
+}
+
+.sidebar li{
+padding:10px 20px;
+}
+
+.sidebar a{
+color:white;
+text-decoration:none;
+display:block;
+}
+
+.sidebar a:hover{
+background:#34495e;
+}
+
+.menu-title{
+font-weight:bold;
+margin-top:20px;
+color:#bdc3c7;
+}
+
+.logout{
+margin-top:30px;
+}
+
+button{
+width:100%;
+background:#e74c3c;
+border:none;
+color:white;
+padding:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#c0392b;
+}
