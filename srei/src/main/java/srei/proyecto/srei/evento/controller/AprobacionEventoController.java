@@ -1,6 +1,10 @@
 package srei.proyecto.srei.evento.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,5 +44,17 @@ public class AprobacionEventoController {
     public ResponseEntity<?> listarRechazados(){
         return ResponseEntity.ok(eventoService.listarRechazados());
     }
+
+    @GetMapping("/dashboard")
+public ResponseEntity<?> dashboard() {
+
+   Map<String,Object> data = new HashMap<>();
+
+data.put("pendientes",eventoService.contarPendientes());
+data.put("aprobados",eventoService.contarAprobados());
+data.put("rechazados",eventoService.contarRechazados());
+
+return ResponseEntity.ok(data);
+}
 
 }
