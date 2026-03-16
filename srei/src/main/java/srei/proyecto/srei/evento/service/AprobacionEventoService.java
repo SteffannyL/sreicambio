@@ -20,16 +20,12 @@ public class AprobacionEventoService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    /**
-     * Aprobar o rechazar evento (COORDINADOR)
-     */
+    // aprobar o rechazar evento
     @Transactional
     public void aprobarEvento(AprobarEventoDTO dto) {
 
-        // Obtener autenticación actual
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Verificar rol desde Spring Security
         boolean esCoordinador = auth.getAuthorities()
                 .stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_COORDINADOR"));
@@ -38,7 +34,6 @@ public class AprobacionEventoService {
             throw new RuntimeException("No autorizado");
         }
 
-        // Obtener id usuario desde RLS
         Long idUsuario = Long.parseLong(
                 jdbcTemplate.queryForObject(
                         "SELECT current_setting('app.currentuserid')",
@@ -46,7 +41,6 @@ public class AprobacionEventoService {
                 )
         );
 
-        // Ejecutar Stored Procedure
         jdbcTemplate.execute(
                 "CALL sp_aprobar_evento(?, ?, ?, ?)",
                 (CallableStatementCallback<Void>) cs -> {
@@ -60,31 +54,80 @@ public class AprobacionEventoService {
         );
     }
 
-    /**
-     * Listar eventos pendientes para coordinador
-     */
+    // eventos pendientes
     @Transactional
     public List<EventoPendienteDTO> listarPendientes() {
 
         String sql = """
-            SELECT e.idevento,
-                   e.nombreevento,
-                   e.descripcion,
-                   e.fechainicio
-            FROM evento e
-            LEFT JOIN aprobacionevento ae ON ae.idevento = e.idevento
-            LEFT JOIN estadoaprobacionevento ea
-                   ON ea.idestadoaprobacionevento = ae.idestadoaprobacionevento
-            WHERE ea.nombre IS NULL
-               OR ea.nombre = 'pendiente'
+            SELECT idevento,
+                   nombreevento,
+                   descripcion,
+                   fechainicio
+            FROM evento
+            WHERE estadoactual='PENDIENTE'
+            ORDER BY fechacreacion DESC
         """;
 
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
+        return jdbcTemplate.query(sql, (rs,rowNum) ->
                 new EventoPendienteDTO(
                         rs.getLong("idevento"),
                         rs.getString("nombreevento"),
                         rs.getString("descripcion"),
-                        rs.getDate("fechainicio").toLocalDate()
+                        rs.getTimestamp("fechainicio")
+                                .toLocalDateTime()
+                                .toLocalDate()
+                )
+        );
+    }
+
+    // eventos aprobados
+    @Transactional
+    public List<EventoPendienteDTO> listarAprobados() {
+
+        String sql = """
+            SELECT idevento,
+                   nombreevento,
+                   descripcion,
+                   fechainicio
+            FROM evento
+            WHERE estadoactual='APROBADO'
+            ORDER BY fechacreacion DESC
+        """;
+
+        return jdbcTemplate.query(sql, (rs,rowNum) ->
+                new EventoPendienteDTO(
+                        rs.getLong("idevento"),
+                        rs.getString("nombreevento"),
+                        rs.getString("descripcion"),
+                        rs.getTimestamp("fechainicio")
+                                .toLocalDateTime()
+                                .toLocalDate()
+                )
+        );
+    }
+
+    // eventos rechazados
+    @Transactional
+    public List<EventoPendienteDTO> listarRechazados() {
+
+        String sql = """
+            SELECT idevento,
+                   nombreevento,
+                   descripcion,
+                   fechainicio
+            FROM evento
+            WHERE estadoactual='RECHAZADO'
+            ORDER BY fechacreacion DESC
+        """;
+
+        return jdbcTemplate.query(sql, (rs,rowNum) ->
+                new EventoPendienteDTO(
+                        rs.getLong("idevento"),
+                        rs.getString("nombreevento"),
+                        rs.getString("descripcion"),
+                        rs.getTimestamp("fechainicio")
+                                .toLocalDateTime()
+                                .toLocalDate()
                 )
         );
     }

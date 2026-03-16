@@ -54,14 +54,31 @@ export const routes: Routes = [
     ]
   },
 
-  /* ================= COORDINADOR ================= */
+ /* ================= COORDINADOR ================= */
 
-  {
-    path: 'coordinador/aprobar-eventos',
-    loadComponent: () =>
-      import('./modules/coordinador/aprobar-eventos/aprobar-eventos')
-        .then(m => m.AprobarEventosComponent)
-  },
+{
+  path: 'coordinador',
+  canActivate: [authGuard],
+  children: [
+
+    { path: '', redirectTo: 'aprobar-eventos', pathMatch: 'full' },
+
+    {
+      path: 'dashboard',
+      loadComponent: () =>
+        import('./modules/coordinador/dashboard/dashboard-coordinador.component')
+          .then(m => m.DashboardCoordinadorComponent)
+    },
+
+    {
+      path: 'aprobar-eventos',
+      loadComponent: () =>
+        import('./modules/coordinador/aprobar-eventos/aprobar-eventos')
+          .then(m => m.AprobarEventosComponent)
+    }
+
+  ]
+},
 
   /* ================= ADMIN ================= */
 

@@ -1,0 +1,60 @@
+.contenedor{
+padding:30px;
+}
+
+.card-evento{
+
+background:hsl(0, 0%, 100%);
+border-radius:10px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+
+}
+
+.fecha{
+
+color:#777;
+font-size:14px;
+
+}
+
+textarea{
+
+width:100%;
+margin-top:10px;
+padding:10px;
+border-radius:6px;
+border:1px solid #ccc;
+
+}
+
+.botones{
+
+margin-top:15px;
+display:flex;
+gap:10px;
+
+}
+
+.btn-aprobar{
+
+background:#1f7a3f;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+.btn-rechazar{
+
+background:#c49a2c;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+
+}

@@ -10,7 +10,11 @@ import java.time.LocalDate;
 public class EventoPendienteDTO {
 
     private Long idevento;
+
     private String nombreevento;
+
     private String descripcion;
+
     private LocalDate fechainicio;
+
 }

@@ -20,37 +20,58 @@ export class AprobarEventosComponent implements OnInit {
   }
 
   cargarEventos() {
-    this.service.listarPendientes().subscribe(data => {
-
-      // 🔥 Agregamos propiedad comentario a cada evento
-      this.eventos = data.map(e => ({
-        ...e,
-        comentario: ''
-      }));
-
+    this.service.listarPendientes().subscribe({
+      next: (res) => {
+        this.eventos = res;
+      },
+      error: (err) => {
+        console.error('Error cargando eventos', err);
+      }
     });
   }
 
   aprobar(evento: any) {
-    this.service.aprobarEvento({
+
+    const data = {
       idevento: evento.idevento,
       estado: 'aprobado',
-      comentario: evento.comentario
-    }).subscribe(() => {
-      alert('Evento aprobado');
+      comentario: evento.comentario || ''
+    };
+
+    this.service.aprobarEvento(data).subscribe(() => {
+
+      alert('Evento aprobado correctamente');
+
       this.cargarEventos();
+
     });
+
   }
 
   rechazar(evento: any) {
-    this.service.aprobarEvento({
+
+    if (!evento.comentario || evento.comentario.trim() === '') {
+
+      alert('Debes escribir un comentario para rechazar');
+
+      return;
+
+    }
+
+    const data = {
       idevento: evento.idevento,
       estado: 'rechazado',
       comentario: evento.comentario
-    }).subscribe(() => {
+    };
+
+    this.service.aprobarEvento(data).subscribe(() => {
+
       alert('Evento rechazado');
+
       this.cargarEventos();
+
     });
+
   }
 
 }

@@ -69,8 +69,8 @@ public class SecurityConfig {
                  .requestMatchers("/api/docente/**").hasRole("DOCENTE")
 
                      // COORDINADOR
-                 .requestMatchers("/api/coordinador/**")
-                  .hasAnyRole("ADMIN", "COORDINADOR")
+                .requestMatchers("/api/coordinador/**").permitAll()
+
 
                      // DECANO
                   .requestMatchers("/api/decano/**")

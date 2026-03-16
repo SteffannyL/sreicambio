@@ -22,6 +22,7 @@ export class AprobacionEventoService {
   }
 
   listarPendientes(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:8080/api/coordinador/eventos-pendientes');
+    return this.http.get<any[]>(`${this.apiUrl}/eventos-pendientes`);
   }
+
 }
