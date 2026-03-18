@@ -34,53 +34,59 @@ export class LoginComponent {
     private sessionMonitor: SessionMonitorService
   ) {}
 
- login(): void {
+  login(): void {
 
-  this.error = '';
-  this.loading = true;
+    this.error = '';
+    this.loading = true;
 
-  this.authService.login(this.credentials).subscribe({
+    this.authService.login(this.credentials).subscribe({
 
-    next: (res: LoginResponse) => {
+      next: (res: LoginResponse) => {
 
-      console.log('Login exitoso:', res);
+        console.log('Login exitoso:', res);
 
-      this.loading = false;
+        this.loading = false;
 
-      // Iniciar monitoreo de sesión
-      this.sessionMonitor.iniciarMonitoreo();
+        /* GUARDAR DATOS EN LOCALSTORAGE */
 
-      // Redirección según rol
-      switch (res.rol) {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('rol', res.rol);
+        localStorage.setItem('idusuario', res.idusuario.toString());
 
-        case 'ADMIN':
-          this.router.navigateByUrl('/admin/dashboard', { replaceUrl: true });
-          break;
+       localStorage.setItem('nombre', res.nombres);
+localStorage.setItem('correo', this.credentials.correo);
 
-        case 'DOCENTE':
-          this.router.navigateByUrl('/docente/dashboard', { replaceUrl: true });
-          break;
+        // redirección por rol
+        switch (res.rol) {
 
-        case 'COORDINADOR':
-          this.router.navigateByUrl('/coordinador/dashboard', { replaceUrl: true });
-          break;
+          case 'ADMIN':
+            this.router.navigateByUrl('/admin/dashboard', { replaceUrl: true });
+            break;
 
-        default:
-          this.router.navigateByUrl('/', { replaceUrl: true });
+          case 'DOCENTE':
+            this.router.navigateByUrl('/docente/dashboard', { replaceUrl: true });
+            break;
+
+          case 'COORDINADOR':
+            this.router.navigateByUrl('/coordinador/dashboard', { replaceUrl: true });
+            break;
+
+          default:
+            this.router.navigateByUrl('/', { replaceUrl: true });
+        }
+
+      },
+
+      error: (err) => {
+
+        console.error('Error login:', err);
+
+        this.error = err.error?.message || 'Credenciales inválidas';
+        this.loading = false;
+
       }
 
-    },
+    });
 
-    error: (err) => {
-
-      console.error('Error login:', err);
-
-      this.error = err.error?.message || 'Credenciales inválidas';
-      this.loading = false;
-
-    }
-
-  });
-
-}
+  }
 }

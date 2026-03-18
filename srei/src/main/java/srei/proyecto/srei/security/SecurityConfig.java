@@ -54,30 +54,31 @@ public class SecurityConfig {
             .httpBasic(httpBasic -> httpBasic.disable())
             .formLogin(form -> form.disable())
 
-                .authorizeHttpRequests(auth -> auth
+            .authorizeHttpRequests(auth -> auth
 
-              .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                 // PUBLICOS
-                  .requestMatchers("/api/auth/**").permitAll()
-                 .requestMatchers("/api/sesiones/validar/**").permitAll()
+                //Para ver el pdf
+                .requestMatchers("/uploads/**").permitAll()
 
-                 // ADMIN
-                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // PUBLICOS
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/sesiones/validar/**").permitAll()
 
-                   // DOCENTE
-                 .requestMatchers("/api/docente/**").hasRole("DOCENTE")
+                // ADMIN
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                     // COORDINADOR
-                .requestMatchers("/api/coordinador/**").permitAll()
+                // DOCENTE
+                .requestMatchers("/api/docente/**").authenticated()
 
+                // COORDINADOR
+                .requestMatchers("/api/coordinador/**").hasRole("COORDINADOR")
 
-                     // DECANO
-                  .requestMatchers("/api/decano/**")
-                    .hasRole("DECANO")
+                // DECANO
+                .requestMatchers("/api/decano/**").hasRole("DECANO")
 
-                 .anyRequest().authenticated()
-)
+                .anyRequest().authenticated()
+            )
 
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

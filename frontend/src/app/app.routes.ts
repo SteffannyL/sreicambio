@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { DocenteComponent } from './features/docente/docente.component';
-import { DocenteDashboardComponent } from './features/docente/dashboard/docente-dashboard.component';
 
 export const routes: Routes = [
 
@@ -34,13 +33,15 @@ export const routes: Routes = [
 
       {
         path: 'dashboard',
-        component: DocenteDashboardComponent
+        loadComponent: () =>
+          import('./features/docente/dashboard/docente-dashboard.component')
+            .then(m => m.DocenteDashboardComponent)
       },
 
       {
         path: 'crear-evento',
         loadComponent: () =>
-          import('./modules/eventos/crear-evento')
+          import('./features/docente/crear-evento/crear-evento.component')
             .then(m => m.CrearEventoComponent)
       },
 
@@ -49,36 +50,44 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/docente/mis-eventos/mis-eventos.component')
             .then(m => m.MisEventosComponent)
+      },
+
+      // 🔥 NUEVA RUTA DETALLE EVENTO
+      {
+        path: 'evento/:id',
+        loadComponent: () =>
+          import('./features/docente/detalle-evento/detalle-evento.component')
+            .then(m => m.DetalleEventoComponent)
       }
 
     ]
   },
 
- /* ================= COORDINADOR ================= */
+  /* ================= COORDINADOR ================= */
 
-{
-  path: 'coordinador',
-  canActivate: [authGuard],
-  children: [
+  {
+    path: 'coordinador',
+    canActivate: [authGuard],
+    children: [
 
-    { path: '', redirectTo: 'aprobar-eventos', pathMatch: 'full' },
+      { path: '', redirectTo: 'aprobar-eventos', pathMatch: 'full' },
 
-    {
-      path: 'dashboard',
-      loadComponent: () =>
-        import('./modules/coordinador/dashboard/dashboard-coordinador.component')
-          .then(m => m.DashboardCoordinadorComponent)
-    },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./modules/coordinador/dashboard/dashboard-coordinador.component')
+            .then(m => m.DashboardCoordinadorComponent)
+      },
 
-    {
-      path: 'aprobar-eventos',
-      loadComponent: () =>
-        import('./modules/coordinador/aprobar-eventos/aprobar-eventos')
-          .then(m => m.AprobarEventosComponent)
-    }
+      {
+        path: 'aprobar-eventos',
+        loadComponent: () =>
+          import('./modules/coordinador/aprobar-eventos/aprobar-eventos')
+            .then(m => m.AprobarEventosComponent)
+      }
 
-  ]
-},
+    ]
+  },
 
   /* ================= ADMIN ================= */
 

@@ -1,3 +1,146 @@
-h2{
-margin-bottom:20px;
+/* TÍTULO */
+h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* CARDS */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-left: 6px solid #007bff;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.card h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #555;
+}
+
+.card p {
+  font-size: 28px;
+  font-weight: bold;
+  color: #222;
+}
+
+/* COLORES POR ESTADO */
+.card:nth-child(1) {
+  border-left-color: #007bff; /* total */
+}
+
+.card:nth-child(2) {
+  border-left-color: #28a745; /* aprobado */
+}
+
+.card:nth-child(3) {
+  border-left-color: #ffc107; /* pendiente */
+}
+
+.card:nth-child(4) {
+  border-left-color: #dc3545; /* rechazado */
+}
+
+/* GRÁFICO */
+.graficos {
+  margin-bottom: 30px;
+}
+
+.grafico {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.grafico h3 {
+  margin-bottom: 15px;
+}
+
+/* ÚLTIMOS EVENTOS */
+.ultimos-eventos {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.ultimos-eventos h3 {
+  margin-bottom: 15px;
+}
+
+.ultimos-eventos ul {
+  list-style: none;
+  padding: 0;
+}
+
+.ultimos-eventos li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.ultimos-eventos li:last-child {
+  border-bottom: none;
+}
+
+.ultimos-eventos strong {
+  color: #333;
+}
+
+.ultimos-eventos span {
+  font-weight: bold;
+}
+
+/* BOTÓN */
+button {
+  padding: 10px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.usuario-card {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.usuario-card h3 {
+  margin: 0;
+}
+
+.usuario-card p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.usuario-card span {
+  font-size: 12px;
+  opacity: 0.8;
 }

@@ -1,0 +1,154 @@
+<div class="form-container">
+
+<h2>Crear Evento</h2>
+
+<form (ngSubmit)="crearEvento()" #formEvento="ngForm">
+
+<!-- Ámbito -->
+
+<label>Ámbito</label>
+
+<select
+[(ngModel)]="evento.idambito"
+name="idambito"
+required>
+
+<option [ngValue]="0">Seleccione</option>
+
+<option *ngFor="let a of ambitos" [ngValue]="a.idambito">
+{{ a.nombre }}
+</option>
+
+</select>
+
+
+<!-- Tipo de evento -->
+
+<label>Tipo de evento</label>
+
+<select
+[(ngModel)]="evento.idtipoevento"
+name="idtipoevento"
+required>
+
+<option [ngValue]="0">Seleccione</option>
+
+<option *ngFor="let t of tiposEvento" [ngValue]="t.idtipoevento">
+{{ t.nombre }}
+</option>
+
+</select>
+
+
+<!-- Nombre -->
+
+<label>Nombre del evento</label>
+
+<input
+type="text"
+[(ngModel)]="evento.nombreevento"
+name="nombreevento"
+required>
+
+
+<!-- Descripción -->
+
+<label>Descripción</label>
+
+<textarea
+[(ngModel)]="evento.descripcion"
+name="descripcion"
+required>
+</textarea>
+
+
+<!-- Fecha inicio -->
+
+<label>Fecha inicio</label>
+
+<input
+type="datetime-local"
+[(ngModel)]="evento.fechainicio"
+name="fechainicio"
+[min]="fechaActual"
+required>
+
+
+<!-- Fecha fin -->
+
+<label>Fecha fin</label>
+
+<input
+type="datetime-local"
+[(ngModel)]="evento.fechafin"
+name="fechafin"
+[min]="evento.fechainicio || fechaActual"
+required>
+
+
+<!-- Lugar -->
+
+<label>Lugar</label>
+
+<input
+type="text"
+[(ngModel)]="evento.lugar"
+name="lugar"
+required>
+
+
+<!-- Aforo -->
+
+<label>Aforo</label>
+
+<input
+type="number"
+[(ngModel)]="evento.aforo"
+name="aforo"
+min="1"
+step="1"
+required>
+
+
+<!-- 🔥 NUEVO: IMAGEN -->
+
+<label>Imagen del evento</label>
+
+<input
+type="file"
+accept="image/*"
+(change)="onImagenSeleccionada($event)">
+
+
+<!-- 🔥 NUEVO: PDF -->
+
+<label>Documento PDF</label>
+
+<input
+type="file"
+accept="application/pdf"
+(change)="onPdfSeleccionado($event)">
+
+
+<!-- Botones -->
+
+<div class="botones">
+
+<button
+type="submit"
+class="btn-guardar">
+
+Crear Evento
+
+</button>
+
+</div>
+
+
+<p class="mensaje" *ngIf="mensaje">
+{{mensaje}}
+</p>
+
+</form>
+
+</div>
