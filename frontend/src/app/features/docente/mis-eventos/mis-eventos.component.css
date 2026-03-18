@@ -1,21 +1,23 @@
-.estado{
-padding:4px 10px;
-border-radius:6px;
-font-size:12px;
-font-weight:bold;
+.contenedor{
+    padding:20px;
 }
 
-.pendiente{
-background:#fef3c7;
-color:#92400e;
+.tabla{
+    width:100%;
+    border-collapse: collapse;
 }
 
-.aprobado{
-background:#d1fae5;
-color:#065f46;
+.tabla th{
+    background:#1e293b;
+    color:white;
+    padding:10px;
 }
 
-.rechazado{
-background:#fee2e2;
-color:#991b1b;
+.tabla td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+
+h2{
+    margin-bottom:20px;
 }

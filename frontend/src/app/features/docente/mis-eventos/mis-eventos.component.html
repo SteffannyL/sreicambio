@@ -1,72 +1,56 @@
-<div class="form-container">
+<div class="contenedor">
 
   <h2>Mis Eventos</h2>
 
-  <p *ngIf="error" style="color:red;">
-    {{error}}
-  </p>
+  <div *ngIf="cargando">
+    Cargando eventos...
+  </div>
 
-  <table *ngIf="eventos.length > 0">
+  <table *ngIf="!cargando && eventos.length > 0" class="tabla">
 
     <thead>
       <tr>
-        <th>Nombre</th>
-        <th>Fecha inicio</th>
-        <th>Fecha fin</th>
+        <th>ID</th>
+        <th>Evento</th>
+        <th>Fecha Inicio</th>
+        <th>Fecha Fin</th>
         <th>Lugar</th>
         <th>Aforo</th>
         <th>Estado</th>
-        <th>Estado</th>
-        <th>Acciones</th>
+        <th>Acciones</th> <!-- 👈 NUEVO -->
       </tr>
     </thead>
 
     <tbody>
+      <tr *ngFor="let evento of eventos">
 
-      <tr *ngFor="let e of eventos">
+        <td>{{ evento.idevento }}</td>
 
-        <td>{{e.nombreevento}}</td>
-        <td>{{e.fechainicio}}</td>
-        <td>{{e.fechafin}}</td>
-        <td>{{e.lugar}}</td>
-        <td>{{e.aforo}}</td>
+        <td>{{ evento.nombreevento }}</td>
 
-        <td>
+        <td>{{ evento.fechainicio }}</td>
 
-          <span *ngIf="e.estado === 'PENDIENTE'" class="estado pendiente">
-            Pendiente
-            </span>
+        <td>{{ evento.fechafin }}</td>
 
-            <span *ngIf="e.estado === 'APROBADO'" class="estado aprobado">
-            probado
-            </span>
+        <td>{{ evento.lugar }}</td>
 
-          <span *ngIf="e.estado === 'RECHAZADO'" class="estado rechazado">
-            Rechazado
-          </span>
+        <td>{{ evento.aforo }}</td>
 
-        </td>
+        <td>{{ evento.estado }}</td>
 
         <td>
-
-          <button class="btn-editar">
-            Editar
-          </button>
-
-          <button class="btn-eliminar">
-            Eliminar
-          </button>
-
+         <button (click)="verDetalle(evento)">
+  Ver detalles
+</button>
         </td>
 
       </tr>
-
     </tbody>
 
   </table>
 
-  <p *ngIf="eventos.length === 0 && !error">
-    No tienes eventos registrados.
-  </p>
+  <div *ngIf="!cargando && eventos.length === 0">
+    No tienes eventos registrados
+  </div>
 
 </div>

@@ -54,33 +54,35 @@ public class SecurityConfig {
             .httpBasic(httpBasic -> httpBasic.disable())
             .formLogin(form -> form.disable())
 
-                .authorizeHttpRequests(auth -> auth
+            .authorizeHttpRequests(auth -> auth
 
-              .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                 // PUBLICOS
-                  .requestMatchers("/api/auth/**").permitAll()
-                 .requestMatchers("/api/sesiones/validar/**").permitAll()
+                // 📂 archivos
+                .requestMatchers("/uploads/**").permitAll()
 
-                // Juegos
-                 .requestMatchers("/api/juegos/**").permitAll()
-                 .requestMatchers("/juegos/**").permitAll()
-                 // ADMIN
-                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // 🔓 públicos
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/sesiones/validar/**").permitAll()
 
-                   // DOCENTE
-                 .requestMatchers("/api/docente/**").hasRole("DOCENTE")
+                // 🎮 IA / juegos
+                .requestMatchers("/api/juegos/**").permitAll()
+                .requestMatchers("/juegos/**").permitAll()
 
-                     // COORDINADOR
-                .requestMatchers("/api/coordinador/**").permitAll()
+                // 🔐 ADMIN
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
+                // 👨‍🏫 DOCENTE
+                .requestMatchers("/api/docente/**").authenticated()
 
-                     // DECANO
-                  .requestMatchers("/api/decano/**")
-                    .hasRole("DECANO")
+                // 👨‍💼 COORDINADOR
+                .requestMatchers("/api/coordinador/**").hasRole("COORDINADOR")
 
-                 .anyRequest().authenticated()
-)
+                // 🎓 DECANO
+                .requestMatchers("/api/decano/**").hasRole("DECANO")
+
+                .anyRequest().authenticated()
+            )
 
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

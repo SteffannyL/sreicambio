@@ -1,0 +1,48 @@
+<div class="contenedor">
+
+  <h2>Detalle del Evento</h2>
+
+  <button (click)="volver()">⬅ Volver</button>
+
+  <div *ngIf="cargando">
+    Cargando...
+  </div>
+
+  <div *ngIf="!cargando && evento">
+
+    <p><strong>Nombre:</strong> {{ evento.nombreevento }}</p>
+
+    <p><strong>Descripción:</strong></p>
+    <p>{{ evento.descripcion }}</p>
+
+    <p><strong>Fecha inicio:</strong> {{ evento.fechainicio }}</p>
+    <p><strong>Fecha fin:</strong> {{ evento.fechafin }}</p>
+
+    <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+    <p><strong>Aforo:</strong> {{ evento.aforo }}</p>
+
+    <p><strong>Estado:</strong> {{ evento.estado }}</p>
+
+    <hr>
+
+    <!-- IMAGEN -->
+    <div *ngIf="evento.url_imagen">
+      <h3>Imagen del evento</h3>
+      <img [src]="'http://localhost:8080/' + evento.url_imagen" width="300">
+    </div>
+
+    <!-- PDF -->
+    <div *ngIf="evento.url_pdf">
+      <h3>Documento PDF</h3>
+      <a [href]="'http://localhost:8080/' + evento.url_pdf" target="_blank">
+        Ver PDF
+      </a>
+    </div>
+
+  </div>
+
+  <div *ngIf="!cargando && !evento">
+    No se encontró el evento
+  </div>
+
+</div>

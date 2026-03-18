@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 public class EventoService {
 
@@ -29,7 +29,7 @@ public class EventoService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         return jdbcTemplate.execute(
-                "CALL sp_crear_evento_docente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+         "{ call sp_crear_evento_docente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }",
                 (CallableStatementCallback<Map<String, Object>>) cs -> {
 
                     cs.setLong(1, usuario.getIdusuario());

@@ -2,14 +2,13 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 
 import { DocenteComponent } from './features/docente/docente.component';
-import { DocenteDashboardComponent } from './features/docente/dashboard/docente-dashboard.component';
 import { CoordinadorComponent } from './features/coordinador/coordinador.component';
 
 export const routes: Routes = [
 
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
 
-  /* ================= AUTH ================= */
+  /* AUTH */
 
   {
     path: 'auth',
@@ -18,7 +17,7 @@ export const routes: Routes = [
         .then(m => m.AuthRoutes)
   },
 
-  /* ================= DASHBOARD GENERAL ================= */
+  /* DASHBOARD GENERAL */
 
   {
     path: 'dashboard',
@@ -28,7 +27,7 @@ export const routes: Routes = [
         .then(m => m.DashboardComponent)
   },
 
-  /* ================= DOCENTE ================= */
+  /* DOCENTE */
 
   {
     path: 'docente',
@@ -40,13 +39,15 @@ export const routes: Routes = [
 
       {
         path: 'dashboard',
-        component: DocenteDashboardComponent
+        loadComponent: () =>
+          import('./features/docente/dashboard/docente-dashboard.component')
+            .then(m => m.DocenteDashboardComponent)
       },
 
       {
         path: 'crear-evento',
         loadComponent: () =>
-          import('./modules/eventos/crear-evento')
+          import('./features/docente/crear-evento/crear-evento.component')
             .then(m => m.CrearEventoComponent)
       },
 
@@ -56,15 +57,27 @@ export const routes: Routes = [
           import('./features/docente/mis-eventos/mis-eventos.component')
             .then(m => m.MisEventosComponent)
       },
+
+      /* IA */
       {
-  path: 'ia/generar-juego',
-  loadComponent: () => import('./modules/ia/generar-juego').then(m => m.GenerarJuegoComponent)
-}
+        path: 'ia/generar-juego',
+        loadComponent: () =>
+          import('./modules/ia/generar-juego')
+            .then(m => m.GenerarJuegoComponent)
+      },
+
+      /* DETALLE EVENTO */
+      {
+        path: 'evento/:id',
+        loadComponent: () =>
+          import('./features/docente/detalle-evento/detalle-evento.component')
+            .then(m => m.DetalleEventoComponent)
+      }
 
     ]
   },
 
-  /* ================= COORDINADOR ================= */
+  /* COORDINADOR */
 
   {
     path: 'coordinador',
@@ -91,7 +104,7 @@ export const routes: Routes = [
     ]
   },
 
-  /* ================= ADMIN ================= */
+  /* ADMIN */
 
   {
     path: 'admin',
@@ -131,12 +144,13 @@ export const routes: Routes = [
           import('./features/administrador/sesiones/sesiones')
             .then(m => m.SesionesComponent)
       },
-       {
-      path: 'backups',
-      loadComponent: () =>
-        import('./features/administrador/backups/backups.component')
-          .then(m => m.BackupsComponent)
-    }
+
+      {
+        path: 'backups',
+        loadComponent: () =>
+          import('./features/administrador/backups/backups.component')
+            .then(m => m.BackupsComponent)
+      }
 
     ]
   },
