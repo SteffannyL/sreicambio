@@ -62,6 +62,9 @@ public class SecurityConfig {
                   .requestMatchers("/api/auth/**").permitAll()
                  .requestMatchers("/api/sesiones/validar/**").permitAll()
 
+                // Juegos
+                 .requestMatchers("/api/juegos/**").permitAll()
+                 .requestMatchers("/juegos/**").permitAll()
                  // ADMIN
                  .requestMatchers("/api/admin/**").hasRole("ADMIN")
 

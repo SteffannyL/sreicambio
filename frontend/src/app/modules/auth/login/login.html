@@ -7,6 +7,7 @@
 
     <form (ngSubmit)="login()">
 
+      <!-- CORREO -->
       <div class="campo">
 
         <label>Correo</label>
@@ -25,6 +26,7 @@
 
       </div>
 
+      <!-- CONTRASEÑA -->
       <div class="campo">
 
         <label>Contraseña</label>
@@ -43,15 +45,31 @@
 
       </div>
 
+      <!-- BOTÓN LOGIN -->
       <button type="submit" class="btn-login" [disabled]="loading">
         {{ loading ? 'Ingresando...' : 'Iniciar Sesión' }}
       </button>
 
+      <!-- ERROR -->
       <p class="error" *ngIf="error">
         {{ error }}
       </p>
 
     </form>
+
+    <!-- 🔥 REGISTRO (FUERA DEL FORM) -->
+    <div class="registro-link">
+
+      <p>¿No tienes cuenta?</p>
+
+      <button
+        type="button"
+        routerLink="/auth/register"
+        class="btn-register">
+        Crear cuenta
+      </button>
+
+    </div>
 
   </div>
 

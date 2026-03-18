@@ -1,6 +1,20 @@
 <div class="container">
 
-<h2>Gestión de Eventos</h2>
+<h2>
+  Gestión de Eventos - {{ estadoSeleccionado }}
+</h2>
+<!-- 🔥 REPORTES -->
+<div style="margin-bottom:15px;">
+  <select [(ngModel)]="estadoSeleccionado">
+    <option value="PENDIENTE">Pendientes</option>
+    <option value="APROBADO">Aprobados</option>
+    <option value="RECHAZADO">Rechazados</option>
+  </select>
+
+  <button (click)="cargarReporte()">Ver Reporte</button>
+  <button (click)="generarPDF()">PDF</button>
+  <button (click)="exportarExcel()">Excel</button>
+</div>
 
 <div *ngIf="cargando" class="loading">
 Cargando eventos...
@@ -15,6 +29,7 @@ Cargando eventos...
 <th>ID</th>
 <th>Evento</th>
 <th>Descripción</th>
+<th>Docente</th>
 <th>Fecha</th>
 <th>Acciones</th>
 </tr>
@@ -27,30 +42,35 @@ Cargando eventos...
 <td>{{e.idevento}}</td>
 <td class="evento">{{e.nombreevento}}</td>
 <td>{{e.descripcion}}</td>
+<td>{{e.nombreDocente || '-'}}</td>
 <td>{{e.fechainicio}}</td>
 
-<td class="acciones">
+<td class="acciones" *ngIf="estadoSeleccionado === 'PENDIENTE'">
 
-<button
-class="btn aprobar"
-[disabled]="procesando"
-(click)="aprobarEvento(e.idevento)">
-✔ Aprobar
-</button>
+  <button
+    class="btn aprobar"
+    [disabled]="procesando"
+    (click)="aprobarEvento(e.idevento)">
+    ✔ Aprobar
+  </button>
 
-<button
-class="btn rechazar"
-[disabled]="procesando"
-(click)="abrirModalRechazo(e.idevento)">
-✖ Rechazar
-</button>
+  <button
+    class="btn rechazar"
+    [disabled]="procesando"
+    (click)="abrirModalRechazo(e.idevento)">
+    ✖ Rechazar
+  </button>
 
+</td>
+
+<!-- 🔥 cuando NO es pendiente -->
+<td *ngIf="estadoSeleccionado !== 'PENDIENTE'">
 </td>
 
 </tr>
 
 <tr *ngIf="eventos.length===0">
-<td colspan="5" class="vacio">No hay eventos pendientes</td>
+<td colspan="6" class="vacio">No hay eventos</td>
 </tr>
 
 </tbody>
@@ -60,7 +80,6 @@ class="btn rechazar"
 </div>
 
 </div>
-
 
 <!-- MODAL RECHAZO -->
 

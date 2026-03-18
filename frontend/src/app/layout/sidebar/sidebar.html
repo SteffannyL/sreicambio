@@ -35,6 +35,11 @@ Mis Eventos
 </a>
 </li>
 
+<li *ngIf="rol === 'DOCENTE'">
+  <a routerLink="/docente/ia/generar-juego">
+    🎮 Generar Quiz IA
+  </a>
+</li>
 
 <!-- COORDINADOR -->
 
@@ -78,7 +83,11 @@ Usuarios
 Sesiones
 </a>
 </li>
-
+<li *ngIf="rol === 'ADMIN'">
+<a routerLink="/admin/backups">
+Backups
+</a>
+</li>
 
 <!-- LOGOUT -->
 

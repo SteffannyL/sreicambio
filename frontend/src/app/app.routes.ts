@@ -55,7 +55,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/docente/mis-eventos/mis-eventos.component')
             .then(m => m.MisEventosComponent)
-      }
+      },
+      {
+  path: 'ia/generar-juego',
+  loadComponent: () => import('./modules/ia/generar-juego').then(m => m.GenerarJuegoComponent)
+}
 
     ]
   },
@@ -126,7 +130,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/administrador/sesiones/sesiones')
             .then(m => m.SesionesComponent)
-      }
+      },
+       {
+      path: 'backups',
+      loadComponent: () =>
+        import('./features/administrador/backups/backups.component')
+          .then(m => m.BackupsComponent)
+    }
 
     ]
   },

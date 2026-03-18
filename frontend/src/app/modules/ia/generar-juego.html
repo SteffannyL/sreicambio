@@ -1,0 +1,52 @@
+<div class="contenedor">
+
+<h2>Generador de Juegos con IA</h2>
+
+<label>Modelo de IA</label>
+
+<select [(ngModel)]="modeloSeleccionado">
+<option *ngFor="let m of modelos" [value]="m">
+{{m}}
+</option>
+</select>
+
+<textarea
+[(ngModel)]="prompt"
+placeholder="Describe el juego que quieres generar..."
+rows="5"
+></textarea>
+
+<button (click)="generar()">
+Generar Juego
+</button>
+
+<div *ngIf="cargando">
+Generando juego...
+</div>
+
+<div *ngIf="urlJuego" class="resultado">
+
+<p><strong>Juego generado:</strong></p>
+
+<input
+type="text"
+[value]="urlJuego"
+readonly
+style="width:100%; padding:8px;"
+>
+
+<br><br>
+
+<button (click)="copiarLink()">
+Copiar link
+</button>
+
+<br><br>
+
+<a [href]="urlJuego" target="_blank">
+Abrir juego
+</a>
+
+</div>
+
+</div>

@@ -1,0 +1,27 @@
+.contenedor{
+
+max-width:600px;
+margin:auto;
+padding:30px;
+
+}
+
+textarea{
+
+width:100%;
+padding:10px;
+margin-top:10px;
+
+}
+
+button{
+
+margin-top:15px;
+padding:10px 20px;
+background:#2c5a2c;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+
+}
