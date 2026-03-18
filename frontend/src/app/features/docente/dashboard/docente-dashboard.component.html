@@ -1,31 +1,63 @@
+<div class="usuario-card">
+  <div class="info">
+    <h3>{{ nombreDocente }}</h3>
+    <p>{{ correoDocente }}</p>
+    <span>{{ rolDocente }}</span>
+  </div>
+</div>
 <h2>Dashboard Docente</h2>
 
 <div class="cards">
 
   <div class="card">
     <h3>Total Eventos</h3>
-    <p>{{totalEventos}}</p>
+    <p>{{ totalEventos }}</p>
   </div>
 
   <div class="card">
     <h3>Eventos Aprobados</h3>
-    <p>{{eventosAprobados}}</p>
+    <p>{{ eventosAprobados }}</p>
   </div>
 
   <div class="card">
     <h3>Eventos Pendientes</h3>
-    <p>{{eventosPendientes}}</p>
+    <p>{{ eventosPendientes }}</p>
+  </div>
+
+  <div class="card">
+    <h3>Eventos Rechazados</h3>
+    <p>{{ eventosRechazados }}</p>
   </div>
 
 </div>
 
+<!-- GRÁFICO -->
 <div class="graficos">
-
   <div class="grafico">
-    <h3>Resumen</h3>
-    <p>Aquí se mostrarán estadísticas del docente.</p>
+    <h3>Resumen de eventos</h3>
+    <div style="width: 300px; margin: auto;">
+      <canvas id="graficoEventos"></canvas>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<!-- ÚLTIMOS EVENTOS -->
+<div class="ultimos-eventos">
+  <h3>Últimos eventos</h3>
+
+  <div *ngIf="ultimosEventos.length === 0">
+    <p>No tienes eventos registrados.</p>
   </div>
 
+  <ul *ngIf="ultimosEventos.length > 0">
+    <li *ngFor="let evento of ultimosEventos">
+      <strong>{{ evento.nombreevento }}</strong><br>
+      <small>{{ evento.fechainicio | date:'shortDate' }}</small><br>
+      <span>{{ evento.estado }}</span>
+    </li>
+  </ul>
 </div>
 
 <br>

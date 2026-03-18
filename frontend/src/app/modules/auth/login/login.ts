@@ -47,33 +47,40 @@ export class LoginComponent {
 
         this.loading = false;
 
-        // iniciar monitoreo de sesión
+        /* GUARDAR DATOS EN LOCALSTORAGE */
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('rol', res.rol);
+        localStorage.setItem('idusuario', res.idusuario.toString());
+        localStorage.setItem('nombre', res.nombres);
+        localStorage.setItem('correo', this.credentials.correo);
+
+        // 🔥 IMPORTANTE: mantener monitoreo de sesión
         this.sessionMonitor.iniciarMonitoreo();
 
-        // redirigir según rol
-        switch(res.rol){
+        // redirección por rol
+        switch (res.rol) {
 
           case 'ADMIN':
-            this.router.navigateByUrl('/admin/dashboard',{replaceUrl:true});
+            this.router.navigateByUrl('/admin/dashboard', { replaceUrl: true });
             break;
 
           case 'DOCENTE':
-            this.router.navigateByUrl('/docente/dashboard',{replaceUrl:true});
+            this.router.navigateByUrl('/docente/dashboard', { replaceUrl: true });
             break;
 
           case 'COORDINADOR':
-            this.router.navigateByUrl('/coordinador/dashboard',{replaceUrl:true});
+            this.router.navigateByUrl('/coordinador/dashboard', { replaceUrl: true });
             break;
 
           default:
-            this.router.navigateByUrl('/',{replaceUrl:true});
+            this.router.navigateByUrl('/', { replaceUrl: true });
         }
 
       },
 
-      error:(err)=>{
+      error: (err) => {
 
-        console.error('Error login:',err);
+        console.error('Error login:', err);
 
         this.error = err.error?.message || 'Credenciales inválidas';
         this.loading = false;

@@ -1,0 +1,112 @@
+/* contenedor principal */
+
+.form-container{
+  max-width:600px;
+  margin:30px auto;
+  padding:25px;
+  background:white;
+  border-radius:14px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 6px 14px rgba(0,0,0,0.06);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+
+/* título */
+
+.form-container h2{
+  margin-bottom:20px;
+  color:#0b7a3b; /* verde institucional */
+  font-size:22px;
+}
+
+/* formulario */
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* etiquetas */
+
+label{
+  font-size:14px;
+  font-weight:600;
+  color:#374151;
+}
+
+/* inputs y selects */
+
+input,
+select,
+textarea{
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid #e5e7eb;
+  font-size:14px;
+  width:100%;
+  box-sizing:border-box;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  outline:none;
+  border-color:#0b7a3b;
+}
+
+/* textarea */
+
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+/* botones */
+
+.botones{
+  margin-top:15px;
+  display:flex;
+  gap:10px;
+}
+
+/* botón guardar */
+
+.btn-guardar{
+  background:#0b7a3b;
+  color:white;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.btn-guardar:hover{
+  background:#08612f;
+}
+
+/* botón cancelar */
+
+.btn-cancelar{
+  background:#c59b2b;
+  color:#111;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.btn-cancelar:hover{
+  background:#b38a21;
+}
+
+/* mensaje de respuesta */
+
+.mensaje{
+  margin-top:15px;
+  font-size:14px;
+  font-weight:600;
+  color:#0b7a3b;
+}

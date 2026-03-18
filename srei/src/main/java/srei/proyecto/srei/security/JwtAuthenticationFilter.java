@@ -53,15 +53,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        String token = null;
+        String correo = null;
+
+        // intento normal (header Authorization)
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        }
+
+        // fallback para multipart (si no viene header)
+        if (token == null) {
+            String paramToken = request.getParameter("token");
+            if (paramToken != null) {
+                token = paramToken;
+            }
+        }
+
+        if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
 
-            String token = authHeader.substring(7);
-            String correo = jwtService.extractUsername(token);
+            correo = jwtService.extractUsername(token);
 
             if (correo != null &&
                     SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -85,7 +100,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     .toLowerCase())
                             .orElse("usuario");
 
-                    // 🔴 Variables para RLS
+                    // Variables para RLS
                     jdbcTemplate.execute("SET app.currentuserid = " + idUsuario);
                     jdbcTemplate.execute("SET app.currentuserrole = '" + rol + "'");
 

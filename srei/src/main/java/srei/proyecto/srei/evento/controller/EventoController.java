@@ -8,23 +8,26 @@ import org.springframework.web.bind.annotation.*;
 import srei.proyecto.srei.evento.dto.CrearEventoDTO;
 import srei.proyecto.srei.evento.service.EventoService;
 
-@RestController
-@RequestMapping("/api/docente/eventos")
-@RequiredArgsConstructor
-public class EventoController {
+//@RestController
+//@RequestMapping("/api/docente/eventos")
+//@RequiredArgsConstructor
+//public class EventoController {
 
-    private final EventoService eventoService;
+//```
+//private final EventoService eventoService;
 
-    @PostMapping
-    @PreAuthorize("hasRole('DOCENTE')")
-    public ResponseEntity<?> crearEvento(
-            @RequestBody CrearEventoDTO dto,
-            Authentication authentication) {
+//@PostMapping
+//@PreAuthorize("hasRole('DOCENTE')")
+//public ResponseEntity<?> crearEvento(
+       // @RequestBody CrearEventoDTO dto,
+       // Authentication authentication) {
 
-        String correo = authentication.getName();
+  //  String correo = authentication.getName();
 
-        return ResponseEntity.ok(
-                eventoService.crearEvento(dto, correo)
-        );
-    }
-}
+   // return ResponseEntity.ok(
+           // eventoService.crearEvento(dto, correo)
+ //   );
+//}
+//```
+
+//}
