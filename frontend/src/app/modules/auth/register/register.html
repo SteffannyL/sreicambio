@@ -1,60 +1,87 @@
-<div class="register-container">
+<div class="login-container">
 
-  <h2>Registro</h2>
+  <div class="login-card">
 
-  <form (ngSubmit)="register()">
+    <h2 class="titulo">Registro</h2>
+    <p class="subtitulo">Crear nueva cuenta</p>
 
-    <input type="text"
-           placeholder="Nombres"
-           [(ngModel)]="usuario.nombres"
-           name="nombres"
-           required />
+    <form (ngSubmit)="register()">
 
-    <input type="text"
-           placeholder="Apellidos"
-           [(ngModel)]="usuario.apellidos"
-           name="apellidos"
-           required />
+      <!-- NOMBRES -->
+      <div class="campo">
+        <label>Nombres</label>
+        <input
+          type="text"
+          [(ngModel)]="usuario.nombres"
+          name="nombres"
+          required
+        />
+      </div>
 
-    <input type="email"
-           placeholder="Correo"
-           [(ngModel)]="usuario.correo"
-           name="correo"
-           required />
+      <!-- APELLIDOS -->
+      <div class="campo">
+        <label>Apellidos</label>
+        <input
+          type="text"
+          [(ngModel)]="usuario.apellidos"
+          name="apellidos"
+          required
+        />
+      </div>
 
-    <input type="password"
-           placeholder="Contraseña"
-           [(ngModel)]="usuario.contrasena"
-           name="contrasena"
-           required />
+      <!-- CORREO -->
+      <div class="campo">
+        <label>Correo</label>
+        <input
+          type="email"
+          [(ngModel)]="usuario.correo"
+          name="correo"
+          required
+        />
+      </div>
 
-    <!-- 🔥 Roles SIN ADMIN -->
-    <select [(ngModel)]="usuario.idtipousuario"
-            name="idtipousuario">
+      <!-- CONTRASEÑA -->
+      <div class="campo">
+        <label>Contraseña</label>
+        <input
+          type="password"
+          [(ngModel)]="usuario.contrasena"
+          name="contrasena"
+          required
+        />
+      </div>
 
-      <option [value]="2">Coordinador</option>
-      <option [value]="3">Decano</option>
-      <option [value]="4">Usuario Externo</option>
-      <option [value]="5">Docente</option>
+      <!-- ROLES -->
+      <div class="campo">
+        <label>Rol</label>
+        <select
+          [(ngModel)]="usuario.idtipousuario"
+          name="idtipousuario">
 
-    </select>
+          <option [value]="2">Coordinador</option>
+          <option [value]="3">Decano</option>
+          <option [value]="4">Usuario Externo</option>
+          <option [value]="5">Docente</option>
 
-    <button type="submit" [disabled]="loading">
-      {{ loading ? 'Registrando...' : 'Registrar' }}
-    </button>
+        </select>
+      </div>
 
-  </form>
+      <!-- BOTÓN -->
+      <button type="submit" class="btn-login" [disabled]="loading">
+        {{ loading ? 'Registrando...' : 'Registrar' }}
+      </button>
 
-  @if (success) {
-    <p style="color: green">{{ success }}</p>
-  }
+    </form>
 
-  @if (error) {
-    <p style="color: red">{{ error }}</p>
-  }
+    <!-- MENSAJES -->
+    <p style="color: green" *ngIf="success">{{ success }}</p>
+    <p style="color: red" *ngIf="error">{{ error }}</p>
 
-  <p>
-    <a routerLink="/auth/login">Volver al login</a>
-  </p>
+    <!-- VOLVER -->
+    <div class="registro-link">
+      <a routerLink="/auth/login">Volver al login</a>
+    </div>
+
+  </div>
 
 </div>

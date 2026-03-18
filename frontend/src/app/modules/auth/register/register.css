@@ -1,0 +1,50 @@
+.login-container {
+  background: #198754;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 350px;
+}
+
+.titulo {
+  text-align: center;
+  color: #198754;
+}
+
+.subtitulo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.campo {
+  margin-bottom: 15px;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.btn-login {
+  width: 100%;
+  background: #c79c2f;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.registro-link {
+  text-align: center;
+  margin-top: 15px;
+}

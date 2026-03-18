@@ -58,23 +58,27 @@ public class SecurityConfig {
 
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                //Para ver el pdf
+                // 📂 archivos
                 .requestMatchers("/uploads/**").permitAll()
 
-                // PUBLICOS
+                // 🔓 públicos
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/sesiones/validar/**").permitAll()
 
-                // ADMIN
+                // 🎮 IA / juegos
+                .requestMatchers("/api/juegos/**").permitAll()
+                .requestMatchers("/juegos/**").permitAll()
+
+                // 🔐 ADMIN
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                // DOCENTE
+                // 👨‍🏫 DOCENTE
                 .requestMatchers("/api/docente/**").authenticated()
 
-                // COORDINADOR
+                // 👨‍💼 COORDINADOR
                 .requestMatchers("/api/coordinador/**").hasRole("COORDINADOR")
 
-                // DECANO
+                // 🎓 DECANO
                 .requestMatchers("/api/decano/**").hasRole("DECANO")
 
                 .anyRequest().authenticated()

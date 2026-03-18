@@ -2,19 +2,19 @@ package srei.proyecto.srei.evento.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class EventoPendienteDTO {
 
     private Long idevento;
-
     private String nombreevento;
-
     private String descripcion;
-
-    private LocalDate fechainicio;
+    private LocalDateTime fechainicio;
+    private String nombreDocente;
 
 }

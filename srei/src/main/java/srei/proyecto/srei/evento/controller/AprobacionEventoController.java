@@ -1,14 +1,15 @@
 package srei.proyecto.srei.evento.controller;
 
 import lombok.RequiredArgsConstructor;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import srei.proyecto.srei.evento.dto.AprobarEventoDTO;
+import srei.proyecto.srei.evento.dto.EventoPendienteDTO;
 import srei.proyecto.srei.evento.service.AprobacionEventoService;
 
 @RestController
@@ -19,42 +20,49 @@ public class AprobacionEventoController {
 
     private final AprobacionEventoService eventoService;
 
-    // listar eventos pendientes
+    // 🔹 listar eventos pendientes
     @GetMapping("/eventos-pendientes")
     public ResponseEntity<?> listarPendientes() {
         System.out.println("ENTRÓ AL ENDPOINT EVENTOS PENDIENTES");
         return ResponseEntity.ok(eventoService.listarPendientes());
     }
 
-    // aprobar evento
+    // 🔹 aprobar evento
     @PostMapping("/aprobar-evento")
     public ResponseEntity<?> aprobarEvento(@RequestBody AprobarEventoDTO dto){
         eventoService.aprobarEvento(dto);
         return ResponseEntity.ok("Evento aprobado correctamente");
     }
 
-    // listar aprobados
+    // 🔹 listar aprobados
     @GetMapping("/eventos-aprobados")
     public ResponseEntity<?> listarAprobados(){
         return ResponseEntity.ok(eventoService.listarAprobados());
     }
 
-    // listar rechazados
+    // 🔹 listar rechazados
     @GetMapping("/eventos-rechazados")
     public ResponseEntity<?> listarRechazados(){
         return ResponseEntity.ok(eventoService.listarRechazados());
     }
 
+    // 🔹 dashboard
     @GetMapping("/dashboard")
-public ResponseEntity<?> dashboard() {
+    public ResponseEntity<?> dashboard() {
 
-   Map<String,Object> data = new HashMap<>();
+        Map<String,Object> data = new HashMap<>();
 
-data.put("pendientes",eventoService.contarPendientes());
-data.put("aprobados",eventoService.contarAprobados());
-data.put("rechazados",eventoService.contarRechazados());
+        data.put("pendientes",eventoService.contarPendientes());
+        data.put("aprobados",eventoService.contarAprobados());
+        data.put("rechazados",eventoService.contarRechazados());
 
-return ResponseEntity.ok(data);
-}
+        return ResponseEntity.ok(data);
+    }
 
+    // 🔥🔥🔥 NUEVO ENDPOINT DE REPORTE 🔥🔥🔥
+    @GetMapping("/reporte")
+    public ResponseEntity<List<EventoPendienteDTO>> reporte(
+            @RequestParam String estado) {
+        return ResponseEntity.ok(eventoService.reporteEventos(estado));
+    }
 }

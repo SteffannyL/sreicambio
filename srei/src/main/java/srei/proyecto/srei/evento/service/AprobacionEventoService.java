@@ -13,6 +13,7 @@ import java.util.List;
 
 import srei.proyecto.srei.evento.dto.AprobarEventoDTO;
 import srei.proyecto.srei.evento.dto.EventoPendienteDTO;
+import srei.proyecto.srei.evento.repository.EventoCoordinadorRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,12 @@ public class AprobacionEventoService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    // aprobar o rechazar evento
+    // 🔥 NUEVO (para reportes)
+    private final EventoCoordinadorRepository eventoCoordinadorRepository;
+
+    // ===============================
+    // 🔹 APROBAR / RECHAZAR EVENTO
+    // ===============================
     @Transactional
     public void aprobarEvento(AprobarEventoDTO dto) {
 
@@ -54,117 +60,92 @@ public class AprobacionEventoService {
         );
     }
 
-    // eventos pendientes
-    @Transactional
+    // ===============================
+    // 🔹 LISTAR PENDIENTES
+    // ===============================
     public List<EventoPendienteDTO> listarPendientes() {
 
-        String sql = """
-            SELECT idevento,
-                   nombreevento,
-                   descripcion,
-                   fechainicio
-            FROM evento
-            WHERE estadoactual='PENDIENTE'
-            ORDER BY fechacreacion DESC
-        """;
+        String sql = "SELECT * FROM fn_listar_eventos_pendientes()";
 
-        return jdbcTemplate.query(sql, (rs,rowNum) ->
-                new EventoPendienteDTO(
-                        rs.getLong("idevento"),
-                        rs.getString("nombreevento"),
-                        rs.getString("descripcion"),
-                        rs.getTimestamp("fechainicio")
-                                .toLocalDateTime()
-                                .toLocalDate()
-                )
-        );
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+            EventoPendienteDTO dto = new EventoPendienteDTO();
+
+            dto.setIdevento(rs.getLong("idevento"));
+            dto.setNombreevento(rs.getString("nombreevento"));
+            dto.setDescripcion(rs.getString("descripcion"));
+            dto.setFechainicio(rs.getTimestamp("fechainicio").toLocalDateTime());
+            dto.setNombreDocente(null); // 🔥 aquí aún no viene en esta función
+
+            return dto;
+        });
     }
 
-    // eventos aprobados
-    @Transactional
-    public List<EventoPendienteDTO> listarAprobados() {
+    // ===============================
+    // 🔹 LISTAR APROBADOS
+    // ===============================
+    public List<EventoPendienteDTO> listarAprobados(){
 
-        String sql = """
-            SELECT idevento,
-                   nombreevento,
-                   descripcion,
-                   fechainicio
-            FROM evento
-            WHERE estadoactual='APROBADO'
-            ORDER BY fechacreacion DESC
-        """;
+        String sql="SELECT * FROM fn_listar_eventos_aprobados()";
 
-        return jdbcTemplate.query(sql, (rs,rowNum) ->
-                new EventoPendienteDTO(
-                        rs.getLong("idevento"),
-                        rs.getString("nombreevento"),
-                        rs.getString("descripcion"),
-                        rs.getTimestamp("fechainicio")
-                                .toLocalDateTime()
-                                .toLocalDate()
-                )
-        );
+        return jdbcTemplate.query(sql,(rs,rowNum)->{
+
+            EventoPendienteDTO dto = new EventoPendienteDTO();
+
+            dto.setIdevento(rs.getLong("idevento"));
+            dto.setNombreevento(rs.getString("nombreevento"));
+            dto.setDescripcion(rs.getString("descripcion"));
+            dto.setFechainicio(rs.getTimestamp("fechainicio").toLocalDateTime());
+            dto.setNombreDocente(null);
+
+            return dto;
+        });
     }
 
-    // eventos rechazados
-    @Transactional
-    public List<EventoPendienteDTO> listarRechazados() {
+    // ===============================
+    // 🔹 LISTAR RECHAZADOS
+    // ===============================
+    public List<EventoPendienteDTO> listarRechazados(){
 
-        String sql = """
-            SELECT idevento,
-                   nombreevento,
-                   descripcion,
-                   fechainicio
-            FROM evento
-            WHERE estadoactual='RECHAZADO'
-            ORDER BY fechacreacion DESC
-        """;
+        String sql="SELECT * FROM fn_listar_eventos_rechazados()";
 
-        return jdbcTemplate.query(sql, (rs,rowNum) ->
-                new EventoPendienteDTO(
-                        rs.getLong("idevento"),
-                        rs.getString("nombreevento"),
-                        rs.getString("descripcion"),
-                        rs.getTimestamp("fechainicio")
-                                .toLocalDateTime()
-                                .toLocalDate()
-                )
-        );
+        return jdbcTemplate.query(sql,(rs,rowNum)->{
+
+            EventoPendienteDTO dto = new EventoPendienteDTO();
+
+            dto.setIdevento(rs.getLong("idevento"));
+            dto.setNombreevento(rs.getString("nombreevento"));
+            dto.setDescripcion(rs.getString("descripcion"));
+            dto.setFechainicio(rs.getTimestamp("fechainicio").toLocalDateTime());
+            dto.setNombreDocente(null);
+
+            return dto;
+        });
     }
 
-    // CONTADORES PARA DASHBOARD
-
-    public int contarPendientes() {
-
-        String sql = """
-            SELECT COUNT(*)
-            FROM evento
-            WHERE estadoactual='PENDIENTE'
-        """;
-
+    // ===============================
+    // 🔹 CONTADORES
+    // ===============================
+    public int contarPendientes(){
+        String sql="SELECT fn_contar_eventos_pendientes()";
         return jdbcTemplate.queryForObject(sql,Integer.class);
     }
 
     public int contarAprobados(){
-
-        String sql = """
-            SELECT COUNT(*)
-            FROM evento
-            WHERE estadoactual='APROBADO'
-        """;
-
+        String sql="SELECT fn_contar_eventos_aprobados()";
         return jdbcTemplate.queryForObject(sql,Integer.class);
     }
 
     public int contarRechazados(){
-
-        String sql = """
-            SELECT COUNT(*)
-            FROM evento
-            WHERE estadoactual='RECHAZADO'
-        """;
-
+        String sql="SELECT fn_contar_eventos_rechazados()";
         return jdbcTemplate.queryForObject(sql,Integer.class);
+    }
+
+    // ===============================
+    // 🔥 REPORTES (NUEVO)
+    // ===============================
+    public List<EventoPendienteDTO> reporteEventos(String estado) {
+        return eventoCoordinadorRepository.listarReporte(estado);
     }
 
 }

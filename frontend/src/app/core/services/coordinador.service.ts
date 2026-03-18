@@ -27,9 +27,13 @@ export class CoordinadorService {
     return this.http.get(`${this.api}/eventos-rechazados`);
   }
 
-  // 🔵 endpoint del dashboard
   getDashboard(): Observable<any> {
     return this.http.get(`${this.api}/dashboard`);
+  }
+
+  // 🔥 NUEVO
+  getReporteEventos(estado: string): Observable<any> {
+    return this.http.get(`${this.api}/reporte?estado=${estado}`);
   }
 
 }

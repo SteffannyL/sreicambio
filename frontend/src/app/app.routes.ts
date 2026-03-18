@@ -8,7 +8,7 @@ export const routes: Routes = [
 
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
 
-  /* ================= AUTH ================= */
+  /* AUTH */
 
   {
     path: 'auth',
@@ -17,7 +17,7 @@ export const routes: Routes = [
         .then(m => m.AuthRoutes)
   },
 
-  /* ================= DASHBOARD GENERAL ================= */
+  /* DASHBOARD GENERAL */
 
   {
     path: 'dashboard',
@@ -27,7 +27,7 @@ export const routes: Routes = [
         .then(m => m.DashboardComponent)
   },
 
-  /* ================= DOCENTE ================= */
+  /* DOCENTE */
 
   {
     path: 'docente',
@@ -58,6 +58,15 @@ export const routes: Routes = [
             .then(m => m.MisEventosComponent)
       },
 
+      /* IA */
+      {
+        path: 'ia/generar-juego',
+        loadComponent: () =>
+          import('./modules/ia/generar-juego')
+            .then(m => m.GenerarJuegoComponent)
+      },
+
+      /* DETALLE EVENTO */
       {
         path: 'evento/:id',
         loadComponent: () =>
@@ -68,7 +77,7 @@ export const routes: Routes = [
     ]
   },
 
-  /* ================= COORDINADOR ================= */
+  /* COORDINADOR */
 
   {
     path: 'coordinador',
@@ -95,7 +104,7 @@ export const routes: Routes = [
     ]
   },
 
-  /* ================= ADMIN ================= */
+  /* ADMIN */
 
   {
     path: 'admin',
@@ -134,6 +143,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/administrador/sesiones/sesiones')
             .then(m => m.SesionesComponent)
+      },
+
+      {
+        path: 'backups',
+        loadComponent: () =>
+          import('./features/administrador/backups/backups.component')
+            .then(m => m.BackupsComponent)
       }
 
     ]
