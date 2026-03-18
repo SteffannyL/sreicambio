@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { NavbarComponent } from './layout/navbar/navbar';
+import { SidebarComponent } from './layout/sidebar/sidebar';
 import { SessionMonitorService } from './core/services/session-monitor.service';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -11,7 +12,8 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule,
     RouterOutlet,
-    NavbarComponent
+    NavbarComponent,
+    SidebarComponent
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
@@ -20,6 +22,7 @@ export class AppComponent implements OnInit {
 
   sesionExpulsada = false;
   mostrarNavbar = true;
+  mostrarSidebar = true;
 
   constructor(
     private sessionMonitor: SessionMonitorService,
@@ -28,39 +31,42 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-   this.router.events
-  .pipe(filter(event => event instanceof NavigationEnd))
-  .subscribe(() => {
+    this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe(() => {
 
-    const url = this.router.url;
-    const token = localStorage.getItem('token');
-    const rol = localStorage.getItem('rol');
+      const url = this.router.url;
+      const token = localStorage.getItem('token');
+      const rol = localStorage.getItem('rol');
 
-    // Ocultar modal si estamos en login
-    if (url.startsWith('/auth')) {
-      this.sesionExpulsada = false;
-    }
-
-    // Si ya hay sesión y entra a login → redirigir
-    if (url === '/auth/login' && token) {
-
-      if (rol === 'ADMIN') {
-        this.router.navigate(['/admin/dashboard']);
+      // ocultar navbar y sidebar en login
+      if (url.startsWith('/auth')) {
+        this.mostrarNavbar = false;
+        this.mostrarSidebar = false;
+        this.sesionExpulsada = false;
+      } else {
+        this.mostrarNavbar = true;
+        this.mostrarSidebar = true;
       }
 
-      else if (rol === 'DOCENTE') {
-        this.router.navigate(['/docente/dashboard']);
+      // si ya está logueado y entra a login
+      if (url === '/auth/login' && token) {
+
+        if (rol === 'ADMIN') {
+          this.router.navigate(['/admin/dashboard']);
+        }
+
+        else if (rol === 'DOCENTE') {
+          this.router.navigate(['/docente/dashboard']);
+        }
+
+        else if (rol === 'COORDINADOR') {
+          this.router.navigate(['/coordinador/dashboard']);
+        }
+
       }
 
-      else if (rol === 'COORDINADOR') {
-        this.router.navigate(['/coordinador']);
-      }
-
-    }
-
-    this.mostrarNavbar = true;
-
-  });
+    });
 
     const token = localStorage.getItem('token');
 
@@ -69,8 +75,8 @@ export class AppComponent implements OnInit {
     }
 
     this.sessionMonitor.sesionExpulsada$.subscribe(valor => {
-  this.sesionExpulsada = valor;
-});
+      this.sesionExpulsada = valor;
+    });
 
   }
 

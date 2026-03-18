@@ -132,4 +132,39 @@ public class AprobacionEventoService {
         );
     }
 
+    // CONTADORES PARA DASHBOARD
+
+    public int contarPendientes() {
+
+        String sql = """
+            SELECT COUNT(*)
+            FROM evento
+            WHERE estadoactual='PENDIENTE'
+        """;
+
+        return jdbcTemplate.queryForObject(sql,Integer.class);
+    }
+
+    public int contarAprobados(){
+
+        String sql = """
+            SELECT COUNT(*)
+            FROM evento
+            WHERE estadoactual='APROBADO'
+        """;
+
+        return jdbcTemplate.queryForObject(sql,Integer.class);
+    }
+
+    public int contarRechazados(){
+
+        String sql = """
+            SELECT COUNT(*)
+            FROM evento
+            WHERE estadoactual='RECHAZADO'
+        """;
+
+        return jdbcTemplate.queryForObject(sql,Integer.class);
+    }
+
 }

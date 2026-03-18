@@ -48,13 +48,14 @@ export class LoginComponent {
         this.loading = false;
 
         /* GUARDAR DATOS EN LOCALSTORAGE */
-
         localStorage.setItem('token', res.token);
         localStorage.setItem('rol', res.rol);
         localStorage.setItem('idusuario', res.idusuario.toString());
+        localStorage.setItem('nombre', res.nombres);
+        localStorage.setItem('correo', this.credentials.correo);
 
-       localStorage.setItem('nombre', res.nombres);
-localStorage.setItem('correo', this.credentials.correo);
+        // 🔥 IMPORTANTE: mantener monitoreo de sesión
+        this.sessionMonitor.iniciarMonitoreo();
 
         // redirección por rol
         switch (res.rol) {
@@ -89,4 +90,5 @@ localStorage.setItem('correo', this.credentials.correo);
     });
 
   }
+
 }

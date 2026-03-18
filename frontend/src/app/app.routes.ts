@@ -1,10 +1,14 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+
 import { DocenteComponent } from './features/docente/docente.component';
+import { CoordinadorComponent } from './features/coordinador/coordinador.component';
 
 export const routes: Routes = [
 
-  { path: '', redirectTo: 'auth', pathMatch: 'full' },
+  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+
+  /* ================= AUTH ================= */
 
   {
     path: 'auth',
@@ -12,6 +16,8 @@ export const routes: Routes = [
       import('./modules/auth/auth-routing-module')
         .then(m => m.AuthRoutes)
   },
+
+  /* ================= DASHBOARD GENERAL ================= */
 
   {
     path: 'dashboard',
@@ -52,7 +58,6 @@ export const routes: Routes = [
             .then(m => m.MisEventosComponent)
       },
 
-      // 🔥 NUEVA RUTA DETALLE EVENTO
       {
         path: 'evento/:id',
         loadComponent: () =>
@@ -67,22 +72,23 @@ export const routes: Routes = [
 
   {
     path: 'coordinador',
+    component: CoordinadorComponent,
     canActivate: [authGuard],
     children: [
 
-      { path: '', redirectTo: 'aprobar-eventos', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./modules/coordinador/dashboard/dashboard-coordinador.component')
+          import('./features/coordinador/dashboard/dashboard-coordinador.component')
             .then(m => m.DashboardCoordinadorComponent)
       },
 
       {
         path: 'aprobar-eventos',
         loadComponent: () =>
-          import('./modules/coordinador/aprobar-eventos/aprobar-eventos')
+          import('./features/coordinador/aprobar-eventos/aprobar-eventos')
             .then(m => m.AprobarEventosComponent)
       }
 
