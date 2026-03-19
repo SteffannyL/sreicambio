@@ -28,6 +28,8 @@ public class AdminSesionService {
             s.setNombres(rs.getString("nombres"));
             s.setApellidos(rs.getString("apellidos"));
 
+            s.setCorreo(rs.getString("correo")); // ✅ CORRECCIÓN CLAVE
+
             s.setNombrerol(rs.getString("nombrerol"));
 
             s.setIp(rs.getString("ip"));
@@ -41,31 +43,32 @@ public class AdminSesionService {
     }
 
     // LISTAR TODAS LAS SESIONES (HISTORIAL COMPLETO)
-public List<SesionDTO> listarTodasSesiones() {
+    public List<SesionDTO> listarTodasSesiones() {
 
-    String sql = "SELECT * FROM fn_listar_todas_sesiones()";
+        String sql = "SELECT * FROM fn_listar_todas_sesiones()";
 
-    return jdbcTemplate.query(sql, (rs, rowNum) -> {
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
 
-        SesionDTO s = new SesionDTO();
+            SesionDTO s = new SesionDTO();
 
-        s.setIdsesion(rs.getLong("idsesion"));
-        s.setIdusuario(rs.getLong("idusuario"));
+            s.setIdsesion(rs.getLong("idsesion"));
+            s.setIdusuario(rs.getLong("idusuario"));
 
-        s.setNombres(rs.getString("nombres"));
-        s.setApellidos(rs.getString("apellidos"));
+            s.setNombres(rs.getString("nombres"));
+            s.setApellidos(rs.getString("apellidos"));
+            s.setCorreo(rs.getString("correo")); // ✅ YA ESTABA BIEN
 
-        s.setNombrerol(rs.getString("nombrerol"));
+            s.setNombrerol(rs.getString("nombrerol"));
 
-        s.setIp(rs.getString("ip"));
-        s.setNavegador(rs.getString("navegador"));
-        s.setSistemaoperativo(rs.getString("sistemaoperativo"));
+            s.setIp(rs.getString("ip"));
+            s.setNavegador(rs.getString("navegador"));
+            s.setSistemaoperativo(rs.getString("sistemaoperativo"));
 
-        s.setFechalogin(rs.getString("fechalogin"));
+            s.setFechalogin(rs.getString("fechalogin"));
 
-        return s;
-    });
-}
+            return s;
+        });
+    }
 
     // EXPULSAR SESION
     public void banearSesion(Long idsesion) {
@@ -94,4 +97,25 @@ public List<SesionDTO> listarTodasSesiones() {
 
         return count != null && count > 0;
     }
+
+    //  ÚLTIMOS USUARIOS REGISTRADOS
+public List<SesionDTO> ultimosUsuarios() {
+
+    String sql = "SELECT * FROM fn_ultimos_usuarios()";
+
+    return jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+        SesionDTO u = new SesionDTO();
+
+        u.setIdusuario(rs.getLong("idusuario"));
+        u.setNombres(rs.getString("nombres"));
+        u.setApellidos(rs.getString("apellidos"));
+        u.setCorreo(rs.getString("correo"));
+
+        // reutilizamos este campo para no crear DTO nuevo
+        u.setFechalogin(rs.getString("fecharegistro"));
+
+        return u;
+    });
+}
 }

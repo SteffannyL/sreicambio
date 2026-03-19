@@ -31,43 +31,57 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // 🔥 1. CONTROL INICIAL (para acceso directo por URL)
+    const urlInicial = this.router.url;
+
+    if (urlInicial.startsWith('/auth')) {
+      this.mostrarNavbar = true;      // ✅ navbar visible en login
+      this.mostrarSidebar = false;    // ❌ sidebar oculto
+    } else {
+      this.mostrarNavbar = true;
+      this.mostrarSidebar = true;
+    }
+
+    // 🔥 2. ESCUCHAR CAMBIOS DE RUTA
     this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe(() => {
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
 
-      const url = this.router.url;
-      const token = localStorage.getItem('token');
-      const rol = localStorage.getItem('rol');
+        const url = this.router.url;
+        const token = localStorage.getItem('token');
+        const rol = localStorage.getItem('rol');
 
-      // ocultar navbar y sidebar en login
-      if (url.startsWith('/auth')) {
-        this.mostrarNavbar = false;
-        this.mostrarSidebar = false;
-        this.sesionExpulsada = false;
-      } else {
-        this.mostrarNavbar = true;
-        this.mostrarSidebar = true;
-      }
-
-      // si ya está logueado y entra a login
-      if (url === '/auth/login' && token) {
-
-        if (rol === 'ADMIN') {
-          this.router.navigate(['/admin/dashboard']);
+        // ✅ Navbar siempre visible
+        // ❌ Sidebar oculto solo en auth
+        if (url.startsWith('/auth')) {
+          this.mostrarNavbar = true;
+          this.mostrarSidebar = false;
+          this.sesionExpulsada = false;
+        } else {
+          this.mostrarNavbar = true;
+          this.mostrarSidebar = true;
         }
 
-        else if (rol === 'DOCENTE') {
-          this.router.navigate(['/docente/dashboard']);
+        // 🔥 Redirección si ya está logueado
+        if (url === '/auth/login' && token) {
+
+          if (rol === 'ADMIN') {
+            this.router.navigate(['/admin/dashboard']);
+          }
+
+          else if (rol === 'DOCENTE') {
+            this.router.navigate(['/docente/dashboard']);
+          }
+
+          else if (rol === 'COORDINADOR') {
+            this.router.navigate(['/coordinador/dashboard']);
+          }
+
         }
 
-        else if (rol === 'COORDINADOR') {
-          this.router.navigate(['/coordinador/dashboard']);
-        }
+      });
 
-      }
-
-    });
-
+    // 🔥 3. MONITOREO DE SESIÓN
     const token = localStorage.getItem('token');
 
     if (token) {

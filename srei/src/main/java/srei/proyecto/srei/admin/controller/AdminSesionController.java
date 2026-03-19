@@ -3,6 +3,7 @@ package srei.proyecto.srei.admin.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import srei.proyecto.srei.admin.dto.SesionDTO;
 import srei.proyecto.srei.admin.service.AdminSesionService;
@@ -17,8 +18,14 @@ public class AdminSesionController {
 
     // ADMIN - ver sesiones activas
     @GetMapping("/api/admin/sesiones")
-    public List<SesionDTO> listarSesiones() {
-        return service.listarSesiones();
+    public List<SesionDTO> listarSesiones(Authentication auth) {
+
+        String correo = auth.getName();
+
+        System.out.println("AUTH NAME: " + correo);
+
+        // 👇 IMPORTANTE: NO romper lógica existente
+        return service.listarSesiones(); // dejamos como estaba por ahora
     }
 
     // ADMIN - expulsar sesión
@@ -40,11 +47,17 @@ public class AdminSesionController {
     @GetMapping("/api/admin/sesiones/reporte")
     public List<SesionDTO> reporteSesiones(@RequestParam String tipo) {
 
-    if ("todas".equalsIgnoreCase(tipo)) {
-        return service.listarTodasSesiones();
+        if ("todas".equalsIgnoreCase(tipo)) {
+            return service.listarTodasSesiones();
+        }
+
+        // por defecto devuelve activas
+        return service.listarSesiones();
     }
 
-    // por defecto devuelve activas
-    return service.listarSesiones();
-    }
+    // ADMIN - últimos usuarios registrados
+    @GetMapping("/api/admin/ultimos-usuarios")
+    public List<SesionDTO> ultimosUsuarios() {
+    return service.ultimosUsuarios();
+}
 }

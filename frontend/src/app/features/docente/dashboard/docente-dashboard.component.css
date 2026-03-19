@@ -1,10 +1,72 @@
-/* TÍTULO */
-h2 {
-  margin-bottom: 20px;
-  color: #333;
+/* ===== PALETA UTEQ SUAVE ===== */
+:root {
+  --verde-principal: #16a34a;
+  --verde-hover: #15803d;
+  --verde-suave: #dcfce7;
+  --verde-borde: #86efac;
+  --gris-texto: #374151;
+  --gris-suave: #f5f7f6;
+  --dorado: #c59b2b;
 }
 
-/* CARDS */
+/* ===== TÍTULO ===== */
+h2 {
+  margin-bottom: 20px;
+  color: var(--verde-principal);
+  font-weight: 700;
+  font-size: 24px;
+}
+
+/* ===== TARJETA USUARIO (FINAL) ===== */
+.usuario-card {
+  max-width: 420px;
+  padding: 18px 20px;
+  border-radius: 14px;
+
+  background: var(--verde-suave);
+  border: 1px solid var(--verde-borde);
+
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  margin-bottom: 25px;
+}
+
+/* NOMBRE */
+.usuario-card h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #065f46;
+}
+
+/* CORREO */
+.usuario-card p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--gris-texto);
+}
+
+/* ROL (FIX VISIBILIDAD) */
+.usuario-card span {
+  margin-top: 6px;
+  display: inline-block;
+
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+  background: #166534; /* 👈 contraste fuerte */
+  color: #ffffff;
+
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+/* ===== CARDS ===== */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -14,75 +76,73 @@ h2 {
 
 .card {
   background: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 22px;
+  border-radius: 14px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-left: 6px solid #007bff;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  transition: all 0.25s ease;
+  border-top: 5px solid var(--verde-principal);
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.10);
 }
 
 .card h3 {
   margin-bottom: 10px;
   font-size: 16px;
-  color: #555;
+  color: var(--gris-texto);
 }
 
 .card p {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
-  color: #222;
+  color: var(--verde-principal);
 }
 
-/* COLORES POR ESTADO */
-.card:nth-child(1) {
-  border-left-color: #007bff; /* total */
-}
-
+/* ===== COLORES POR ESTADO ===== */
 .card:nth-child(2) {
-  border-left-color: #28a745; /* aprobado */
+  border-top-color: #16a34a;
 }
 
 .card:nth-child(3) {
-  border-left-color: #ffc107; /* pendiente */
+  border-top-color: var(--dorado);
 }
 
 .card:nth-child(4) {
-  border-left-color: #dc3545; /* rechazado */
+  border-top-color: #dc2626;
 }
 
-/* GRÁFICO */
+/* ===== GRÁFICO ===== */
 .graficos {
   margin-bottom: 30px;
 }
 
 .grafico {
   background: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
   text-align: center;
 }
 
 .grafico h3 {
   margin-bottom: 15px;
+  color: var(--verde-principal);
 }
 
-/* ÚLTIMOS EVENTOS */
+/* ===== ÚLTIMOS EVENTOS ===== */
 .ultimos-eventos {
   background: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
 }
 
 .ultimos-eventos h3 {
   margin-bottom: 15px;
+  color: var(--verde-principal);
 }
 
 .ultimos-eventos ul {
@@ -91,8 +151,14 @@ h2 {
 }
 
 .ultimos-eventos li {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+
+.ultimos-eventos li:hover {
+  background: var(--verde-suave);
 }
 
 .ultimos-eventos li:last-child {
@@ -100,47 +166,55 @@ h2 {
 }
 
 .ultimos-eventos strong {
-  color: #333;
+  color: #111;
 }
 
 .ultimos-eventos span {
   font-weight: bold;
+  color: var(--verde-principal);
 }
 
-/* BOTÓN */
+/* ===== BOTONES ===== */
 button {
   padding: 10px 20px;
   border: none;
-  background: #007bff;
+  background: var(--verde-principal);
   color: white;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-button:hover {
-  background: #0056b3;
-}
-
-.usuario-card {
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: white;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.usuario-card h3 {
-  margin: 0;
-}
-
-.usuario-card p {
-  margin: 5px 0;
   font-size: 14px;
 }
 
-.usuario-card span {
-  font-size: 12px;
-  opacity: 0.8;
+button:hover {
+  background: var(--verde-hover);
+}
+
+/* ===== FORMULARIO ===== */
+.form-container {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 25px;
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gris-texto);
+}
+
+input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--verde-principal);
+  box-shadow: 0 0 0 2px rgba(22,163,74,0.15);
 }

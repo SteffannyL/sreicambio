@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocenteEventoService } from '../../../core/services/docente-evento.service';
 
@@ -7,6 +7,7 @@ import { DocenteEventoService } from '../../../core/services/docente-evento.serv
   selector: 'app-detalle-evento',
   standalone: true,
   imports: [CommonModule],
+  providers: [DatePipe],
   templateUrl: './detalle-evento.component.html',
   styleUrls: ['./detalle-evento.component.css']
 })
@@ -18,7 +19,8 @@ export class DetalleEventoComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private eventoService: DocenteEventoService
+    private eventoService: DocenteEventoService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -41,5 +43,10 @@ export class DetalleEventoComponent implements OnInit {
 
   volver() {
     this.router.navigate(['/docente/mis-eventos']);
+  }
+
+  // 🔥 OPCIONAL: usar si quieres formatear desde TS
+  formatearFecha(fecha: string): string {
+    return this.datePipe.transform(fecha, 'dd/MM/yyyy HH:mm', 'America/Guayaquil') || '';
   }
 }

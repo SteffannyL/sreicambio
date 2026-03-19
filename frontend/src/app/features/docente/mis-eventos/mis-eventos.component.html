@@ -1,55 +1,68 @@
 <div class="contenedor">
 
-  <h2>Mis Eventos</h2>
+  <h2 class="titulo">Mis Eventos</h2>
 
-  <div *ngIf="cargando">
+  <div *ngIf="cargando" class="cargando">
     Cargando eventos...
   </div>
 
-  <table *ngIf="!cargando && eventos.length > 0" class="tabla">
+  <div class="tabla-container" *ngIf="!cargando && eventos.length > 0">
 
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Evento</th>
-        <th>Fecha Inicio</th>
-        <th>Fecha Fin</th>
-        <th>Lugar</th>
-        <th>Aforo</th>
-        <th>Estado</th>
-        <th>Acciones</th> <!-- 👈 NUEVO -->
-      </tr>
-    </thead>
+    <table class="tabla">
 
-    <tbody>
-      <tr *ngFor="let evento of eventos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Evento</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
+          <th>Lugar</th>
+          <th>Aforo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
 
-        <td>{{ evento.idevento }}</td>
+      <tbody>
+        <tr *ngFor="let evento of eventos">
 
-        <td>{{ evento.nombreevento }}</td>
+          <td>{{ evento.idevento }}</td>
 
-        <td>{{ evento.fechainicio }}</td>
+          <td class="nombre">{{ evento.nombreevento }}</td>
 
-        <td>{{ evento.fechafin }}</td>
+          <!-- ✅ FECHA + HORA BONITA -->
+          <td>
+            {{ evento.fechainicio | date:'dd MMM yyyy, hh:mm a' }}
+          </td>
 
-        <td>{{ evento.lugar }}</td>
+          <td>
+            {{ evento.fechafin | date:'dd MMM yyyy, hh:mm a' }}
+          </td>
 
-        <td>{{ evento.aforo }}</td>
+          <td>{{ evento.lugar }}</td>
 
-        <td>{{ evento.estado }}</td>
+          <td>{{ evento.aforo }}</td>
 
-        <td>
-         <button (click)="verDetalle(evento)">
-  Ver detalles
-</button>
-        </td>
+          <td>
+            <span class="estado" [ngClass]="evento.estado.toLowerCase()">
+              {{ evento.estado }}
+            </span>
+          </td>
 
-      </tr>
-    </tbody>
+          <td>
+            <button class="btn-detalle" (click)="verDetalle(evento)">
+              Ver detalles
+            </button>
+          </td>
 
-  </table>
+        </tr>
+      </tbody>
 
-  <div *ngIf="!cargando && eventos.length === 0">
+    </table>
+
+  </div>
+
+  <div *ngIf="!cargando && eventos.length === 0" class="no-data">
     No tienes eventos registrados
   </div>
 
