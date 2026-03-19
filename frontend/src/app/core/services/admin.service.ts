@@ -48,5 +48,17 @@ export class AdminService {
   obtenerUsuariosPorMes() {
     return this.http.get<any>(`${this.apiUrl}/usuarios/registro-mensual`);
   }
+  
+  ultimosUsuarios() {
+  const token = localStorage.getItem('token');
 
+  return this.http.get<any[]>(
+    'http://localhost:8080/api/admin/ultimos-usuarios',
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+}
 }

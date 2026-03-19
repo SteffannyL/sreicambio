@@ -10,6 +10,8 @@ public class SesionDTO {
 
     private String nombres;
     private String apellidos;
+    private String correo; 
+
     private String nombrerol;
 
     private String ip;

@@ -1,47 +1,91 @@
 <div class="contenedor">
 
-  <h2>Detalle del Evento</h2>
-
-  <button (click)="volver()">⬅ Volver</button>
-
-  <div *ngIf="cargando">
-    Cargando...
+  <div class="header">
+    <h2 class="titulo">Detalle del Evento</h2>
+    <button class="btn-volver" (click)="volver()">⬅ Volver</button>
   </div>
 
-  <div *ngIf="!cargando && evento">
+  <div *ngIf="cargando" class="cargando">
+    <div class="loader"></div>
+    Cargando información del evento...
+  </div>
 
-    <p><strong>Nombre:</strong> {{ evento.nombreevento }}</p>
+  <div *ngIf="!cargando && evento" class="card-detalle">
 
-    <p><strong>Descripción:</strong></p>
-    <p>{{ evento.descripcion }}</p>
-
-    <p><strong>Fecha inicio:</strong> {{ evento.fechainicio }}</p>
-    <p><strong>Fecha fin:</strong> {{ evento.fechafin }}</p>
-
-    <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
-    <p><strong>Aforo:</strong> {{ evento.aforo }}</p>
-
-    <p><strong>Estado:</strong> {{ evento.estado }}</p>
-
-    <hr>
-
-    <!-- IMAGEN -->
-    <div *ngIf="evento.url_imagen">
-      <h3>Imagen del evento</h3>
-      <img [src]="'http://localhost:8080/' + evento.url_imagen" width="300">
+    <!-- ESTADO -->
+    <div class="estado-banner" [ngClass]="evento.estado.toLowerCase()">
+      {{ evento.estado }}
     </div>
 
-    <!-- PDF -->
-    <div *ngIf="evento.url_pdf">
-      <h3>Documento PDF</h3>
-      <a [href]="'http://localhost:8080/' + evento.url_pdf" target="_blank">
-        Ver PDF
-      </a>
+    <!-- TITULO -->
+    <h1 class="evento-titulo">{{ evento.nombreevento }}</h1>
+
+    <!-- INFO -->
+    <div class="info-grid">
+
+      <div class="info-item">
+        <span>Fecha inicio</span>
+        <p>
+          {{ evento.fechainicio | date:'dd/MM/yyyy':'America/Guayaquil' }}
+          <br>
+          <small>
+            {{ evento.fechainicio | date:'HH:mm':'America/Guayaquil' }}
+          </small>
+        </p>
+      </div>
+
+      <div class="info-item">
+        <span>Fecha fin</span>
+        <p>
+          {{ evento.fechafin | date:'dd/MM/yyyy':'America/Guayaquil' }}
+          <br>
+          <small>
+            {{ evento.fechafin | date:'HH:mm':'America/Guayaquil' }}
+          </small>
+        </p>
+      </div>
+
+      <div class="info-item">
+        <span>Lugar</span>
+        <p>{{ evento.lugar }}</p>
+      </div>
+
+      <div class="info-item">
+        <span>Aforo</span>
+        <p>{{ evento.aforo }}</p>
+      </div>
+
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+    <div class="descripcion">
+      <h3>Descripción del evento</h3>
+      <p>{{ evento.descripcion }}</p>
+    </div>
+
+    <!-- MEDIA -->
+    <div class="media-container">
+
+      <!-- IMAGEN -->
+      <div class="media-imagen" *ngIf="evento.url_imagen">
+        <h3>Imagen</h3>
+        <img [src]="'http://localhost:8080/' + evento.url_imagen">
+      </div>
+
+      <!-- PDF -->
+      <div class="media-pdf" *ngIf="evento.url_pdf">
+        <h3>Documento</h3>
+        <a class="btn-pdf" [href]="'http://localhost:8080/' + evento.url_pdf" target="_blank">
+          <span class="icono-pdf">📄</span>
+          Ver PDF
+        </a>
+      </div>
+
     </div>
 
   </div>
 
-  <div *ngIf="!cargando && !evento">
+  <div *ngIf="!cargando && !evento" class="no-data">
     No se encontró el evento
   </div>
 

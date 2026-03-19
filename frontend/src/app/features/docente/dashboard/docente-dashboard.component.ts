@@ -14,28 +14,28 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 })
 export class DocenteDashboardComponent implements OnInit {
 
-  totalEventos = 0;
-  eventosAprobados = 0;
-  eventosPendientes = 0;
-  eventosRechazados = 0;
+  totalEventos: number = 0;
+  eventosAprobados: number = 0;
+  eventosPendientes: number = 0;
+  eventosRechazados: number = 0;
 
-  nombreDocente = '';
-  correoDocente = '';
-  rolDocente = '';
+  nombreDocente: string = '';
+  correoDocente: string = '';
+  rolDocente: string = '';
 
   ultimosEventos: any[] = [];
 
-  chart: any;
+  chart: Chart | null = null;
 
   constructor(private eventoService: DocenteEventoService) {}
 
   ngOnInit(): void {
+    this.cargarDatosUsuario();
     this.cargarResumen();
-     this.cargarDatosUsuario(); 
   }
 
-  cargarResumen() {
-    this.eventoService.listarMisEventos().subscribe(data => {
+  cargarResumen(): void {
+    this.eventoService.listarMisEventos().subscribe((data: any[]) => {
 
       this.totalEventos = data.length;
 
@@ -50,11 +50,10 @@ export class DocenteDashboardComponent implements OnInit {
         .slice(0, 5);
 
       this.crearGrafico();
-
     });
   }
 
-  crearGrafico() {
+  crearGrafico(): void {
 
     if (this.chart) {
       this.chart.destroy();
@@ -81,7 +80,7 @@ export class DocenteDashboardComponent implements OnInit {
       options: {
         responsive: true,
         animation: {
-          duration: 1200 // ✅ CORRECTO en v4
+          duration: 1200
         },
         plugins: {
           legend: {
@@ -104,16 +103,12 @@ export class DocenteDashboardComponent implements OnInit {
       },
       plugins: [ChartDataLabels]
     });
-
   }
 
-cargarDatosUsuario() {
-  this.nombreDocente = localStorage.getItem('nombre') || 'Docente';
-  this.correoDocente = localStorage.getItem('correo') || '';
-  this.rolDocente = localStorage.getItem('rol') || 'DOCENTE';
-}
+  cargarDatosUsuario(): void {
+    this.nombreDocente = localStorage.getItem('nombre') || 'Docente';
+    this.correoDocente = localStorage.getItem('correo') || '';
+    this.rolDocente = localStorage.getItem('rol') || 'DOCENTE';
+  }
 
 }
-
-
-
