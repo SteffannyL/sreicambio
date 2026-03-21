@@ -72,6 +72,52 @@ export class CrearEventoComponent implements OnInit {
     this.pdf = event.target.files[0];
   }
 
+  /* ================= VALIDACIONES ================= */
+
+  validarFormulario(): boolean {
+
+    if (
+      this.evento.idambito === 0 ||
+      this.evento.idtipoevento === 0 ||
+      !this.evento.nombreevento ||
+      !this.evento.descripcion ||
+      !this.evento.fechainicio ||
+      !this.evento.fechafin ||
+      !this.evento.lugar ||
+      this.evento.aforo <= 0
+    ) {
+      this.mensaje = 'Por favor complete todos los campos obligatorios';
+      return false;
+    }
+
+    // validar fechas
+    if (this.evento.fechafin <= this.evento.fechainicio) {
+      this.mensaje = 'La fecha fin debe ser mayor a la fecha inicio';
+      return false;
+    }
+
+    return true;
+  }
+
+  /* ================= CONFIRMAR ENVÍO ================= */
+
+  confirmarEnvio(form: any) {
+
+    this.mensaje = '';
+
+    if (!this.validarFormulario()) {
+      return;
+    }
+
+    const confirmado = confirm('¿Está seguro de enviar el evento?');
+
+    if (!confirmado) return;
+
+    this.crearEvento();
+  }
+
+  /* ================= CREAR EVENTO ================= */
+
   crearEvento() {
 
     const token = localStorage.getItem('token');
@@ -109,7 +155,7 @@ export class CrearEventoComponent implements OnInit {
 
         console.log(resp);
 
-        this.mensaje = resp.mensaje;
+        this.mensaje = 'El evento ha sido enviado correctamente';
 
         // limpiar formulario
         this.evento = {
@@ -126,9 +172,8 @@ export class CrearEventoComponent implements OnInit {
         this.imagen = null;
         this.pdf = null;
 
-        // 🔥 CLAVE: notificar sin navegar
+        // notificar actualización
         this.eventoRefresh.notificarEventoCreado();
-
       },
       error: (err) => {
 
@@ -139,7 +184,6 @@ export class CrearEventoComponent implements OnInit {
         } else {
           this.mensaje = "Error al crear evento";
         }
-
       }
     });
   }

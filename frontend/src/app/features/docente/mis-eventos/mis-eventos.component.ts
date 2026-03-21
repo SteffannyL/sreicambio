@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // 👈 IMPORTANTE
+import { Router } from '@angular/router';
 import { DocenteEventoService } from '../../../core/services/docente-evento.service';
 
 @Component({
@@ -14,10 +14,14 @@ export class MisEventosComponent implements OnInit {
 
   eventos: any[] = [];
   cargando = true;
+  
+
+  // 🔥 URL base del backend (ajústalo si cambia)
+  private baseUrl = 'http://localhost:8080/';
 
   constructor(
     private eventoService: DocenteEventoService,
-    private router: Router // 👈 INYECCIÓN
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -27,6 +31,8 @@ export class MisEventosComponent implements OnInit {
   cargarEventos() {
     this.eventoService.listarMisEventos().subscribe({
       next: (data) => {
+        console.log('EVENTOS BACKEND:', data); 
+        console.log('EVENTOS:', this.eventos);
         this.eventos = data;
         this.cargando = false;
       },
@@ -37,8 +43,32 @@ export class MisEventosComponent implements OnInit {
     });
   }
 
-  // 👇 AQUÍ YA NAVEGA
+  // 🔥 FORMATEAR IMAGEN
+  getImagen(url: string | null): string {
+    if (!url) {
+      return '/img/logo.png';
+    }
+    return this.baseUrl + url;
+  }
+
+  // 🔥 FORMATEAR PDF
+  getPdf(url: string | null): string {
+    if (!url) {
+      return '#';
+    }
+    return this.baseUrl + url;
+  }
+
+  // 👇 NAVEGAR A DETALLE
   verDetalle(evento: any) {
     this.router.navigate(['/docente/evento', evento.idevento]);
+  }
+
+  // 🔥 ABRIR PDF
+  abrirPdf(url: string | null) {
+    const pdfUrl = this.getPdf(url);
+    if (pdfUrl !== '#') {
+      window.open(pdfUrl, '_blank');
+    }
   }
 }
