@@ -15,19 +15,36 @@ public class EventoCoordinadorRepository {
 
     public List<EventoPendienteDTO> listarReporte(String estado) {
 
-        String sql = switch (estado.toUpperCase()) {
+        String estadoUpper = estado.toUpperCase();
+
+        String sql = switch (estadoUpper) {
             case "APROBADO" -> "SELECT * FROM fn_reporte_eventos_aprobados()";
-            case "RECHAZADO" -> "SELECT * FROM fn_reporte_eventos_rechazados()";
+            case "RECHAZADO" -> "SELECT * FROM fn_reporte_eventos_rechazados()"; // 🔥 FIX REAL
             default -> "SELECT * FROM fn_reporte_eventos_pendientes()";
         };
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
+
             EventoPendienteDTO dto = new EventoPendienteDTO();
+
             dto.setIdevento(rs.getLong("idevento"));
             dto.setNombreevento(rs.getString("nombreevento"));
             dto.setDescripcion(rs.getString("descripcion"));
-            dto.setFechainicio(rs.getTimestamp("fechainicio").toLocalDateTime());
-            dto.setNombreDocente(rs.getString("docente")); // 🔥 clave
+
+            if (rs.getTimestamp("fechainicio") != null) {
+                dto.setFechainicio(rs.getTimestamp("fechainicio").toLocalDateTime());
+            }
+
+            dto.setNombreDocente(rs.getString("docente"));
+
+            // 🔥 comentario solo en rechazados
+            if ("RECHAZADO".equals(estadoUpper)) {
+                dto.setComentario(rs.getString("comentario"));
+            }
+
+            dto.setUrlImagen(rs.getString("url_imagen"));
+            dto.setUrlPdf(rs.getString("url_pdf"));
+
             return dto;
         });
     }

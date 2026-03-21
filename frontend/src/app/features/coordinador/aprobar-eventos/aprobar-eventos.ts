@@ -18,6 +18,7 @@ export class AprobarEventosComponent implements OnInit {
 
   eventos: any[] = [];
   eventosReporte: any[] = [];
+
   cargando = true;
   procesando = false;
 
@@ -30,14 +31,27 @@ export class AprobarEventosComponent implements OnInit {
   constructor(private coordinadorService: CoordinadorService) {}
 
   ngOnInit(): void {
-    this.cargarEventos();
+    this.cargarPorEstado();
   }
 
-  cargarEventos() {
+  // 🔥 CARGA PRINCIPAL
+  cargarPorEstado() {
 
     this.cargando = true;
 
-    this.coordinadorService.listarPendientes().subscribe({
+    let request;
+
+    if (this.estadoSeleccionado === 'PENDIENTE') {
+      request = this.coordinadorService.listarPendientes();
+    } 
+    else if (this.estadoSeleccionado === 'APROBADO') {
+      request = this.coordinadorService.listarAprobados();
+    } 
+    else {
+      request = this.coordinadorService.listarRechazados();
+    }
+
+    request.subscribe({
       next: (data) => {
         this.eventos = data;
         this.cargando = false;
@@ -46,15 +60,12 @@ export class AprobarEventosComponent implements OnInit {
     });
   }
 
-  // 🔥 NUEVO
-  cargarReporte() {
-    this.coordinadorService.getReporteEventos(this.estadoSeleccionado)
-      .subscribe(data => {
-        this.eventos = data;
-        this.eventosReporte = data;
-      });
-  }
-
+  // 🔥 REPORTE (NO pisa eventos)
+cargarReporte() {
+  return this.coordinadorService
+    .getReporteEventos(this.estadoSeleccionado);
+}
+  // 🔥 APROBAR
   aprobarEvento(id: number) {
 
     if (this.procesando) return;
@@ -70,12 +81,13 @@ export class AprobarEventosComponent implements OnInit {
     this.coordinadorService.aprobarEvento(body).subscribe({
       next: () => {
         this.procesando = false;
-        this.cargarEventos();
+        this.cargarPorEstado(); // 🔥 CORREGIDO
       },
       error: () => this.procesando = false
     });
   }
 
+  // 🔥 MODAL
   abrirModalRechazo(id: number) {
     this.eventoSeleccionado = id;
     this.mostrarModal = true;
@@ -88,6 +100,7 @@ export class AprobarEventosComponent implements OnInit {
     this.eventoSeleccionado = null;
   }
 
+  // 🔥 RECHAZAR
   confirmarRechazo(){
 
     if(this.procesando) return;
@@ -110,11 +123,9 @@ export class AprobarEventosComponent implements OnInit {
     this.coordinadorService.aprobarEvento(body).subscribe({
 
       next: () => {
-        this.mostrarModal = false;
-        this.observacion = '';
-        this.eventoSeleccionado = null;
+        this.cerrarModal();
         this.procesando = false;
-        this.cargarEventos();
+        this.cargarPorEstado(); // 🔥 CORREGIDO
       },
 
       error: () => this.procesando = false
@@ -124,31 +135,44 @@ export class AprobarEventosComponent implements OnInit {
   }
 
   // 🔥 PDF
-  generarPDF() {
+generarPDF() {
+
+  this.cargarReporte().subscribe(data => {
 
     const doc = new jsPDF();
 
-    const rows = this.eventosReporte.map(e => [
+    const rows = data.map((e:any) => [
       e.idevento,
       e.nombreevento,
-      e.nombreDocente,
-      e.fechainicio
+      e.nombreDocente || '',
+      e.fechainicio,
+      e.comentario || 'Sin comentario'
     ]);
 
     autoTable(doc, {
-      head: [['ID','Evento','Docente','Fecha']],
+      head: [['ID','Evento','Docente','Fecha','Comentario']],
       body: rows
     });
 
     doc.save('reporte-eventos.pdf');
-  }
+
+  });
+
+}
 
   // 🔥 EXCEL
-  exportarExcel() {
-    const ws = XLSX.utils.json_to_sheet(this.eventosReporte);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Eventos');
-    XLSX.writeFile(wb, 'reporte-eventos.xlsx');
-  }
+exportarExcel() {
 
+  this.cargarReporte().subscribe(data => {
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Eventos');
+
+    XLSX.writeFile(wb, 'reporte-eventos.xlsx');
+
+  });
+
+}
 }

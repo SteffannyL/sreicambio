@@ -20,8 +20,6 @@ import srei.proyecto.srei.evento.repository.EventoCoordinadorRepository;
 public class AprobacionEventoService {
 
     private final JdbcTemplate jdbcTemplate;
-
-    // 🔥 NUEVO (para reportes)
     private final EventoCoordinadorRepository eventoCoordinadorRepository;
 
     // ===============================
@@ -61,71 +59,25 @@ public class AprobacionEventoService {
     }
 
     // ===============================
-    // 🔹 LISTAR PENDIENTES
+    // 🔹 LISTAR (UNIFICADO CON BD)
     // ===============================
+
     public List<EventoPendienteDTO> listarPendientes() {
-
-        String sql = "SELECT * FROM fn_listar_eventos_pendientes()";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-
-            EventoPendienteDTO dto = new EventoPendienteDTO();
-
-            dto.setIdevento(rs.getLong("idevento"));
-            dto.setNombreevento(rs.getString("nombreevento"));
-            dto.setDescripcion(rs.getString("descripcion"));
-            dto.setFechainicio(rs.getTimestamp("fechainicio").toLocalDateTime());
-            dto.setNombreDocente(null); // 🔥 aquí aún no viene en esta función
-
-            return dto;
-        });
+        return eventoCoordinadorRepository.listarReporte("PENDIENTE");
     }
 
-    // ===============================
-    // 🔹 LISTAR APROBADOS
-    // ===============================
-    public List<EventoPendienteDTO> listarAprobados(){
-
-        String sql="SELECT * FROM fn_listar_eventos_aprobados()";
-
-        return jdbcTemplate.query(sql,(rs,rowNum)->{
-
-            EventoPendienteDTO dto = new EventoPendienteDTO();
-
-            dto.setIdevento(rs.getLong("idevento"));
-            dto.setNombreevento(rs.getString("nombreevento"));
-            dto.setDescripcion(rs.getString("descripcion"));
-            dto.setFechainicio(rs.getTimestamp("fechainicio").toLocalDateTime());
-            dto.setNombreDocente(null);
-
-            return dto;
-        });
+    public List<EventoPendienteDTO> listarAprobados() {
+        return eventoCoordinadorRepository.listarReporte("APROBADO");
     }
 
-    // ===============================
-    // 🔹 LISTAR RECHAZADOS
-    // ===============================
-    public List<EventoPendienteDTO> listarRechazados(){
-
-        String sql="SELECT * FROM fn_listar_eventos_rechazados()";
-
-        return jdbcTemplate.query(sql,(rs,rowNum)->{
-
-            EventoPendienteDTO dto = new EventoPendienteDTO();
-
-            dto.setIdevento(rs.getLong("idevento"));
-            dto.setNombreevento(rs.getString("nombreevento"));
-            dto.setDescripcion(rs.getString("descripcion"));
-            dto.setFechainicio(rs.getTimestamp("fechainicio").toLocalDateTime());
-            dto.setNombreDocente(null);
-
-            return dto;
-        });
+    public List<EventoPendienteDTO> listarRechazados() {
+        return eventoCoordinadorRepository.listarReporte("RECHAZADO");
     }
 
     // ===============================
     // 🔹 CONTADORES
     // ===============================
+
     public int contarPendientes(){
         String sql="SELECT fn_contar_eventos_pendientes()";
         return jdbcTemplate.queryForObject(sql,Integer.class);
@@ -142,10 +94,10 @@ public class AprobacionEventoService {
     }
 
     // ===============================
-    // 🔥 REPORTES (NUEVO)
+    // 🔥 REPORTES
     // ===============================
+
     public List<EventoPendienteDTO> reporteEventos(String estado) {
         return eventoCoordinadorRepository.listarReporte(estado);
     }
-
 }

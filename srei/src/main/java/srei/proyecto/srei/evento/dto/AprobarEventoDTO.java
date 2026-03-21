@@ -11,5 +11,7 @@ public class AprobarEventoDTO {
     // aprobado o rechazado
 
     private String comentario;
+    private String urlImagen;
+private String urlPdf;
 
 }
