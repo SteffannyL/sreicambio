@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import srei.proyecto.srei.admin.dto.SesionDTO;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -118,4 +119,23 @@ public List<SesionDTO> ultimosUsuarios() {
         return u;
     });
 }
+
+// TOTAL DE EVENTOS (ADMIN)
+public int totalEventos() {
+
+    String sql = "SELECT COUNT(*) FROM evento";
+
+    Integer total = jdbcTemplate.queryForObject(sql, Integer.class);
+
+    return total != null ? total : 0;
+}
+
+// LISTAR EVENTOS (ADMIN)
+public List<Map<String, Object>> listarEventos() {
+
+    String sql = "SELECT * FROM fn_listar_eventos_admin()";
+
+    return jdbcTemplate.queryForList(sql);
+}
+
 }

@@ -9,6 +9,7 @@ import srei.proyecto.srei.admin.dto.SesionDTO;
 import srei.proyecto.srei.admin.service.AdminSesionService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,5 +60,17 @@ public class AdminSesionController {
     @GetMapping("/api/admin/ultimos-usuarios")
     public List<SesionDTO> ultimosUsuarios() {
     return service.ultimosUsuarios();
+}
+
+    // ADMIN - total de eventos
+    @GetMapping("/api/admin/eventos/total")
+    public ResponseEntity<Integer> totalEventos() {
+    return ResponseEntity.ok(service.totalEventos());
+}
+
+// ADMIN - listar eventos
+@GetMapping("/api/admin/eventos")
+public List<Map<String, Object>> listarEventos() {
+    return service.listarEventos();
 }
 }

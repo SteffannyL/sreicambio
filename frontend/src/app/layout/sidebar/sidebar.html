@@ -1,102 +1,99 @@
-<nav class="sidebar">
+<nav class="sidebar" [class.collapsed]="isCollapsed">
 
-<ul>
+  <!-- 🔥 BOTÓN AHORA A LA IZQUIERDA -->
+  <div class="toggle-container">
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <span class="material-icons">menu</span>
+    </button>
+  </div>
 
-<!-- DASHBOARD GENERAL -->
+  <ul>
+   
+    <!-- DOCENTE -->
+    <li *ngIf="rol === 'DOCENTE'" class="menu-title">
+      <span *ngIf="!isCollapsed">Docente</span>
+    </li>
 
-<li>
-<a routerLink="/dashboard">
-Dashboard
-</a>
-</li>
+    <li *ngIf="rol === 'DOCENTE'">
+      <a routerLink="/docente/dashboard">
+        <span class="material-icons">school</span>
+        <span class="texto" *ngIf="!isCollapsed">Dashboard Docente</span>
+      </a>
+    </li>
 
+    <li *ngIf="rol === 'DOCENTE'">
+      <a routerLink="/docente/crear-evento">
+        <span class="material-icons">event</span>
+        <span class="texto" *ngIf="!isCollapsed">Crear Evento</span>
+      </a>
+    </li>
 
-<!-- DOCENTE -->
+    <li *ngIf="rol === 'DOCENTE'">
+      <a routerLink="/docente/mis-eventos">
+        <span class="material-icons">list</span>
+        <span class="texto" *ngIf="!isCollapsed">Mis Eventos</span>
+      </a>
+    </li>
 
-<li *ngIf="rol === 'DOCENTE'" class="menu-title">
-Docente
-</li>
+    <li *ngIf="rol === 'DOCENTE'">
+      <a routerLink="/docente/ia/generar-juego">
+        <span class="material-icons">smart_toy</span>
+        <span class="texto" *ngIf="!isCollapsed">Generar Quiz IA</span>
+      </a>
+    </li>
 
-<li *ngIf="rol === 'DOCENTE'">
-<a routerLink="/docente/dashboard">
-Dashboard Docente
-</a>
-</li>
+    <!-- COORDINADOR -->
+    <li *ngIf="rol === 'COORDINADOR'" class="menu-title">
+      <span *ngIf="!isCollapsed">Coordinador</span>
+    </li>
 
-<li *ngIf="rol === 'DOCENTE'">
-<a routerLink="/docente/crear-evento">
-Crear Evento
-</a>
-</li>
+    <li *ngIf="rol === 'COORDINADOR'">
+      <a routerLink="/coordinador/dashboard">
+        <span class="material-icons">analytics</span>
+        <span class="texto" *ngIf="!isCollapsed">Dashboard Coordinador</span>
+      </a>
+    </li>
 
-<li *ngIf="rol === 'DOCENTE'">
-<a routerLink="/docente/mis-eventos">
-Mis Eventos
-</a>
-</li>
+    <li *ngIf="rol === 'COORDINADOR'">
+      <a routerLink="/coordinador/aprobar-eventos">
+        <span class="material-icons">check_circle</span>
+        <span class="texto" *ngIf="!isCollapsed">Aprobar Eventos</span>
+      </a>
+    </li>
 
-<li *ngIf="rol === 'DOCENTE'">
-  <a routerLink="/docente/ia/generar-juego">
-    🎮 Generar Quiz IA
-  </a>
-</li>
+    <!-- ADMIN -->
+    <li *ngIf="rol === 'ADMIN'" class="menu-title">
+      <span *ngIf="!isCollapsed">Administrador</span>
+    </li>
 
-<!-- COORDINADOR -->
+    <li *ngIf="rol === 'ADMIN'">
+      <a routerLink="/admin/dashboard">
+        <span class="material-icons">admin_panel_settings</span>
+        <span class="texto" *ngIf="!isCollapsed">Dashboard Admin</span>
+      </a>
+    </li>
 
-<li *ngIf="rol === 'COORDINADOR'" class="menu-title">
-Coordinador
-</li>
+    <li *ngIf="rol === 'ADMIN'">
+      <a routerLink="/admin/usuarios">
+        <span class="material-icons">groups</span>
+        <span class="texto" *ngIf="!isCollapsed">Usuarios</span>
+      </a>
+    </li>
 
-<li *ngIf="rol === 'COORDINADOR'">
-<a routerLink="/coordinador/dashboard">
-Dashboard Coordinador
-</a>
-</li>
+    <li *ngIf="rol === 'ADMIN'">
+      <a routerLink="/admin/sesiones">
+        <span class="material-icons">devices</span>
+        <span class="texto" *ngIf="!isCollapsed">Sesiones</span>
+      </a>
+    </li>
 
-<li *ngIf="rol === 'COORDINADOR'">
-<a routerLink="/coordinador/aprobar-eventos">
-Aprobar Eventos
-</a>
-</li>
+    <li *ngIf="rol === 'ADMIN'">
+      <a routerLink="/admin/backups">
+        <span class="material-icons">backup</span>
+        <span class="texto" *ngIf="!isCollapsed">Backups</span>
+      </a>
+    </li>
 
-
-<!-- ADMIN -->
-
-<li *ngIf="rol === 'ADMIN'" class="menu-title">
-Administrador
-</li>
-
-<li *ngIf="rol === 'ADMIN'">
-<a routerLink="/admin/dashboard">
-Dashboard Admin
-</a>
-</li>
-
-<li *ngIf="rol === 'ADMIN'">
-<a routerLink="/admin/usuarios">
-Usuarios
-</a>
-</li>
-
-<li *ngIf="rol === 'ADMIN'">
-<a routerLink="/admin/sesiones">
-Sesiones
-</a>
-</li>
-<li *ngIf="rol === 'ADMIN'">
-<a routerLink="/admin/backups">
-Backups
-</a>
-</li>
-
-<!-- LOGOUT -->
-
-<li class="logout">
-<button (click)="logout()">
-Cerrar sesión
-</button>
-</li>
-
-</ul>
+  </ul>
 
 </nav>

@@ -1,0 +1,80 @@
+<div class="eventos-container">
+
+  <h2>Eventos</h2>
+
+  <!-- FILTROS / REPORTES -->
+  <div class="acciones-reportes">
+
+    <label>Reportes:</label>
+
+    <select #filtro (change)="aplicarFiltro(filtro.value)">
+      <option value="todos">Todos</option>
+      <option value="pendientes">Pendientes</option>
+      <option value="aprobados">Aprobados</option>
+      <option value="rechazados">Rechazados</option>
+    </select>
+       
+ 
+    <button (click)="generarPDFEventos(filtroActual)">
+      📄 PDF
+    </button>
+
+    <button (click)="exportarExcelEventos(filtroActual)">
+      📊 Excel
+    </button>
+
+  </div>
+
+  <!-- 📊 GRÁFICO -->
+  <div class="grafico-container">
+    <canvas id="graficoEventos"></canvas>
+  </div>
+
+  <!-- 📋 TABLA -->
+  <div class="tabla-container">
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Docente</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let e of eventosFiltrados">
+
+          <td>{{ e.idevento }}</td>
+
+          <td>{{ e.nombre }}</td>
+
+          <td>{{ e.docente }}</td>
+
+          <td>{{ e.fechainicio | date:'short' }}</td>
+
+          <td>{{ e.fechafin | date:'short' }}</td>
+
+          <td>
+            <span 
+              class="estado"
+              [ngClass]="{
+                'pendiente': (e.estado || '').toUpperCase().includes('PEND'),
+                'aprobado': (e.estado || '').toUpperCase().includes('APRO'),
+                'rechazado': (e.estado || '').toUpperCase().includes('RECH')
+              }"
+            >
+              {{ e.estado }}
+            </span>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>

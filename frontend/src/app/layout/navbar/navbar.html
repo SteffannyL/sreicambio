@@ -1,7 +1,11 @@
 <nav class="navbar">
 
+  <!-- LOGO + NOMBRE -->
   <div class="logo">
-    <strong>SREI</strong>
+    <img src="/img/logo.png" class="logo-img">
+    <span class="logo-text">
+      Sistema de Registro de Eventos Interculturales
+    </span>
   </div>
 
   <ul class="menu">
@@ -10,11 +14,17 @@
     <ng-container *ngIf="!authService.isLoggedIn()">
 
       <li>
-        <a routerLink="/auth/login">Iniciar Sesión</a>
+        <a routerLink="/auth/login">
+          <span class="material-icons">login</span>
+          Iniciar Sesión
+        </a>
       </li>
 
       <li>
-        <a routerLink="/auth/register">Registrarse</a>
+        <a routerLink="/auth/register">
+          <span class="material-icons">person_add</span>
+          Registrarse
+        </a>
       </li>
 
     </ng-container>
@@ -22,12 +32,16 @@
     <!-- CON LOGIN -->
     <ng-container *ngIf="authService.isLoggedIn()">
 
-      <li>
-        Bienvenido, {{ authService.getRol() }}
+      <li class="usuario">
+        <span class="material-icons">account_circle</span>
+        {{ authService.getRol() }}
       </li>
 
       <li>
-        <a (click)="logout()">Cerrar Sesión</a>
+        <a (click)="logout()" class="logout-btn">
+          <span class="material-icons">logout</span>
+          Cerrar Sesión
+        </a>
       </li>
 
     </ng-container>

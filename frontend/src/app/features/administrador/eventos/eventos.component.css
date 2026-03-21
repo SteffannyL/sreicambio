@@ -1,0 +1,132 @@
+.eventos-container {
+  padding: 20px;
+  background: #f6f7f9; /* fondo general como UTEQ */
+}
+
+/* TARJETA DEL GRÁFICO */
+.grafico-container {
+  width: 100%;
+  max-width: 700px; /* 🔥 más ancho */
+  height: 450px; /* 🔥 más alto */
+  margin: 0 auto 30px auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  border-top: 5px solid #c59b2b;
+}
+/* CONTENEDOR TABLA */
+.tabla-container {
+  overflow-x: auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  padding: 10px;
+}
+
+/* TABLA */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ENCABEZADO */
+th {
+  background: #0b7a3b; /* verde UTEQ */
+  color: white;
+  padding: 14px;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* CELDAS */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+/* EFECTO HOVER FILAS */
+tr:hover {
+  background: #f9fafb;
+  transition: 0.2s;
+}
+
+/* ESTADOS */
+.estado {
+  padding: 5px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+/* PENDIENTE */
+.pendiente {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* APROBADO */
+.aprobado {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* RECHAZADO */
+.rechazado {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.acciones-reportes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* SELECT */
+.acciones-reportes select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* BOTONES */
+.acciones-reportes button {
+  background: #0b7a3b; /* verde UTEQ */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.acciones-reportes button:hover {
+  background: #095f2d;
+}
+
+/* BOTÓN EXCEL DIFERENTE */
+.acciones-reportes button:last-child {
+  background: #c59b2b; /* dorado */
+}
+
+.acciones-reportes button:last-child:hover {
+  background: #a88422;
+}

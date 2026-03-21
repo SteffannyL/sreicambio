@@ -1,50 +1,120 @@
+/* SIDEBAR */
 .sidebar{
-width:220px;
-background:#2c3e50;
-height:100vh;
-color:white;
-padding-top:20px;
+  width:220px;
+  background:#0b7a3b;
+  height:100vh;
+  color:white;
+  padding-top:10px;
+  display:flex;
+  flex-direction:column;
+
+  /* 🔥 ANIMACIÓN SUAVE */
+  transition: width 0.35s ease-in-out;
 }
 
+/* COLAPSADO */
+.sidebar.collapsed{
+  width:70px;
+}
+
+/* BOTÓN CONTENEDOR */
+.toggle-container{
+  display:flex;
+  justify-content:flex-start; /* 🔥 AHORA A LA IZQUIERDA */
+  padding:10px;
+}
+
+/* BOTÓN */
+.toggle-btn{
+  background:#c59b2b;
+  border:none;
+  color:white;
+  padding:6px;
+  border-radius:8px;
+  cursor:pointer;
+
+  /* 🔥 ANIMACIÓN */
+  transition: all 0.3s ease;
+}
+
+/* HOVER */
+.toggle-btn:hover{
+  background:#a88422;
+  transform: scale(1.05);
+}
+
+/* LISTA */
 .sidebar ul{
-list-style:none;
-padding:0;
-margin:0;
+  list-style:none;
+  padding:0;
+  margin:0;
 }
 
+/* ITEMS */
 .sidebar li{
-padding:10px 20px;
+  padding:8px 15px;
 }
 
+/* LINKS */
 .sidebar a{
-color:white;
-text-decoration:none;
-display:block;
+  color:white;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border-radius:10px;
+
+  /* 🔥 SUAVIDAD */
+  transition: all 0.25s ease;
 }
 
+/* HOVER */
 .sidebar a:hover{
-background:#34495e;
+  background:rgba(255,255,255,0.2);
+  transform: translateX(3px); /* 🔥 pequeño movimiento */
 }
 
+/* ICONOS */
+.material-icons{
+  font-size:20px;
+
+  /* 🔥 animación suave */
+  transition: transform 0.2s ease;
+}
+
+/* TEXTO */
+.texto{
+  white-space:nowrap;
+
+  /* 🔥 fade */
+  transition: opacity 0.2s ease;
+}
+
+/* OCULTAR TEXTO EN COLAPSADO */
+.sidebar.collapsed .texto{
+  opacity:0;
+  width:0;
+  overflow:hidden;
+}
+
+/* CENTRAR ICONOS */
+.sidebar.collapsed a{
+  justify-content:center;
+}
+
+/* TITULOS */
 .menu-title{
-font-weight:bold;
-margin-top:20px;
-color:#bdc3c7;
+  font-weight:bold;
+  margin-top:15px;
+  color:#cde7d8;
+  font-size:13px;
+  padding-left:15px;
+
+  transition: opacity 0.2s ease;
 }
 
-.logout{
-margin-top:30px;
-}
-
-button{
-width:100%;
-background:#e74c3c;
-border:none;
-color:white;
-padding:8px;
-cursor:pointer;
-}
-
-button:hover{
-background:#c0392b;
+/* OCULTAR TITULOS */
+.sidebar.collapsed .menu-title span{
+  opacity:0;
 }

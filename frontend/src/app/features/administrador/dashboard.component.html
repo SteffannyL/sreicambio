@@ -5,26 +5,32 @@
 
     <h2>Dashboard</h2>
 
+    <!-- CARDS -->
     <div class="cards">
 
       <div class="card">
         <h3>Total Usuarios</h3>
-        <p>{{totalUsuarios}}</p>
+        <p>{{ totalUsuarios }}</p>
       </div>
 
       <div class="card">
         <h3>Usuarios Activos</h3>
-        <p>{{activos}}</p>
+        <p>{{ activos }}</p>
       </div>
 
       <div class="card">
         <h3>Usuarios Inactivos</h3>
-        <p>{{inactivos}}</p>
+        <p>{{ inactivos }}</p>
+      </div>
+
+      <div class="card card-eventos">
+        <h3>Total Eventos</h3>
+        <p>{{ totalEventos }}</p>
       </div>
 
     </div>
 
-    <!--  GRÁFICOS  -->
+    <!-- GRÁFICOS SUPERIORES -->
     <div class="graficos">
       <div class="grafico">
         <canvas id="graficoPie"></canvas>
@@ -35,17 +41,30 @@
       </div>
     </div>
 
-    <div class="grafico">
-      <h3>Usuarios registrados por mes</h3>
-      <canvas id="graficoLinea"></canvas>
+    <!-- GRÁFICOS INFERIORES (alineados correctamente) -->
+    <div class="graficos">
+
+      <div class="grafico">
+        <h3>Usuarios registrados por mes</h3>
+        <canvas id="graficoLinea"></canvas>
+      </div>
+
+      <div class="grafico">
+      <h3>Estado de eventos</h3>
+
+    <div class="grafico-contenedor">
+    <canvas id="graficoEventosDashboard"></canvas>
+   </div>
+</div>
+
     </div>
 
   </div>
 
   <!-- DERECHA -->
-  <div class="dashboard-side">
+    <div class="dashboard-side">
 
-    <!--  USUARIOS CONECTADOS -->
+    <!-- USUARIOS CONECTADOS -->
     <div class="usuarios-card">
       <h3>Últimos usuarios conectados</h3>
 
@@ -65,7 +84,6 @@
               {{ u.nombres || 'Usuario' }}
               {{ u.apellidos || '' }}
             </strong>
-
             <small>{{ u.correo }}</small>
           </div>
         </div>
@@ -85,7 +103,6 @@
         </button>
       </div>
     </div>
-
 
     <!-- USUARIOS REGISTRADOS -->
     <div class="usuarios-card">
@@ -107,7 +124,6 @@
               {{ u.nombres }}
               {{ u.apellidos }}
             </strong>
-
             <small>{{ u.correo }}</small>
           </div>
         </div>
@@ -127,6 +143,48 @@
       </div>
     </div>
 
+    <!-- LISTA DE EVENTOS -->
+    <div class="usuarios-card">
+      <h3>Últimos eventos</h3>
+
+      <div *ngIf="eventos.length === 0">
+        <p>No hay eventos</p>
+      </div>
+
+      <div 
+        class="usuario-item fade-in"
+        *ngFor="let e of eventos">
+
+        <div class="usuario-info">
+          <mat-icon>event</mat-icon>
+
+          <div>
+            <strong>{{ e.nombre }}</strong>
+            <small>{{ e.docente }}</small>
+          </div>
+        </div>
+
+        <div class="estado">
+          <span 
+            [ngClass]="{
+              'estado-pendiente': e.estado === 'PENDIENTE',
+              'estado-aprobado': e.estado === 'APROBADO',
+              'estado-rechazado': e.estado === 'RECHAZADO'
+            }"
+          >
+            {{ e.estado }}
+          </span>
+        </div>
+
+      </div>
+
+      <div class="ver-mas">
+        <button routerLink="/admin/eventos">
+          Ver eventos
+        </button>
+      </div>
+    </div>
+
   </div>
 
-</div>
+</div>s
