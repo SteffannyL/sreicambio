@@ -2,66 +2,70 @@
 
   <h2 class="titulo">Mis Eventos</h2>
 
+  <!-- CARGANDO -->
   <div *ngIf="cargando" class="cargando">
     Cargando eventos...
   </div>
 
-  <div class="tabla-container" *ngIf="!cargando && eventos.length > 0">
+  <!-- CARDS -->
+  <div class="cards-container" *ngIf="!cargando && eventos.length > 0">
 
-    <table class="tabla">
+    <div class="card-evento" *ngFor="let evento of eventos">
 
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Evento</th>
-          <th>Fecha Inicio</th>
-          <th>Fecha Fin</th>
-          <th>Lugar</th>
-          <th>Aforo</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
+      <!-- IMAGEN -->
+      <div class="imagen">
+        <img [src]="getImagen(evento.url_imagen)" alt="evento">
+      </div>
 
-      <tbody>
-        <tr *ngFor="let evento of eventos">
+      <!-- CONTENIDO -->
+      <div class="contenido">
 
-          <td>{{ evento.idevento }}</td>
+        <h3 class="nombre">{{ evento.nombreevento }}</h3>
 
-          <td class="nombre">{{ evento.nombreevento }}</td>
+        <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
 
-          <!-- ✅ FECHA + HORA BONITA -->
-          <td>
-            {{ evento.fechainicio | date:'dd MMM yyyy, hh:mm a' }}
-          </td>
+        <p>
+          <strong>Inicio:</strong>
+          {{ evento.fechainicio | date:'dd MMM yyyy, hh:mm a' }}
+        </p>
 
-          <td>
-            {{ evento.fechafin | date:'dd MMM yyyy, hh:mm a' }}
-          </td>
+        <p>
+          <strong>Fin:</strong>
+          {{ evento.fechafin | date:'dd MMM yyyy, hh:mm a' }}
+        </p>
 
-          <td>{{ evento.lugar }}</td>
+        <p><strong>Aforo:</strong> {{ evento.aforo }}</p>
 
-          <td>{{ evento.aforo }}</td>
+        <!-- ESTADO -->
+        <span class="estado" [ngClass]="evento.estado?.toLowerCase()">
+          {{ evento.estado }}
+        </span>
 
-          <td>
-            <span class="estado" [ngClass]="evento.estado.toLowerCase()">
-              {{ evento.estado }}
-            </span>
-          </td>
+        <!-- ACCIONES -->
+        <div class="acciones">
 
-          <td>
-            <button class="btn-detalle" (click)="verDetalle(evento)">
-              Ver detalles
-            </button>
-          </td>
+          <!-- PDF A LA IZQUIERDA -->
+          <button 
+            class="btn-pdf" 
+            *ngIf="evento.url_pdf"
+            (click)="abrirPdf(evento.url_pdf)">
+            Ver PDF
+          </button>
 
-        </tr>
-      </tbody>
+          <!-- DETALLE A LA DERECHA -->
+          <button class="btn-detalle" (click)="verDetalle(evento)">
+            Ver detalles
+          </button>
 
-    </table>
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
 
+  <!-- SIN DATOS -->
   <div *ngIf="!cargando && eventos.length === 0" class="no-data">
     No tienes eventos registrados
   </div>

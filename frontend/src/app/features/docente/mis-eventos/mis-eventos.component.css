@@ -1,147 +1,151 @@
-/* ===== CONTENEDOR ===== */
-.contenedor {
-  max-width: 1100px;
-  margin: 30px auto;
-  padding: 20px;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+/* ===== GRID ===== */
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 10px;
 }
 
-/* ===== TÍTULO ===== */
-.titulo {
-  color: #0b7a3b;
-  margin-bottom: 20px;
-  font-weight: 700;
-}
+/* ===== CARD ===== */
 
-/* ===== TABLA CONTENEDOR ===== */
-.tabla-container {
+.card-evento {
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.06);
   overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ===== TABLA ===== */
-.tabla {
+.card-evento:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== IMAGEN ===== */
+
+.card-evento .imagen {
   width: 100%;
-  border-collapse: collapse;
+  height: 180px;
+  overflow: hidden;
+  background: #f3f4f6;
+  position: relative;
 }
 
-/* HEADER */
-.tabla thead {
-  background: #0b7a3b;
-  color: white;
+.card-evento .imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
 }
 
-.tabla th {
-  padding: 14px;
-  text-align: left;
-  font-size: 14px;
+.card-evento:hover .imagen img {
+  transform: scale(1.05);
 }
 
-/* FILAS */
-.tabla td {
-  padding: 12px;
-  font-size: 14px;
-  border-bottom: 1px solid #e5e7eb;
+/* ===== CONTENIDO ===== */
+
+.card-evento .contenido {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-/* HOVER FILA */
-.tabla tbody tr:hover {
-  background: #f0fdf4;
-}
-
-/* NOMBRE DESTACADO */
-.nombre {
+.card-evento h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
   font-weight: 600;
-  color: #111;
+  color: #1f2937;
 }
 
-/* ===== ESTADOS ===== */
-.estado {
-  padding: 5px 10px;
-  border-radius: 20px;
+/* Texto */
+.card-evento p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+/* ===== ESTADO ===== */
+
+.card-evento .estado {
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 8px;
+  padding: 4px 10px;
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 600;
+  border-radius: 999px;
+  width: fit-content;
 }
 
-/* colores */
-.estado.aprobado {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
+/* Colores por estado */
 .estado.pendiente {
   background: #fef3c7;
-  color: #c59b2b;
+  color: #92400e;
+}
+
+.estado.aprobado {
+  background: #dcfce7;
+  color: #166534;
 }
 
 .estado.rechazado {
   background: #fee2e2;
-  color: #dc2626;
+  color: #991b1b;
 }
 
-/* ===== BOTÓN ===== */
+/* ===== ACCIONES ===== */
+
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Botón principal */
 .btn-detalle {
-  background: #0b7a3b;
-  color: white;
+  flex: 1;
+  padding: 8px;
   border: none;
-  padding: 6px 12px;
   border-radius: 8px;
-  cursor: pointer;
+  background: #0b7a3b;
+  color: #fff;
   font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
   transition: 0.2s;
 }
 
 .btn-detalle:hover {
-  background: #08612f;
+  background: #095c2d;
 }
 
-/* ===== CARGANDO ===== */
-.cargando {
-  text-align: center;
-  padding: 20px;
-  color: #666;
+/* Botón PDF */
+.btn-pdf {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #c59b2b;
+  background: #fff;
+  color: #c59b2b;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-/* ===== NO DATA ===== */
-.no-data {
-  text-align: center;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+.btn-pdf:hover {
+  background: #c59b2b;
+  color: #fff;
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .tabla thead {
-    display: none;
-  }
 
-  .tabla, .tabla tbody, .tabla tr, .tabla td {
-    display: block;
-    width: 100%;
-  }
-
-  .tabla tr {
-    margin-bottom: 15px;
-    background: #fff;
-    border-radius: 12px;
-    padding: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  }
-
-  .tabla td {
-    border: none;
-    padding: 8px;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .tabla td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    color: #0b7a3b;
+@media (max-width: 600px) {
+  .card-evento .imagen {
+    height: 160px;
   }
 }

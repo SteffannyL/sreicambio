@@ -1,112 +1,187 @@
-/* contenedor principal */
+/* ===== CONTENEDOR ===== */
 
-.form-container{
-  max-width:600px;
-  margin:30px auto;
-  padding:25px;
-  background:white;
-  border-radius:14px;
-  border:1px solid #e5e7eb;
-  box-shadow:0 6px 14px rgba(0,0,0,0.06);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+.form-container {
+  max-width: 650px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* título */
+/* ===== TÍTULO ===== */
 
-.form-container h2{
-  margin-bottom:20px;
-  color:#0b7a3b; /* verde institucional */
-  font-size:22px;
+.titulo {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  background: linear-gradient(90deg, #0b7a3b, #c59b2b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* formulario */
+/* ===== FORM ===== */
 
-form{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* etiquetas */
-
-label{
-  font-size:14px;
-  font-weight:600;
-  color:#374151;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-/* inputs y selects */
+/* ===== LABEL ===== */
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* ===== INPUTS ===== */
 
 input,
 select,
-textarea{
-  padding:10px 12px;
-  border-radius:8px;
-  border:1px solid #e5e7eb;
-  font-size:14px;
-  width:100%;
-  box-sizing:border-box;
+textarea {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background: #f9fafb;
+  transition: all 0.25s ease;
 }
 
+/* focus verde */
 input:focus,
 select:focus,
-textarea:focus{
-  outline:none;
-  border-color:#0b7a3b;
+textarea:focus {
+  outline: none;
+  border-color: #0b7a3b;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(11, 122, 59, 0.15);
 }
 
-/* textarea */
+/* ===== ERROR ===== */
 
-textarea{
-  min-height:80px;
-  resize:vertical;
+.invalido {
+  border-color: #dc2626 !important;
+  background: #fef2f2;
 }
 
-/* botones */
-
-.botones{
-  margin-top:15px;
-  display:flex;
-  gap:10px;
+small {
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-/* botón guardar */
+/* ===== TEXTAREA ===== */
 
-.btn-guardar{
-  background:#0b7a3b;
-  color:white;
-  border:none;
-  padding:10px 18px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:14px;
+textarea {
+  min-height: 90px;
 }
 
-.btn-guardar:hover{
-  background:#08612f;
+/* ===== FILE INPUT ===== */
+
+.file-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px dashed #0b7a3b;
+  background: #ecfdf5;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
-/* botón cancelar */
-
-.btn-cancelar{
-  background:#c59b2b;
-  color:#111;
-  border:none;
-  padding:10px 18px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:14px;
+.file-upload input {
+  display: none;
 }
 
-.btn-cancelar:hover{
-  background:#b38a21;
+.file-upload:hover {
+  background: #d1fae5;
+  transform: scale(1.01);
 }
 
-/* mensaje de respuesta */
+/* PDF dorado */
 
-.mensaje{
-  margin-top:15px;
-  font-size:14px;
-  font-weight:600;
-  color:#0b7a3b;
+.file-upload.pdf {
+  border-color: #c59b2b;
+  background: #fffbeb;
+}
+
+.file-upload.pdf:hover {
+  background: #fef3c7;
+}
+
+/* ===== BOTONES ===== */
+
+.botones {
+  margin-top: 20px;
+}
+
+/* BOTÓN PRINCIPAL */
+
+.btn-guardar {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #0b7a3b, #16a34a);
+  color: white;
+
+  transition: all 0.3s ease;
+}
+
+/* hover elegante */
+.btn-guardar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(11, 122, 59, 0.3);
+}
+
+/* deshabilitado */
+
+.btn-guardar:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ===== MENSAJE ===== */
+
+.mensaje {
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 600px) {
+  .form-container {
+    padding: 20px;
+  }
+
+  .titulo {
+    font-size: 24px;
+  }
 }

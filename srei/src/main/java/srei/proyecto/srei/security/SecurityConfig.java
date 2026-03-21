@@ -69,6 +69,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/juegos/**").permitAll()
                 .requestMatchers("/juegos/**").permitAll()
 
+                //IA/ GENERACIÓN
+               .requestMatchers("/api/ia/**").permitAll()
+
                 // 🔐 ADMIN
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
