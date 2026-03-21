@@ -6,6 +6,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const authService = inject(AuthService);
   const token = authService.getToken();
+  console.log('TOKEN INTERCEPTOR:', token);
 
   // ❗ Solo saltar login y register
   if (

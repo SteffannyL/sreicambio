@@ -5,6 +5,7 @@ import { Chart } from 'chart.js/auto';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { EventoRefreshService } from '../../core/services/evento-refresh.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,43 +19,65 @@ export class DashboardComponent implements OnInit, OnDestroy {
   totalUsuarios: number = 0;
   activos: number = 0;
   inactivos: number = 0;
+  totalEventos: number = 0;
 
   meses: string[] = [];
   totalesMes: number[] = [];
 
-  // 👥 Usuarios conectados (sesiones)
   ultimosUsuarios: any[] = [];
-
-  // 🆕 Usuarios registrados
   ultimosRegistrados: any[] = [];
+  eventos: any[] = [];
 
-  // Auto-refresh
   intervalo: any;
 
-  // Gráficos
   pieChart: Chart | null = null;
   barraChart: Chart | null = null;
   lineaChart: Chart | null = null;
+  eventosChart: Chart | null = null;
 
   constructor(
     private adminService: AdminService,
     private sesionService: AdminSesionService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private eventoRefresh: EventoRefreshService
   ) {}
 
-  ngOnInit(): void {
-    this.cargarEstadisticas();
-    this.cargarUsuariosPorMes();
+ ngOnInit(): void {
+  // 🔥 CARGA INICIAL
+  this.cargarEstadisticas();
+  this.cargarUsuariosPorMes();
 
-    // 👇 separados correctamente
-    this.cargarUltimosUsuarios();     // conectados
-    this.cargarUltimosRegistrados();  // registrados
+  this.cargarUltimosUsuarios();
+  this.cargarUltimosRegistrados();
 
-    // refresca solo sesiones
-    this.intervalo = setInterval(() => {
-      this.cargarUltimosUsuarios();
-    }, 10000);
-  }
+  this.cargarTotalEventos();
+  this.cargarEventos();
+
+  // 🔥 SOLO sesiones en tiempo real
+  this.intervalo = setInterval(() => {
+    this.cargarUltimosUsuarios();
+  }, 10000);
+
+  //  EVENTO CREADO (en vivo)
+  this.eventoRefresh.eventoCreado$.subscribe(() => {
+    console.log('Evento creado → actualizando dashboard');
+
+    this.cargarEventos();
+    this.cargarTotalEventos();
+
+    this.cd.detectChanges(); //  asegura render inmediato
+  });
+
+  //  EVENTO ACTUALIZADO (estado en vivo)
+  this.eventoRefresh.eventoActualizado$.subscribe(() => {
+    console.log('Evento actualizado → actualizando dashboard');
+
+    this.cargarEventos();
+    this.cargarTotalEventos();
+
+    this.cd.detectChanges(); //  importante
+  });
+}
 
   ngOnDestroy(): void {
     if (this.intervalo) {
@@ -88,7 +111,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  // 👥 USUARIOS CONECTADOS (NO SE TOCA TU LÓGICA)
   cargarUltimosUsuarios(): void {
     this.sesionService.listarSesiones().subscribe((data: any[]) => {
 
@@ -97,24 +119,38 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .sort((a, b) => new Date(b.fechalogin).getTime() - new Date(a.fechalogin).getTime())
         .slice(0, 10);
 
-      console.log('USUARIOS ONLINE:', this.ultimosUsuarios);
-
       this.cd.detectChanges();
     });
   }
 
-  // 🆕 USUARIOS REGISTRADOS (NUEVO)
   cargarUltimosRegistrados(): void {
     this.adminService.ultimosUsuarios().subscribe((data: any[]) => {
 
       this.ultimosRegistrados = data;
 
-      console.log('ÚLTIMOS REGISTRADOS:', this.ultimosRegistrados);
+      this.cd.detectChanges();
+    });
+  }
+
+  cargarTotalEventos(): void {
+    this.adminService.totalEventos().subscribe((data: number) => {
+
+      this.totalEventos = data;
 
       this.cd.detectChanges();
     });
   }
 
+cargarEventos(): void {
+  this.adminService.listarEventos().subscribe((data: any[]) => {
+
+    this.eventos = data.slice(0, 5);
+
+    this.crearGraficoEventos();
+
+    this.cd.detectChanges();
+  });
+}
   crearGraficoPie(): void {
     if (this.pieChart) {
       this.pieChart.destroy();
@@ -126,11 +162,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
         labels: ['Activos', 'Inactivos'],
         datasets: [{
           data: [this.activos, this.inactivos],
-          backgroundColor: [
-            '#26c6da',
-            '#ef5350'
-          ]
+          backgroundColor: ['#26c6da', '#ef5350']
         }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            align: 'center'
+          }
+        }
       }
     });
   }
@@ -155,8 +198,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
             '#42a5f5',
             '#66bb6a',
             '#ef5350'
-          ]
+          ],
+          barThickness: 40,
+          maxBarThickness: 50
         }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
       }
     });
   }
@@ -180,12 +229,54 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  // 👇 TU LÓGICA ORIGINAL (SE MANTIENE)
+  crearGraficoEventos(): void {
+
+    const estados = {
+      PENDIENTE: 0,
+      APROBADO: 0,
+      RECHAZADO: 0
+    };
+
+    this.eventos.forEach(e => {
+      const estado = e.estado as keyof typeof estados;
+
+      if (estado in estados) {
+        estados[estado]++;
+      }
+    });
+
+    if (this.eventosChart) {
+      this.eventosChart.destroy();
+    }
+
+    this.eventosChart = new Chart("graficoEventosDashboard", {
+      type: 'doughnut',
+      data: {
+        labels: ['Pendientes', 'Aprobados', 'Rechazados'],
+        datasets: [{
+          data: [
+            estados.PENDIENTE,
+            estados.APROBADO,
+            estados.RECHAZADO
+          ],
+          backgroundColor: [
+            '#fbbf24',
+            '#34d399',
+            '#f87171'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  }
+
   esSesionReciente(fecha: string): boolean {
     if (!fecha) return false;
 
     const fechaParseada = new Date(fecha.replace(' ', 'T'));
-
     if (isNaN(fechaParseada.getTime())) return false;
 
     const ahora = new Date().getTime();
@@ -195,5 +286,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     return diferenciaMinutos < 5;
   }
-
 }

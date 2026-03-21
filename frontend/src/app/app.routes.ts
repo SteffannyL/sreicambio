@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-
+import { EventosComponent } from './features/administrador/eventos/eventos.component';
 import { DocenteComponent } from './features/docente/docente.component';
 import { CoordinadorComponent } from './features/coordinador/coordinador.component';
 
@@ -150,7 +150,8 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/administrador/backups/backups.component')
             .then(m => m.BackupsComponent)
-      }
+      }, { path: 'eventos', component: EventosComponent }
+      
 
     ]
   },

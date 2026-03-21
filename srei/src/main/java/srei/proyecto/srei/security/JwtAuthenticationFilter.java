@@ -38,13 +38,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String requestURI = request.getRequestURI();
 
-        // Permitir preflight CORS
+        // ✅ Permitir preflight CORS
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Endpoints públicos
+        // ✅ Endpoints públicos
         if (requestURI.startsWith("/api/auth/")
                 || requestURI.startsWith("/api/sesiones/validar/")) {
             filterChain.doFilter(request, response);
@@ -56,12 +56,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = null;
         String correo = null;
 
-        // intento normal (header Authorization)
+        // ✅ Header Authorization
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         }
 
-        // fallback para multipart (si no viene header)
+        // ✅ Fallback multipart
         if (token == null) {
             String paramToken = request.getParameter("token");
             if (paramToken != null) {
@@ -69,6 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
+        // No hay token → seguir
         if (token == null) {
             filterChain.doFilter(request, response);
             return;
@@ -84,6 +85,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserDetails userDetails =
                         userDetailsService.loadUserByUsername(correo);
 
+                // DEBUG CLAVE
+                System.out.println("USER: " + correo);
+                System.out.println("AUTHORITIES (ANTES): " + userDetails.getAuthorities());
+
                 if (jwtService.isTokenValid(token, userDetails)) {
 
                     var usuario = usuarioRepository
@@ -92,15 +97,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     Long idUsuario = usuario.getIdusuario();
 
-                    String rol = userDetails.getAuthorities()
-                            .stream()
+                    //  IMPORTANTE: tomar TODOS los roles
+                    var authorities = userDetails.getAuthorities();
+
+                    //  DEBUG CLAVE
+                    System.out.println("AUTHORITIES (DESPUES): " + authorities);
+
+                    // Tomar primer rol para RLS
+                    String rol = authorities.stream()
                             .findFirst()
                             .map(a -> a.getAuthority()
                                     .replace("ROLE_", "")
                                     .toLowerCase())
                             .orElse("usuario");
 
-                    // Variables para RLS
+                    // Variables para PostgreSQL RLS
                     jdbcTemplate.execute("SET app.currentuserid = " + idUsuario);
                     jdbcTemplate.execute("SET app.currentuserrole = '" + rol + "'");
 
@@ -108,7 +119,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(
                                     userDetails,
                                     null,
-                                    userDetails.getAuthorities()
+                                    authorities
                             );
 
                     authToken.setDetails(
@@ -118,11 +129,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     SecurityContextHolder.getContext()
                             .setAuthentication(authToken);
+
+                    // 🔥 DEBUG FINAL
+                    System.out.println("AUTH FINAL: " +
+                            SecurityContextHolder.getContext().getAuthentication().getAuthorities());
                 }
             }
 
         } catch (Exception e) {
-            System.out.println("Error en JWT Filter: " + e.getMessage());
+            System.out.println("❌ Error en JWT Filter: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

@@ -89,6 +89,10 @@ buscarUsuarios() {
 
   });
 
+  this.usuariosFiltrados.sort((a, b) => {
+  return (b.activo ? 1 : 0) - (a.activo ? 1 : 0);
+});
+
   this.paginaActual = 1;
   this.actualizarPaginacion();
 }

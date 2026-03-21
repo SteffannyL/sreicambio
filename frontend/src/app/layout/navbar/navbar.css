@@ -9,12 +9,28 @@
   font-family:system-ui;
 }
 
+/* 🔥 LOGO CONTENEDOR */
 .logo{
-  font-size:20px;
-  font-weight:bold;
-  letter-spacing:1px;
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
+/* 🔥 IMAGEN LOGO */
+.logo-img{
+  height:64px;
+  width:auto;
+  object-fit:contain;
+}
+
+/* 🔥 TEXTO DEL LOGO */
+.logo-text{
+  font-size:14px;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+/* MENU */
 .menu{
   display:flex;
   list-style:none;
@@ -24,13 +40,42 @@
   align-items:center;
 }
 
+/* LINKS */
 .menu a{
   color:white;
   text-decoration:none;
   font-weight:500;
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
 
 .menu a:hover{
   text-decoration:underline;
   opacity:0.9;
+}
+
+/* ICONOS */
+.material-icons {
+  font-size:18px;
+}
+
+/* USUARIO */
+.usuario {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:500;
+}
+
+/* 🔥 BOTÓN LOGOUT */
+.logout-btn{
+  background:#c59b2b;
+  padding:6px 12px;
+  border-radius:8px;
+  transition:0.3s;
+}
+
+.logout-btn:hover{
+  background:#a88422;
 }

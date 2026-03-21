@@ -16,6 +16,11 @@ import { AuthService } from '../../core/services/auth.service';
 export class SidebarComponent {
 
   rol: string | null = '';
+  isCollapsed: boolean = false;
+
+  toggleSidebar(){
+  this.isCollapsed = !this.isCollapsed;
+}
 
   constructor(private authService: AuthService) {
     this.rol = this.authService.getRol();
