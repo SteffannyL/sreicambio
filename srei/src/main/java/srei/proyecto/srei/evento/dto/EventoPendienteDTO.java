@@ -15,6 +15,9 @@ public class EventoPendienteDTO {
     private String nombreevento;
     private String descripcion;
     private LocalDateTime fechainicio;
+    private String comentario;
     private String nombreDocente;
+    private String urlImagen;
+private String urlPdf;
 
 }

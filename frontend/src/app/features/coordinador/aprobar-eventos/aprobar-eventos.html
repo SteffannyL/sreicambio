@@ -3,9 +3,10 @@
 <h2>
   Gestión de Eventos - {{ estadoSeleccionado }}
 </h2>
+
 <!-- 🔥 REPORTES -->
-<div style="margin-bottom:15px;">
-  <select [(ngModel)]="estadoSeleccionado">
+<div class="acciones-top">
+  <select [(ngModel)]="estadoSeleccionado" (change)="cargarPorEstado()">
     <option value="PENDIENTE">Pendientes</option>
     <option value="APROBADO">Aprobados</option>
     <option value="RECHAZADO">Rechazados</option>
@@ -17,100 +18,131 @@
 </div>
 
 <div *ngIf="cargando" class="loading">
-Cargando eventos...
+  Cargando eventos...
 </div>
 
-<div class="tabla-container">
+<!-- 🔥 CARDS -->
+<div class="cards-container" *ngIf="!cargando">
 
-<table *ngIf="!cargando">
+  <div class="card-evento" *ngFor="let e of eventos">
 
-<thead>
-<tr>
-<th>ID</th>
-<th>Evento</th>
-<th>Descripción</th>
-<th>Docente</th>
-<th>Fecha</th>
-<th>Acciones</th>
-</tr>
-</thead>
+    <!-- IMAGEN -->
+    <div class="imagen">
+      <img 
+        [src]="e.urlImagen ? 'http://localhost:8080/' + e.urlImagen : '/img/logo.png'"
+        alt="evento"
+        (error)="e.urlImagen = null"
+      />
+    </div>
 
-<tbody>
+    <!-- CONTENIDO -->
+    <div class="contenido">
 
-<tr *ngFor="let e of eventos">
+      <h3>{{ e.nombreevento }}</h3>
 
-<td>{{e.idevento}}</td>
-<td class="evento">{{e.nombreevento}}</td>
-<td>{{e.descripcion}}</td>
-<td>{{e.nombreDocente || '-'}}</td>
-<td>{{e.fechainicio}}</td>
+      <p class="descripcion">
+        {{ e.descripcion }}
+      </p>
 
-<td class="acciones" *ngIf="estadoSeleccionado === 'PENDIENTE'">
+      <p><strong>Docente:</strong> {{ e.nombreDocente || '-' }}</p>
+      <p><strong>Inicio:</strong> {{ e.fechainicio }}</p>
 
-  <button
-    class="btn aprobar"
-    [disabled]="procesando"
-    (click)="aprobarEvento(e.idevento)">
-    ✔ Aprobar
-  </button>
+      <!-- ESTADO -->
+      <span class="estado" 
+            [ngClass]="{
+              'pendiente': estadoSeleccionado === 'PENDIENTE',
+              'aprobado': estadoSeleccionado === 'APROBADO',
+              'rechazado': estadoSeleccionado === 'RECHAZADO'
+            }">
+        {{ estadoSeleccionado }}
+      </span>
 
-  <button
-    class="btn rechazar"
-    [disabled]="procesando"
-    (click)="abrirModalRechazo(e.idevento)">
-    ✖ Rechazar
-  </button>
+      <!-- COMENTARIO -->
+      <p *ngIf="estadoSeleccionado === 'RECHAZADO'">
+        <strong>Comentario:</strong>
+        {{ e.comentario || 'Sin comentario' }}
+      </p>
 
-</td>
+      <!-- BOTONES -->
+      <div class="acciones-card">
 
-<!-- 🔥 cuando NO es pendiente -->
-<td *ngIf="estadoSeleccionado !== 'PENDIENTE'">
-</td>
+        <!-- PDF -->
+        <a *ngIf="e.urlPdf"
+           [href]="'http://localhost:8080/' + e.urlPdf"
+           target="_blank"
+           class="btn pdf">
+          Ver PDF
+        </a>
 
-</tr>
+        <!-- DETALLE (puedes luego usarlo si quieres) -->
+        <button class="btn detalle">
+          Ver detalles
+        </button>
 
-<tr *ngIf="eventos.length===0">
-<td colspan="6" class="vacio">No hay eventos</td>
-</tr>
+      </div>
 
-</tbody>
+      <!-- ACCIONES SOLO PENDIENTE -->
+      <div class="acciones-card" *ngIf="estadoSeleccionado === 'PENDIENTE'">
 
-</table>
+        <button
+          class="btn aprobar"
+          [disabled]="procesando"
+          (click)="aprobarEvento(e.idevento)">
+          ✔ Aprobar
+        </button>
+
+        <button
+          class="btn rechazar"
+          [disabled]="procesando"
+          (click)="abrirModalRechazo(e.idevento)">
+          ✖ Rechazar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- VACÍO -->
+  <div *ngIf="eventos.length === 0" class="vacio">
+    No hay eventos
+  </div>
 
 </div>
 
 </div>
 
-<!-- MODAL RECHAZO -->
+<!-- 🔥 MODAL RECHAZO -->
 
 <div class="modal" *ngIf="mostrarModal">
 
-<div class="modal-content">
+  <div class="modal-content">
 
-<h3>Rechazar evento</h3>
+    <h3>Rechazar evento</h3>
 
-<textarea
-[(ngModel)]="observacion"
-placeholder="Escriba la observación">
-</textarea>
+    <textarea
+      [(ngModel)]="observacion"
+      placeholder="Escriba la observación">
+    </textarea>
 
-<div class="acciones-modal">
+    <div class="acciones-modal">
 
-<button
-class="btn confirmar"
-[disabled]="procesando"
-(click)="confirmarRechazo()">
-Confirmar
-</button>
+      <button
+        class="btn confirmar"
+        [disabled]="procesando"
+        (click)="confirmarRechazo()">
+        Confirmar
+      </button>
 
-<button
-class="btn cancelar"
-(click)="cerrarModal()">
-Cancelar
-</button>
+      <button
+        class="btn cancelar"
+        (click)="cerrarModal()">
+        Cancelar
+      </button>
 
-</div>
+    </div>
 
-</div>
+  </div>
 
 </div>
