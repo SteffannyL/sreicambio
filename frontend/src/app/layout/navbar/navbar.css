@@ -79,3 +79,7 @@
 .logout-btn:hover{
   background:#a88422;
 }
+
+:root {
+  --navbar-height: 70px;
+}

@@ -19,4 +19,5 @@ public class BackupConfiguracion {
     private String tipo;
 
     private String carpeta;
+    
 }

@@ -27,6 +27,9 @@ public class AdminBackupController {
     private final DatabaseBackupService backupService;
     private final BackupHistorialRepository backupRepository;
 
+    // =========================================
+    // CREAR BACKUP
+    // =========================================
     @PostMapping("/crear")
     public Map<String,String> crearBackup(@RequestBody BackupRequest request)
             throws Exception {
@@ -36,6 +39,9 @@ public class AdminBackupController {
         return Map.of("ruta", ruta);
     }
 
+    // =========================================
+    // PROGRAMAR POR FECHA
+    // =========================================
     @PostMapping("/programar")
     public Map<String,String> programarBackup(@RequestBody BackupRequest request) {
 
@@ -49,6 +55,9 @@ public class AdminBackupController {
         return Map.of("mensaje","Backup programado correctamente");
     }
 
+    // =========================================
+    // PROGRAMAR INTERVALO
+    // =========================================
     @PostMapping("/programar-intervalo")
     public Map<String,String> programarIntervalo(@RequestBody BackupRequest request) {
 
@@ -61,6 +70,9 @@ public class AdminBackupController {
         return Map.of("mensaje","Backup automático configurado");
     }
 
+    // =========================================
+    // CANCELAR PROGRAMACIÓN
+    // =========================================
     @PostMapping("/cancelar-programacion")
     public Map<String,String> cancelarProgramacion(){
 
@@ -69,11 +81,17 @@ public class AdminBackupController {
         return Map.of("mensaje","Programación cancelada");
     }
 
+    // =========================================
+    // HISTORIAL
+    // =========================================
     @GetMapping("/historial")
     public List<BackupHistorial> historial(){
         return backupRepository.findAll();
     }
 
+    // =========================================
+    // DESCARGAR
+    // =========================================
     @GetMapping("/descargar/{nombre}")
     public ResponseEntity<Resource> descargar(@PathVariable String nombre) throws Exception {
 
@@ -88,6 +106,9 @@ public class AdminBackupController {
                 .body(resource);
     }
 
+    // =========================================
+    // RESTAURAR
+    // =========================================
     @PostMapping("/restaurar/{nombre}")
     public Map<String,String> restaurar(@PathVariable String nombre)
             throws Exception {
@@ -98,4 +119,68 @@ public class AdminBackupController {
 
         return Map.of("mensaje","Base restaurada correctamente");
     }
+
+    // =========================================
+    // CREAR DB
+    // =========================================
+    @PostMapping("/crear-db/{nombre}")
+    public Map<String,String> crearDb(@PathVariable String nombre) throws Exception {
+
+        backupService.crearBaseDatos(nombre);
+
+        return Map.of("mensaje", "Base creada: " + nombre);
+    }
+
+    // =========================================
+    // RESTAURAR EN DB ESPECÍFICA
+    // =========================================
+    @PostMapping("/restaurar-en-db")
+    public Map<String,String> restaurarEnDb(
+            @RequestParam String nombreBackup,
+            @RequestParam String nombreDb
+    ) throws Exception {
+
+        String ruta = "G:/Mi unidad/backups_srei/" + nombreBackup;
+
+        backupService.restaurarBackupEnDb(ruta, nombreDb);
+
+        return Map.of("mensaje", "Restaurado en DB: " + nombreDb);
+    }
+
+    // =========================================
+    // CAMBIAR DB
+    // =========================================
+    @PostMapping("/cambiar-db/{nombre}")
+    public Map<String,String> cambiarDb(@PathVariable String nombre) throws Exception {
+
+        backupService.cambiarBaseDatos(nombre);
+
+        return Map.of(
+                "mensaje",
+                "Base cambiada a " + nombre + " (reinicia backend)"
+        );
+    }
+
+    // =========================================
+    // LISTAR BASES
+    // =========================================
+    @GetMapping("/bases")
+    public List<Map<String, Object>> listarBases() throws Exception {
+        return backupService.listarBases();
+    }
+
+    // =========================================
+    // 🔥 NUEVO: DB ACTUAL
+    // =========================================
+    @GetMapping("/db-actual")
+    public Map<String, String> obtenerDbActual(){
+
+        String db = backupService.obtenerBaseActual();
+
+        Map<String, String> resp = new HashMap<>();
+        resp.put("database", db);
+
+        return resp;
+    }
+
 }

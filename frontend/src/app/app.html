@@ -1,8 +1,9 @@
 <app-navbar *ngIf="mostrarNavbar"></app-navbar>
 
-<div class="layout">
+<!-- 🔥 SOLO SI NO ES LOGIN -->
+<div class="layout" *ngIf="mostrarSidebar">
 
-  <app-sidebar *ngIf="mostrarSidebar"></app-sidebar>
+  <app-sidebar></app-sidebar>
 
   <div class="content">
     <router-outlet></router-outlet>
@@ -10,16 +11,15 @@
 
 </div>
 
+<!-- 🔥 LOGIN SIN LAYOUT -->
+<div *ngIf="!mostrarSidebar">
+  <router-outlet></router-outlet>
+</div>
+
 <div *ngIf="sesionExpulsada" class="session-modal">
-
   <div class="session-modal-content">
-
     <h2>Sesión cerrada</h2>
-
     <p>Un administrador expulsó tu sesión.</p>
-
     <button (click)="irLogin()">Ir al login</button>
-
   </div>
-
 </div>

@@ -42,61 +42,69 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthFilter
-    ) throws Exception {
+public SecurityFilterChain securityFilterChain(
+        HttpSecurity http,
+        JwtAuthenticationFilter jwtAuthFilter
+) throws Exception {
 
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
+    http
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(csrf -> csrf.disable())
 
-            .httpBasic(httpBasic -> httpBasic.disable())
-            .formLogin(form -> form.disable())
+        .httpBasic(httpBasic -> httpBasic.disable())
+        .formLogin(form -> form.disable())
 
-            .authorizeHttpRequests(auth -> auth
+        // 🔥 SOLUCIÓN: permitir iframe (NO rompe nada)
+        .headers(headers -> headers
+            .frameOptions(frame -> frame.disable())
+        )
 
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+        .authorizeHttpRequests(auth -> auth
 
-                // 📂 archivos
-                .requestMatchers("/uploads/**").permitAll()
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // 🔓 públicos
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/sesiones/validar/**").permitAll()
+            // 📂 archivos
+            .requestMatchers("/uploads/**").permitAll()
 
-                // 🎮 IA / juegos
-                .requestMatchers("/api/juegos/**").permitAll()
-                .requestMatchers("/juegos/**").permitAll()
+            // 🔓 públicos
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/sesiones/validar/**").permitAll()
 
-                //IA/ GENERACIÓN
-               .requestMatchers("/api/ia/**").permitAll()
+            // 🎮 IA / juegos
+            .requestMatchers("/api/juegos/**").permitAll()
+            .requestMatchers("/juegos/**").permitAll()
 
-                // 🔐 ADMIN
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            // 🤖 IA generación
+            .requestMatchers("/api/ia/**").permitAll()
 
-                // 👨‍🏫 DOCENTE
-                .requestMatchers("/api/docente/**").authenticated()
+            // 🔐 ADMIN
+            .requestMatchers("/api/admin/backup/**").permitAll()
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                // 👨‍💼 COORDINADOR
-                .requestMatchers("/api/coordinador/**").hasRole("COORDINADOR")
+            // 👨‍🏫 DOCENTE
+            .requestMatchers("/api/docente/**").authenticated()
 
-                // 🎓 DECANO
-                .requestMatchers("/api/decano/**").hasRole("DECANO")
+            // 👨‍💼 COORDINADOR
+            .requestMatchers("/api/coordinador/**").hasRole("COORDINADOR")
 
-                .anyRequest().authenticated()
-            )
+            // 🎓 DECANO
+            .requestMatchers("/api/decano/**").hasRole("DECANO")
 
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+            .anyRequest().authenticated()
+        )
 
-            .authenticationProvider(authenticationProvider())
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
 
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        .authenticationProvider(authenticationProvider())
 
-        return http.build();
-    }
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+}
+
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

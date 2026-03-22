@@ -1,50 +1,186 @@
+/* ===== CONTENEDOR ===== */
 .login-container {
-  background: #198754;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(135deg, #0b7a3b, #063d1f);
+  padding: 20px;
 }
 
+/* ===== CARD ===== */
 .login-card {
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  width: 350px;
+  background: #ffffff;
+  padding: 35px 40px;
+  border-radius: 16px;
+  width: 420px; /* 🔥 MÁS GRANDE */
+  max-width: 100%;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  animation: fadeIn 0.4s ease;
 }
 
+/* ===== TITULOS ===== */
 .titulo {
   text-align: center;
-  color: #198754;
+  color: #0b7a3b;
+  margin-bottom: 5px;
+  font-size: 26px;
+  font-weight: 700;
 }
 
 .subtitulo {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  color: #6b7280;
+  font-size: 14px;
 }
 
+/* ===== CAMPOS ===== */
 .campo {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 }
 
-input, select {
-  width: 100%;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.campo label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
 }
 
+/* ===== INPUT CON ICONO ===== */
+.input-icon {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 6px 10px;
+  margin-top: 6px;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+
+.input-icon:focus-within {
+  border-color: #0b7a3b;
+  box-shadow: 0 0 0 2px rgba(11,122,59,0.15);
+}
+
+/* INPUT Y SELECT */
+.input-icon input,
+.input-icon select {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  background: transparent;
+}
+
+/* ICONOS */
+.material-icons {
+  color: #0b7a3b;
+  font-size: 20px;
+}
+
+/* ===== SELECT PERSONALIZADO ===== */
+.select-icon {
+  position: relative;
+}
+
+.select-icon::after {
+  content: "▼";
+  font-size: 10px;
+  position: absolute;
+  right: 12px;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+/* ===== BOTON ===== */
 .btn-login {
   width: 100%;
-  background: #c79c2f;
-  color: white;
-  padding: 10px;
+  margin-top: 15px;
+  padding: 12px;
+  background: linear-gradient(135deg, #c59b2b, #b38a21);
+  color: #111;
+  font-weight: 600;
+  border-radius: 10px;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.registro-link {
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+.btn-login:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== MENSAJES ===== */
+.error {
+  margin-top: 12px;
+  color: #c62828;
+  font-size: 13px;
   text-align: center;
-  margin-top: 15px;
+}
+
+.success {
+  margin-top: 12px;
+  color: #0b7a3b;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ===== REGISTRO / LOGIN LINK ===== */
+.registro-link {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.registro-link a {
+  color: #0b7a3b;
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+}
+
+/* EFECTO SUBRAYADO */
+.registro-link a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background: #0b7a3b;
+  transition: width 0.3s ease;
+}
+
+.registro-link a:hover::after {
+  width: 100%;
+}
+
+/* ===== ANIMACION ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 25px 20px;
+  }
 }
