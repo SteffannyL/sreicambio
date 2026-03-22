@@ -1,88 +1,150 @@
-/* CONTENEDOR PRINCIPAL */
-.login-container{
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(135deg,#0b7a3b,#0f9d58);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+/* ===== CONTENEDOR ===== */
+.login-container {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
+
+  /* 🔥 EFECTO VERDE UTEQ */
+  background:
+    linear-gradient(
+      rgba(11, 122, 59, 0.75),  /* verde claro */
+      rgba(6, 61, 31, 0.85)     /* verde oscuro */
+    ),
+    url('/img/uteq-evento.jpg');
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* TARJETA */
-.login-card{
-  background:white;
-  padding:40px;
-  border-radius:16px;
-  width:360px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
-  text-align:center;
+/* ===== CARD ===== */
+.login-card {
+  background: #ffffff;
+  padding: 35px 45px;
+  border-radius: 18px;
+  width: 450px;
+  max-width: 100%;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
 }
 
-/* TITULOS */
-.titulo{
-  margin:0;
-  font-size:32px;
-  color:#0b7a3b;
-  font-weight:bold;
-  letter-spacing:2px;
+/* ===== HEADER ===== */
+.header {
+  text-align: center;
+  margin-bottom: 25px;
 }
 
-.subtitulo{
-  margin-top:6px;
-  margin-bottom:30px;
-  font-size:14px;
-  color:#666;
+/* 🔥 SREI GRANDE */
+.titulo {
+  font-size: 42px;
+  font-weight: 800;
+  color: #0b7a3b;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
 }
 
-/* CAMPOS */
-.campo{
-  text-align:left;
-  margin-bottom:18px;
+/* 🔥 SUBTÍTULO MÁS VISIBLE */
+.subtitulo {
+  font-size: 16px; /* 🔥 MÁS GRANDE */
+  color: #4b5563;
+  line-height: 1.5;
+  max-width: 340px;
+  margin: 0 auto;
+  font-weight: 500;
 }
 
-.campo label{
-  font-size:14px;
-  font-weight:500;
-  color:#333;
+/* ===== CAMPOS ===== */
+.campo {
+  margin-bottom: 18px;
 }
 
-.campo input{
-  width:100%;
-  margin-top:6px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:14px;
-  transition:0.2s;
+.campo label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
 }
 
-.campo input:focus{
-  outline:none;
-  border-color:#0b7a3b;
+/* ===== INPUT ICON ===== */
+.input-icon {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin-top: 6px;
+  transition: all 0.2s ease;
+  background: #fff;
 }
 
-/* BOTON */
-.btn-login{
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  background:#c59b2b;
-  color:white;
-  font-size:15px;
-  font-weight:600;
-  cursor:pointer;
-  transition:0.25s;
+.input-icon:focus-within {
+  border-color: #0b7a3b;
+  box-shadow: 0 0 0 2px rgba(11,122,59,0.15);
 }
 
-.btn-login:hover{
-  background:#a8831f;
+.input-icon input {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+  background: transparent;
 }
 
-/* ERROR */
-.error{
-  margin-top:15px;
-  color:#e53935;
-  font-size:14px;
+/* ICONOS */
+.material-icons {
+  color: #0b7a3b;
+  font-size: 22px;
+}
+
+/* ===== BOTON ===== */
+.btn-login {
+  width: 100%;
+  margin-top: 15px;
+  padding: 14px;
+  background: linear-gradient(135deg, #c59b2b, #b38a21);
+  color: #111;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.25s ease;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
+
+/* ===== FOOTER ===== */
+.registro-link {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.registro-link a {
+  color: #c59b2b;
+  font-weight: 700;
+  text-decoration: none;
+  position: relative;
+}
+
+.registro-link a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background: #c59b2b;
+  transition: width 0.3s ease;
+}
+
+.registro-link a:hover::after {
+  width: 100%;
 }

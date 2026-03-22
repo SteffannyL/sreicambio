@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Cultural Ecuador</title>
+
+<style>
+
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+background:linear-gradient(135deg,#1d3557,#457b9d,#a8dadc);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+color:#2d3748;
+overflow-x:hidden;
+}
+
+.game-container{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:30px;
+max-width:1200px;
+width:100%;
+flex-wrap:wrap;
+}
+
+.mascot-container{
+flex:0 0 auto;
+width:200px;
+height:200px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(10px);
+border-radius:50%;
+padding:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.3);
+border:3px solid rgba(255,255,255,0.5);
+transition:all 0.3s ease;
+}
+
+.mascot{
+font-size:120px;
+transition:all 0.3s ease;
+}
+
+@keyframes happyBounce {
+0% { transform: scale(1) rotate(0deg); }
+25% { transform: scale(1.3) rotate(-10deg); }
+50% { transform: scale(1.5) rotate(10deg) translateY(-10px); }
+75% { transform: scale(1.2) rotate(-5deg) translateY(-5px); }
+100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes sadShake {
+0% { transform: translateX(0) scale(1); }
+25% { transform: translateX(-15px) scale(0.9) rotate(-5deg); }
+50% { transform: translateX(15px) scale(0.8) rotate(5deg); }
+75% { transform: translateX(-8px) scale(0.9) rotate(-3deg); }
+100% { transform: translateX(0) scale(1) rotate(0); }
+}
+
+@keyframes happyFloat {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-20px); }
+}
+
+@keyframes sadFloat {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(20px) scale(0.95); }
+}
+
+@keyframes spin {
+from { transform: rotate(0deg); }
+to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+0%,100%{transform:scale(1);}
+50%{transform:scale(1.05);}
+}
+
+@keyframes shake {
+0%,100%{transform:translateX(0);}
+25%{transform:translateX(-10px);}
+75%{transform:translateX(10px);}
+}
+
+@keyframes tearDrop {
+0% { 
+opacity: 0;
+transform: translateY(-10px);
+}
+50% { 
+opacity: 1;
+transform: translateY(10px);
+}
+100% { 
+opacity: 0;
+transform: translateY(30px);
+}
+}
+
+.mascot.happy {
+animation: happyBounce 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.mascot.sad {
+animation: sadShake 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.mascot.happy-float {
+animation: happyFloat 3s ease-in-out infinite;
+}
+
+.mascot.sad-float {
+animation: sadFloat 3s ease-in-out infinite;
+}
+
+.happy-glow {
+filter: drop-shadow(0 0 20px #ffd700);
+}
+
+.sad-glow {
+filter: drop-shadow(0 0 20px #4169e1);
+}
+
+.tear {
+position: absolute;
+font-size: 30px;
+opacity: 0;
+pointer-events: none;
+}
+
+.mascot.sad .tear {
+animation: tearDrop 1s ease-in-out infinite;
+}
+
+.mascot-name{
+color:white;
+font-size:18px;
+font-weight:bold;
+margin-top:10px;
+background:rgba(0,0,0,0.3);
+padding:5px 15px;
+border-radius:50px;
+}
+
+.card{
+flex:1;
+min-width:350px;
+max-width:600px;
+background:rgba(255,255,255,0.95);
+padding:40px 30px;
+border-radius:24px;
+box-shadow:0 25px 50px rgba(0,0,0,0.5);
+text-align:center;
+}
+
+h2{
+margin-bottom:25px;
+color:#1d3557;
+font-size:28px;
+}
+
+#answers{
+margin-top:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,#457b9d,#1d3557);
+color:white;
+cursor:pointer;
+font-size:16px;
+transition:all 0.3s ease;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+
+.correct{
+background:#2ecc71!important;
+animation:pulse 0.5s ease;
+}
+
+.incorrect{
+background:#e74c3c!important;
+animation:shake 0.5s ease;
+}
+
+.score{
+margin-top:25px;
+font-size:24px;
+font-weight:bold;
+color:#1d3557;
+}
+
+.progress{
+margin-bottom:15px;
+font-size:16px;
+}
+
+.player{
+font-size:24px;
+margin-bottom:15px;
+color:#1d3557;
+font-weight:bold;
+}
+
+.emojis{
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
+margin:25px 0;
+}
+
+.emoji{
+font-size:40px;
+cursor:pointer;
+padding:12px;
+border-radius:50%;
+background:white;
+transition:all 0.3s ease;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.emoji:hover{
+transform:scale(1.2) rotate(10deg);
+background:#457b9d;
+color:white;
+}
+
+.selected{
+background:#457b9d!important;
+color:white!important;
+transform:scale(1.1);
+}
+
+.music-control{
+position:fixed;
+top:20px;
+right:20px;
+background:white;
+padding:12px 25px;
+border-radius:50px;
+cursor:pointer;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+display:flex;
+align-items:center;
+gap:10px;
+z-index:1000;
+transition:all 0.3s ease;
+border:2px solid rgba(255,255,255,0.5);
+}
+
+.music-control:hover{
+transform:scale(1.05);
+background:#f8f9fa;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.music-icon{
+font-size:24px;
+transition:all 0.3s ease;
+}
+
+.music-icon.playing{
+animation:spin 3s linear infinite;
+}
+
+.music-text{
+font-weight:bold;
+color:#1d3557;
+}
+
+input{
+padding:15px;
+border-radius:50px;
+border:2px solid #ddd;
+width:80%;
+margin:10px 0 20px;
+font-size:16px;
+transition:all 0.3s ease;
+outline:none;
+}
+
+input:focus{
+border-color:#457b9d;
+box-shadow:0 0 0 3px rgba(69,123,157,0.2);
+transform:scale(1.02);
+}
+
+.progress-bar{
+width:100%;
+height:8px;
+background:#e0e0e0;
+border-radius:10px;
+margin:15px 0;
+overflow:hidden;
+}
+
+.progress-fill{
+height:100%;
+background:linear-gradient(90deg,#2ecc71,#457b9d);
+transition:width 0.3s ease;
+border-radius:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="music-control" onclick="toggleMusic()">
+<span class="music-icon" id="musicIcon">🎵</span>
+<span class="music-text" id="musicText">Activar música</span>
+</div>
+
+<audio id="bgmusic" loop preload="auto">
+<source src="https://cdn.pixabay.com/audio/2022/08/02/audio_884fe92c49.mp3">
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"> <!-- Fallback -->
+</audio>
+
+<div class="game-container">
+
+<div class="mascot-container" id="mascotContainer">
+<div class="mascot" id="mascot">😀</div>
+<span class="tear" style="left:40%;">💧</span>
+<span class="tear" style="left:60%; animation-delay:0.3s;">💧</span>
+<div class="mascot-name" id="mascotName">Jugador</div>
+</div>
+
+<div class="card">
+
+<div id="start" class="start-screen">
+
+<h2>🌎 Quiz Cultural del Ecuador</h2>
+
+<input id="name" type="text" placeholder="Escribe tu nombre" value="Jugador">
+
+<p>Elige tu personaje</p>
+
+<div class="emojis">
+<span class="emoji selected" onclick="selectEmoji(this)">😀</span>
+<span class="emoji" onclick="selectEmoji(this)">😎</span>
+<span class="emoji" onclick="selectEmoji(this)">🤠</span>
+<span class="emoji" onclick="selectEmoji(this)">🧠</span>
+<span class="emoji" onclick="selectEmoji(this)">🐱</span>
+<span class="emoji" onclick="selectEmoji(this)">🦊</span>
+<span class="emoji" onclick="selectEmoji(this)">🐼</span>
+</div>
+
+<button onclick="startGame()">🎮 Comenzar Quiz</button>
+
+</div>
+
+<div id="game" style="display:none">
+
+<div class="player" id="player"></div>
+
+<div class="progress" id="progress"></div>
+
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+
+<h2 id="question"></h2>
+
+<div id="answers"></div>
+
+<div class="score">🏆 <span id="score">0</span></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/*
+VSCode marca error porque [
+  {
+    "question": "¿Cuál es la ciudad más famosa por su celebración del carnaval en Ecuador?",
+    "options": ["Guayaquil", "Cuenca", "Ambato", "Quito"],
+    "correct": 2
+  },
+  {
+    "question": "¿Qué fruta es tradicionalmente utilizada en la celebración del carnaval en Ambato?",
+    "options": ["Mango", "Piña", "Naranja", "Frutilla"],
+    "correct": 2
+  },
+  {
+    "question": "¿Qué evento se realiza en Ambato durante el carnaval?",
+    "options": ["Desfile de carros alegóricos", "Conciertos de rock", "Feria de comida", "Maratón"],
+    "correct": 0
+  },
+  {
+    "question": "¿Qué se lanza comúnmente durante las festividades de carnaval en Ecuador?",
+    "options": ["Confeti", "Agua", "Flores", "Globos"],
+    "correct": 1
+  },
+  {
+    "question": "¿Qué personaje es emblemático del carnaval en Guaranda?",
+    "options": ["El Diablo", "El Rey Momo", "La Reina del Carnaval", "El Payaso"],
+    "correct": 1
+  },
+  {
+    "question": "¿Qué bebida típica se consume durante el carnaval en Ecuador?",
+    "options": ["Chicha", "Cerveza", "Agua de panela", "Jugo de caña"],
+    "correct": 0
+  },
+  {
+    "question": "¿Qué día se celebra el carnaval en Ecuador?",
+    "options": ["El último domingo de enero", "El martes antes del miércoles de ceniza", "El primer sábado de febrero", "El 20 de febrero"],
+    "correct": 1
+  },
+  {
+    "question": "¿Qué actividad es común en las calles durante el carnaval?",
+    "options": ["Desfiles de moda", "Batallas de agua", "Ferias de artesanías", "Conciertos de música clásica"],
+    "correct": 1
+  }
+] no es JS válido,
+pero Spring lo reemplaza al generar el HTML final.
+*/
+
+let questions = [];
+
+try{
+questions = [
+  {
+    "question": "¿Cuál es la ciudad más famosa por su celebración del carnaval en Ecuador?",
+    "options": ["Guayaquil", "Cuenca", "Ambato", "Quito"],
+    "correct": 2
+  },
+  {
+    "question": "¿Qué fruta es tradicionalmente utilizada en la celebración del carnaval en Ambato?",
+    "options": ["Mango", "Piña", "Naranja", "Frutilla"],
+    "correct": 2
+  },
+  {
+    "question": "¿Qué evento se realiza en Ambato durante el carnaval?",
+    "options": ["Desfile de carros alegóricos", "Conciertos de rock", "Feria de comida", "Maratón"],
+    "correct": 0
+  },
+  {
+    "question": "¿Qué se lanza comúnmente durante las festividades de carnaval en Ecuador?",
+    "options": ["Confeti", "Agua", "Flores", "Globos"],
+    "correct": 1
+  },
+  {
+    "question": "¿Qué personaje es emblemático del carnaval en Guaranda?",
+    "options": ["El Diablo", "El Rey Momo", "La Reina del Carnaval", "El Payaso"],
+    "correct": 1
+  },
+  {
+    "question": "¿Qué bebida típica se consume durante el carnaval en Ecuador?",
+    "options": ["Chicha", "Cerveza", "Agua de panela", "Jugo de caña"],
+    "correct": 0
+  },
+  {
+    "question": "¿Qué día se celebra el carnaval en Ecuador?",
+    "options": ["El último domingo de enero", "El martes antes del miércoles de ceniza", "El primer sábado de febrero", "El 20 de febrero"],
+    "correct": 1
+  },
+  {
+    "question": "¿Qué actividad es común en las calles durante el carnaval?",
+    "options": ["Desfiles de moda", "Batallas de agua", "Ferias de artesanías", "Conciertos de música clásica"],
+    "correct": 1
+  }
+];
+}catch(e){
+questions = [];
+}
+
+if(!Array.isArray(questions)){
+questions = [];
+}
+
+let selectedEmoji="😀";
+let playerName="Jugador";
+let current=0;
+let score=0;
+let musicPlaying=false;
+let currentEmotion='neutral';
+
+function selectEmoji(el){
+document.querySelectorAll(".emoji").forEach(e=>e.classList.remove("selected"));
+el.classList.add("selected");
+selectedEmoji=el.innerText;
+document.getElementById("mascot").innerText=selectedEmoji;
+}
+
+function setEmotion(emotion){
+const mascot=document.getElementById("mascot");
+const container=document.getElementById("mascotContainer");
+
+mascot.classList.remove("happy","sad","happy-float","sad-float");
+container.classList.remove("happy-glow","sad-glow");
+
+switch(emotion){
+case 'happy':
+mascot.classList.add("happy");
+container.classList.add("happy-glow");
+mascot.innerText=getHappyEmoji(selectedEmoji);
+setTimeout(()=>{
+mascot.classList.add("happy-float");
+mascot.innerText=selectedEmoji;
+},1200);
+break;
+case 'sad':
+mascot.classList.add("sad");
+container.classList.add("sad-glow");
+mascot.innerText=getSadEmoji(selectedEmoji);
+setTimeout(()=>{
+mascot.classList.add("sad-float");
+mascot.innerText=selectedEmoji;
+},1200);
+break;
+default:
+mascot.classList.add("happy-float");
+}
+currentEmotion=emotion;
+}
+
+function getHappyEmoji(emoji){
+const happyMap={
+'😀':'😃','😎':'😎✨','🤠':'🤠🌟','🧠':'🧠💡',
+'🐱':'😸','🦊':'🦊✨','🐼':'🐼🎋'
+};
+return happyMap[emoji]||'😊';
+}
+
+function getSadEmoji(emoji){
+const sadMap={
+'😀':'😞','😎':'😎💔','🤠':'🤠💧','🧠':'🧠💭',
+'🐱':'😿','🦊':'🦊💦','🐼':'🐼😢'
+};
+return sadMap[emoji]||'😢';
+}
+
+function startGame(){
+
+playerName=document.getElementById("name").value||"Jugador";
+
+document.getElementById("player").innerHTML=
+selectedEmoji+" "+playerName;
+
+document.getElementById("mascotName").innerText=playerName;
+
+document.getElementById("start").style.display="none";
+document.getElementById("game").style.display="block";
+
+current=0;
+score=0;
+document.getElementById("score").innerText="0";
+setEmotion('neutral');
+
+load();
+
+}
+
+function load(){
+
+if(questions.length===0){
+document.getElementById("question").innerText="No se generaron preguntas";
+return;
+}
+
+const q=questions[current];
+
+document.getElementById("question").innerText=q.question;
+
+document.getElementById("progress").innerText=
+"Pregunta "+(current+1)+" de "+questions.length;
+
+
+const progressPercent=(current/questions.length)*100;
+document.getElementById("progressFill").style.width=progressPercent+"%";
+
+const answers=document.getElementById("answers");
+
+answers.innerHTML="";
+
+q.options.forEach((a,i)=>{
+
+const btn=document.createElement("button");
+
+btn.innerText=a;
+
+btn.onclick=()=>check(i,btn);
+
+answers.appendChild(btn);
+
+});
+
+}
+
+function check(i,btn){
+
+const buttons=document.querySelectorAll("#answers button");
+
+buttons.forEach(b=>b.disabled=true);
+
+if(i===questions[current].correct){
+
+btn.classList.add("correct");
+
+score++;
+
+document.getElementById("score").innerText=score;
+
+
+setEmotion('happy');
+
+}else{
+
+btn.classList.add("incorrect");
+
+buttons[questions[current].correct].classList.add("correct");
+
+
+setEmotion('sad');
+
+}
+
+setTimeout(()=>{
+
+current++;
+
+if(current<questions.length){
+load();
+
+setEmotion('neutral');
+}else{
+finish();
+}
+
+},1500);
+
+}
+
+function finish(){
+
+const total=questions.length;
+const porcentaje=Math.round((score/total)*100);
+
+let mensaje="🎉 Quiz terminado";
+let emocion='neutral';
+
+if(porcentaje>=80) emocion='happy';
+else if(porcentaje<=40) emocion='sad';
+
+setEmotion(emocion);
+
+document.getElementById("question").innerHTML=
+`${mensaje}<br><small style="font-size:16px;">Puntaje: ${score}/${total} (${porcentaje}%)</small>`;
+
+document.getElementById("answers").innerHTML=
+'<button onclick="restart()">🔄 Jugar de nuevo</button>';
+
+document.getElementById("progress").innerText="";
+document.getElementById("progressFill").style.width="100%";
+
+}
+
+function restart(){
+
+current=0;
+score=0;
+
+document.getElementById("score").innerText=score;
+setEmotion('neutral');
+
+load();
+
+}
+
+
+function toggleMusic(){
+
+const music=document.getElementById("bgmusic");
+const icon=document.getElementById("musicIcon");
+const text=document.getElementById("musicText");
+
+if(music.paused){
+
+music.play().catch(e=>{
+
+
+music.src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+music.play().catch(()=>{});
+
+});
+
+icon.classList.add("playing");
+icon.innerText="⏸️";
+text.innerText="Pausar música";
+musicPlaying=true;
+
+}else{
+
+music.pause();
+icon.classList.remove("playing");
+icon.innerText="🎵";
+text.innerText="Activar música";
+musicPlaying=false;
+
+}
+
+}
+
+
+document.addEventListener('DOMContentLoaded',function(){
+setEmotion('neutral');
+});
+
+</script>
+
+</body>
+</html>

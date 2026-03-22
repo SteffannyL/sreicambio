@@ -98,4 +98,62 @@ public class AdminBackupController {
 
         return Map.of("mensaje","Base restaurada correctamente");
     }
+
+    // =========================================
+// CREAR DB
+// =========================================
+
+@PostMapping("/crear-db/{nombre}")
+public Map<String,String> crearDb(@PathVariable String nombre) throws Exception {
+
+    backupService.crearBaseDatos(nombre);
+
+    return Map.of("mensaje", "Base creada: " + nombre);
+}
+
+
+// =========================================
+// RESTAURAR EN DB NUEVA
+// =========================================
+
+@PostMapping("/restaurar-en-db")
+public Map<String,String> restaurarEnDb(
+        @RequestParam String nombreBackup,
+        @RequestParam String nombreDb
+) throws Exception {
+
+    String ruta = "G:/Mi unidad/backups_srei/" + nombreBackup;
+
+    backupService.restaurarBackupEnDb(ruta, nombreDb);
+
+    return Map.of("mensaje", "Restaurado en DB: " + nombreDb);
+}
+
+@PostMapping("/cambiar-db/{nombre}")
+public Map<String,String> cambiarDb(@PathVariable String nombre) throws Exception {
+
+    backupService.cambiarBaseDatos(nombre);
+
+    return Map.of(
+            "mensaje",
+            "Base cambiada a " + nombre + " (reinicia backend)"
+    );
+}
+@GetMapping("/bases")
+public List<Map<String, Object>> listarBases() throws Exception {
+    return backupService.listarBases();
+}
+
+
+@GetMapping("/db-actual")
+public Map<String, String> obtenerDbActual(){
+
+    String db = backupService.obtenerBaseActual();
+
+    Map<String, String> resp = new HashMap<>();
+    resp.put("database", db);
+
+    return resp;
+}
+
 }

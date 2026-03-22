@@ -2,47 +2,40 @@
 
   <div class="login-card">
 
-    <h2 class="titulo">SREI</h2>
-    <p class="subtitulo">Sistema de Registro de Eventos Interculturales</p>
+    <!-- HEADER -->
+    <div class="header">
+      <h1 class="titulo">SREI</h1>
+      <p class="subtitulo">Sistema de Registro de Eventos Interculturales</p>
+    </div>
 
     <form (ngSubmit)="login()">
 
       <!-- CORREO -->
       <div class="campo">
-
         <label>Correo</label>
-
         <div class="input-icon">
           <span class="material-icons">mail</span>
-
           <input
             type="email"
             [(ngModel)]="credentials.correo"
             name="correo"
             required
           />
-
         </div>
-
       </div>
 
       <!-- CONTRASEÑA -->
       <div class="campo">
-
         <label>Contraseña</label>
-
         <div class="input-icon">
           <span class="material-icons">lock</span>
-
           <input
             type="password"
             [(ngModel)]="credentials.contrasena"
             name="contrasena"
             required
           />
-
         </div>
-
       </div>
 
       <!-- BOTÓN LOGIN -->
@@ -57,18 +50,10 @@
 
     </form>
 
-    <!-- 🔥 REGISTRO (FUERA DEL FORM) -->
+    <!-- FOOTER -->
     <div class="registro-link">
-
-      <p>¿No tienes cuenta?</p>
-
-      <button
-        type="button"
-        routerLink="/auth/register"
-        class="btn-register">
-        Crear cuenta
-      </button>
-
+      <span>¿No tienes cuenta?</span>
+      <a routerLink="/auth/register">Crear cuenta</a>
     </div>
 
   </div>

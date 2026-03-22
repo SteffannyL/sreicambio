@@ -7,7 +7,11 @@ import srei.proyecto.srei.admin.model.BackupConfiguracion;
 import srei.proyecto.srei.admin.model.BackupHistorial;
 import srei.proyecto.srei.admin.repository.BackupConfiguracionRepository;
 import srei.proyecto.srei.admin.repository.BackupHistorialRepository;
-
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -32,6 +36,8 @@ public class DatabaseBackupService {
 
     private static final String BACKUP_FOLDER =
             "G:/Mi unidad/backups_srei";
+    private static final String PSQL =
+    "C:/Program Files/PostgreSQL/18/bin/psql.exe";
 
     private final BackupHistorialRepository backupRepository;
     private final BackupConfiguracionRepository configRepository;
@@ -277,4 +283,187 @@ public class DatabaseBackupService {
 
         System.out.println("RESTORE COMPLETADO");
     }
+
+    // =========================================
+// CREAR BASE DE DATOS NUEVA
+// =========================================
+
+public void crearBaseDatos(String nombreDb) throws Exception {
+
+    ProcessBuilder pb = new ProcessBuilder(
+            PSQL,
+            "-U", DB_USER,
+            "-d", "postgres",
+            "-c", "CREATE DATABASE " + nombreDb
+    );
+
+    pb.environment().put("PGPASSWORD", DB_PASSWORD);
+    pb.redirectErrorStream(true);
+
+    Process process = pb.start();
+
+    BufferedReader reader = new BufferedReader(
+            new InputStreamReader(process.getInputStream())
+    );
+
+    String line;
+    while ((line = reader.readLine()) != null) {
+        System.out.println(line);
+    }
+
+    int exit = process.waitFor();
+
+    if (exit != 0) {
+        throw new RuntimeException("Error creando la base de datos");
+    }
+
+    System.out.println("BASE CREADA: " + nombreDb);
+}
+// =========================================
+// RESTAURAR EN BASE ESPECÍFICA
+// =========================================
+
+public void restaurarBackupEnDb(String ruta, String nombreDb) throws Exception {
+
+    ProcessBuilder pb = new ProcessBuilder(
+            PG_RESTORE,
+            "-U", DB_USER,
+            "-d", nombreDb,
+            "--clean",
+            "--if-exists",
+            "--verbose",
+            ruta
+    );
+
+    pb.environment().put("PGPASSWORD", DB_PASSWORD);
+    pb.redirectErrorStream(true);
+
+    Process process = pb.start();
+
+    BufferedReader reader = new BufferedReader(
+            new InputStreamReader(process.getInputStream())
+    );
+
+    String line;
+    while ((line = reader.readLine()) != null) {
+        System.out.println(line);
+    }
+
+    int exit = process.waitFor();
+
+    if (exit != 0) {
+        throw new RuntimeException("Error restaurando en DB");
+    }
+
+    System.out.println("RESTORE COMPLETADO EN: " + nombreDb);
+}
+
+// =========================================
+// CAMBIAR BASE DE DATOS
+// =========================================
+
+public void cambiarBaseDatos(String nuevaDb) throws Exception {
+
+    String archivo = "src/main/resources/application.properties";
+
+    File file = new File(archivo);
+
+    List<String> lineas = java.nio.file.Files.readAllLines(file.toPath());
+
+    for (int i = 0; i < lineas.size(); i++) {
+        if (lineas.get(i).startsWith("spring.datasource.url")) {
+
+            String nuevaUrl = "spring.datasource.url=jdbc:postgresql://localhost:5432/" + nuevaDb;
+            lineas.set(i, nuevaUrl);
+        }
+    }
+
+    java.nio.file.Files.write(file.toPath(), lineas);
+
+    System.out.println("Base cambiada a: " + nuevaDb);
+}
+
+
+// =========================================
+// LISTAR BASES DE DATOS
+// =========================================
+public List<Map<String, Object>> listarBases() throws Exception {
+
+    List<Map<String, Object>> bases = new ArrayList<>();
+
+    // 1. Obtener lista de bases
+    ProcessBuilder pb = new ProcessBuilder(
+            PSQL,
+            "-U", DB_USER,
+            "-d", "postgres",
+            "-t",
+            "-A",
+            "-c",
+            "SELECT datname FROM pg_database WHERE datistemplate = false;"
+    );
+
+    pb.environment().put("PGPASSWORD", DB_PASSWORD);
+    pb.redirectErrorStream(true);
+
+    Process process = pb.start();
+
+    BufferedReader reader = new BufferedReader(
+            new InputStreamReader(process.getInputStream())
+    );
+
+    String dbName;
+
+    while ((dbName = reader.readLine()) != null) {
+
+        dbName = dbName.trim();
+        if (dbName.isEmpty()) continue;
+
+        // 2. Contar tablas en ESA BD
+        ProcessBuilder pbCount = new ProcessBuilder(
+                PSQL,
+                "-U", DB_USER,
+                "-d", dbName,
+                "-t",
+                "-A",
+                "-c",
+                "SELECT COUNT(*) FROM pg_tables WHERE schemaname='public';"
+        );
+
+        pbCount.environment().put("PGPASSWORD", DB_PASSWORD);
+        pbCount.redirectErrorStream(true);
+
+        Process processCount = pbCount.start();
+
+        BufferedReader readerCount = new BufferedReader(
+                new InputStreamReader(processCount.getInputStream())
+        );
+
+        String countStr = readerCount.readLine();
+
+        int tablas = 0;
+
+        try {
+            tablas = Integer.parseInt(countStr.trim());
+        } catch (Exception e) {
+            tablas = 0;
+        }
+
+        Map<String, Object> db = new HashMap<>();
+        db.put("nombre", dbName);
+        db.put("vacia", tablas == 0);
+
+        bases.add(db);
+
+        processCount.waitFor();
+    }
+
+    process.waitFor();
+
+    return bases;
+}
+
+public String obtenerBaseActual(){
+    return getDatabaseName();
+}
+
 }
