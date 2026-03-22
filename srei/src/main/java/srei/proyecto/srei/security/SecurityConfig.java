@@ -58,6 +58,9 @@ public class SecurityConfig {
 
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
+                //IA/ GENERACIÓN
+                .requestMatchers("/api/ia/**").anonymous() 
+
                 // 📂 archivos
                 .requestMatchers("/uploads/**").permitAll()
 
@@ -69,8 +72,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/juegos/**").permitAll()
                 .requestMatchers("/juegos/**").permitAll()
 
-                //IA/ GENERACIÓN
-               .requestMatchers("/api/ia/**").permitAll()
+                
 
                 // 🔐 ADMIN
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -103,10 +105,10 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+configuration.setAllowedOrigins(List.of("http://localhost:4200")); // 🔥 ESTA ES LA MEJOR
+configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+configuration.setAllowedHeaders(List.of("*"));
+configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source =
