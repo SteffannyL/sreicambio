@@ -23,46 +23,56 @@ public class EventoDocenteController {
 
     /* ================= CREAR EVENTO CON ARCHIVOS ================= */
 
-    @PostMapping(value = "/eventos", consumes = {"multipart/form-data"})
-    @PreAuthorize("hasAuthority('ROLE_DOCENTE')")
-    public ResponseEntity<Map<String, Object>> crearEvento(
-            @RequestParam Long idambito,
-            @RequestParam Long idtipoevento,
-            @RequestParam String nombreevento,
-            @RequestParam String descripcion,
-            @RequestParam String fechainicio,
-            @RequestParam String fechafin,
-            @RequestParam String lugar,
-            @RequestParam Integer aforo,
-            @RequestParam(required = false) MultipartFile imagen,
-            @RequestParam(required = false) MultipartFile pdf,
-            Authentication authentication
-    ) {
+   @PostMapping(value = "/eventos", consumes = {"multipart/form-data"})
+@PreAuthorize("hasAuthority('ROLE_DOCENTE')")
+public ResponseEntity<Map<String, Object>> crearEvento(
+        @RequestParam Long idambito,
+        @RequestParam Long idtipoevento,
+        @RequestParam String nombreevento,
+        @RequestParam String descripcion,
+        @RequestParam String fechainicio,
+        @RequestParam String fechafin,
+        @RequestParam String lugar,
+        @RequestParam Integer aforo,
 
-        // 🔥 PROTECCIÓN EXTRA (evita NullPointerException y 403 confusos)
-        if (authentication == null || authentication.getName() == null) {
-            throw new RuntimeException("Usuario no autenticado");
-        }
+        @RequestParam(required = false) MultipartFile imagen,
+        @RequestParam(required = false) MultipartFile pdf,
 
-        String correo = authentication.getName();
+        // 🔥 NUEVO (IA)
+        @RequestParam(required = false) String imagenIA,
 
-        Map<String, Object> resultado =
-                eventoService.crearEventoConArchivos(
-                        idambito,
-                        idtipoevento,
-                        nombreevento,
-                        descripcion,
-                        fechainicio,
-                        fechafin,
-                        lugar,
-                        aforo,
-                        imagen,
-                        pdf,
-                        correo
-                );
+        Authentication authentication
+) {
 
-        return ResponseEntity.ok(resultado);
+    if (authentication == null || authentication.getName() == null) {
+        throw new RuntimeException("Usuario no autenticado");
     }
+
+    String correo = authentication.getName();
+
+    // 🔥 PRIORIDAD IA SOBRE ARCHIVO
+    if (imagenIA != null && !imagenIA.isEmpty()) {
+        imagen = null; // anulamos archivo si hay IA
+    }
+
+    Map<String, Object> resultado =
+            eventoService.crearEventoConArchivos(
+                    idambito,
+                    idtipoevento,
+                    nombreevento,
+                    descripcion,
+                    fechainicio,
+                    fechafin,
+                    lugar,
+                    aforo,
+                    imagen,
+                    pdf,
+                    correo,
+                    imagenIA // 🔥 NUEVO
+            );
+
+    return ResponseEntity.ok(resultado);
+}
 
     /* ================= LISTAR MIS EVENTOS ================= */
 
