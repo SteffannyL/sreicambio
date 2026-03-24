@@ -10,76 +10,92 @@
       <!-- NOMBRES -->
       <div class="campo">
         <label>Nombres</label>
-        <input
-          type="text"
-          [(ngModel)]="usuario.nombres"
-          name="nombres"
-          required
-        />
+        <div class="input-icon">
+          <span class="material-icons">person</span>
+          <input
+            type="text"
+            [(ngModel)]="usuario.nombres"
+            name="nombres"
+            required
+          />
+        </div>
       </div>
 
       <!-- APELLIDOS -->
       <div class="campo">
         <label>Apellidos</label>
-        <input
-          type="text"
-          [(ngModel)]="usuario.apellidos"
-          name="apellidos"
-          required
-        />
+        <div class="input-icon">
+          <span class="material-icons">badge</span>
+          <input
+            type="text"
+            [(ngModel)]="usuario.apellidos"
+            name="apellidos"
+            required
+          />
+        </div>
       </div>
 
       <!-- CORREO -->
       <div class="campo">
         <label>Correo</label>
-        <input
-          type="email"
-          [(ngModel)]="usuario.correo"
-          name="correo"
-          required
-        />
+        <div class="input-icon">
+          <span class="material-icons">mail</span>
+          <input
+            type="email"
+            [(ngModel)]="usuario.correo"
+            name="correo"
+            required
+          />
+        </div>
       </div>
 
       <!-- CONTRASEÑA -->
       <div class="campo">
         <label>Contraseña</label>
-        <input
-          type="password"
-          [(ngModel)]="usuario.contrasena"
-          name="contrasena"
-          required
-        />
+        <div class="input-icon">
+          <span class="material-icons">lock</span>
+          <input
+            type="password"
+            [(ngModel)]="usuario.contrasena"
+            name="contrasena"
+            required
+          />
+        </div>
       </div>
 
       <!-- ROLES -->
       <div class="campo">
         <label>Rol</label>
-        <select
-          [(ngModel)]="usuario.idtipousuario"
-          name="idtipousuario">
+        <div class="input-icon select-icon">
+          <span class="material-icons">groups</span>
+          <select
+            [(ngModel)]="usuario.idtipousuario"
+            name="idtipousuario">
 
-          <option [value]="2">Coordinador</option>
-          <option [value]="3">Decano</option>
-          <option [value]="4">Usuario Externo</option>
-          <option [value]="5">Docente</option>
+            <option [value]="2">Coordinador</option>
+            <option [value]="3">Decano</option>
+            <option [value]="4">Usuario Externo</option>
+            <option [value]="5">Docente</option>
 
-        </select>
+          </select>
+        </div>
       </div>
 
       <!-- BOTÓN -->
       <button type="submit" class="btn-login" [disabled]="loading">
-        {{ loading ? 'Registrando...' : 'Registrar' }}
+        {{ loading ? 'Registrando...' : 'Crear cuenta' }}
       </button>
 
     </form>
 
     <!-- MENSAJES -->
-    <p style="color: green" *ngIf="success">{{ success }}</p>
-    <p style="color: red" *ngIf="error">{{ error }}</p>
+    <p class="success" *ngIf="success">{{ success }}</p>
+    <p class="error" *ngIf="error">{{ error }}</p>
 
     <!-- VOLVER -->
     <div class="registro-link">
-      <a routerLink="/auth/login">Volver al login</a>
+      <span>¿Ya tienes cuenta?</span>
+      <a routerLink="/auth/login">Iniciar sesión</a>
     </div>
 
   </div>
