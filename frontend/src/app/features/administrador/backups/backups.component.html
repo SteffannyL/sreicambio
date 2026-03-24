@@ -1,156 +1,142 @@
 <div class="backup-container">
 
-<h2>Gestión de Backups</h2>
-
-<div class="acciones">
-
-<button
-class="btn-crear"
-(click)="crearBackup()"
-[disabled]="creando">
-
-Crear Backup
-
-</button>
-
-<span class="mensaje" *ngIf="mensaje">
-{{mensaje}}
-</span>
-
+    <div class="db-actual">
+  🟢 Base activa: <strong>{{dbActual}}</strong>
 </div>
+  <h2>💾 Gestión de Backups</h2>
 
-<hr>
+  <!-- 🔥 CREAR BACKUP -->
+  <div class="card acciones">
+    <button class="btn-crear" (click)="crearBackup()" [disabled]="creando">
+      ➕ Crear Backup
+    </button>
 
-<div class="programacion">
+    <span class="mensaje" *ngIf="mensaje">
+      {{mensaje}}
+    </span>
+  </div>
 
-<h3>Programar Backup por fecha</h3>
+  <!-- 🔥 BASES DE DATOS -->
+  <div class="card">
+    <h3>🗄️ Gestión de Bases de Datos</h3>
 
-<div class="fila">
+    <div class="fila">
+      <input type="text" placeholder="Nombre nueva DB" [(ngModel)]="nombreNuevaDb">
+      <button class="btn-crear" (click)="crearDb()">Crear DB</button>
+    </div>
 
-<input type="datetime-local"
-[(ngModel)]="fechaProgramada">
+    <div class="fila">
+      <select [(ngModel)]="backupSeleccionado">
+        <option value="">Seleccionar backup</option>
+        <option *ngFor="let b of backups" [value]="b.nombreArchivo">
+          {{b.nombreArchivo}}
+        </option>
+      </select>
 
-<button
-class="btn-programar"
-(click)="programarFecha()">
+      <select [(ngModel)]="dbRestore">
+        <option value="">Seleccionar DB</option>
+        <option *ngFor="let db of basesFiltradas" [value]="db.nombre">
+          {{db.nombre}} {{db.vacia ? '(vacía)' : '(con datos)'}}
+        </option>
+      </select>
 
-Programar
+      <button class="btn-programar" (click)="restaurarEnNuevaDb()">
+        Restaurar en DB
+      </button>
+    </div>
 
-</button>
+    <div class="fila">
+      <button class="btn-warning" (click)="toggleBases()">
+        {{ mostrarTodas ? 'Mostrar solo vacías' : '⚠️ Mostrar todas las BD' }}
+      </button>
+    </div>
 
-</div>
+    <div class="fila">
+      <select [(ngModel)]="dbCambiar">
+        <option value="">Seleccionar DB</option>
+        <option *ngFor="let db of bases" [value]="db.nombre">
+          {{db.nombre}}
+        </option>
+      </select>
 
-</div>
+      <button class="btn-cancelar" (click)="cambiarDb()">
+        Cambiar DB
+      </button>
+    </div>
+  </div>
 
-<hr>
+  <!-- 🔥 PROGRAMACIÓN -->
+  <div class="card">
+    <h3>⏱ Programación</h3>
 
-<div class="programacion">
+    <div class="fila">
+      <input type="datetime-local" [(ngModel)]="fechaProgramada">
+      <button class="btn-programar" (click)="programarFecha()">Programar</button>
+    </div>
 
-<h3>Programar Backup automático</h3>
+    <div class="fila">
+      <input type="number" [(ngModel)]="intervaloTiempo">
 
-<div class="fila">
+      <select [(ngModel)]="intervaloTipo">
+        <option value="minutos">Minutos</option>
+        <option value="horas">Horas</option>
+        <option value="dias">Días</option>
+        <option value="semanas">Semanas</option>
+      </select>
 
-<input
-type="number"
-[(ngModel)]="intervaloTiempo">
+      <button class="btn-programar" (click)="programarIntervalo()">
+        Programar automático
+      </button>
 
-<select [(ngModel)]="intervaloTipo">
+      <button class="btn-cancelar" (click)="cancelarProgramacion()">
+        Cancelar
+      </button>
+    </div>
+  </div>
 
-<option value="minutos">Minutos</option>
-<option value="horas">Horas</option>
-<option value="dias">Días</option>
-<option value="semanas">Semanas</option>
+  <!-- 🔥 HISTORIAL -->
+  <div class="card">
+    <h3>📊 Historial de Backups</h3>
 
-</select>
+    <table class="tabla-backups">
+      <thead>
+        <tr>
+          <th>Backup</th>
+          <th>Fecha</th>
+          <th>Tamaño</th>
+          <th>Estado</th>
+          <th>Descargar</th>
+          <th>Restaurar</th>
+        </tr>
+      </thead>
 
-<button
-class="btn-programar"
-(click)="programarIntervalo()">
+      <tbody>
+        <tr *ngFor="let b of backups">
+          <td>{{b.nombreArchivo}}</td>
+          <td>{{b.fecha}}</td>
+          <td>{{ (b.tamano / 1024).toFixed(2) }} KB</td>
 
-Programar automático
+          <td>
+            <span class="estado-ok" *ngIf="b.estado==='COMPLETADO'">
+              ✔ COMPLETADO
+            </span>
+          </td>
 
-</button>
-<button
-class="btn-cancelar"
-(click)="cancelarProgramacion()">
+          <td>
+            <button class="btn-descargar" (click)="descargar(b.nombreArchivo)">
+              ⬇ Descargar
+            </button>
+          </td>
 
-Cancelar backup automático
+          <td>
+            <button class="btn-restaurar" (click)="restaurar(b.nombreArchivo)">
+              Restaurar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-</button>
-
-</div>
-
-</div>
-
-<hr>
-
-<h3>Historial de Backups</h3>
-
-<table class="tabla-backups">
-
-<thead>
-
-<tr>
-<th>Backup</th>
-<th>Fecha</th>
-<th>Tamaño</th>
-<th>Estado</th>
-<th>Descargar</th>
-<th>Restaurar</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr *ngFor="let b of backups">
-
-<td>{{b.nombreArchivo}}</td>
-
-<td>{{b.fecha}}</td>
-
-<td>{{ (b.tamano / 1024).toFixed(2) }} KB</td>
-
-<td>
-
-<span
-class="estado-ok"
-*ngIf="b.estado==='COMPLETADO'">
-
-COMPLETADO
-
-</span>
-
-</td>
-
-<td>
-
-<button
-class="btn-descargar"
-(click)="descargar(b.nombreArchivo)">
-
-Descargar
-
-</button>
-
-</td>
-
-<td>
-
-<button
-class="btn-restaurar"
-(click)="restaurar(b.nombreArchivo)">
-
-Restaurar
-
-</button>
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
+  </div>
 
 </div>
