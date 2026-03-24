@@ -8,11 +8,7 @@
     <div class="form-group">
       <label>Ámbito</label>
 
-      <select
-        [(ngModel)]="evento.idambito"
-        name="idambito"
-        required
-        #idambito="ngModel"
+      <select [(ngModel)]="evento.idambito" name="idambito" required #idambito="ngModel"
         [class.invalido]="idambito.invalid && idambito.touched">
 
         <option [ngValue]="0">Seleccione</option>
@@ -32,11 +28,7 @@
     <div class="form-group">
       <label>Tipo de evento</label>
 
-      <select
-        [(ngModel)]="evento.idtipoevento"
-        name="idtipoevento"
-        required
-        #idtipoevento="ngModel"
+      <select [(ngModel)]="evento.idtipoevento" name="idtipoevento" required #idtipoevento="ngModel"
         [class.invalido]="idtipoevento.invalid && idtipoevento.touched">
 
         <option [ngValue]="0">Seleccione</option>
@@ -56,12 +48,7 @@
     <div class="form-group">
       <label>Nombre del evento</label>
 
-      <input
-        type="text"
-        [(ngModel)]="evento.nombreevento"
-        name="nombreevento"
-        required
-        #nombre="ngModel"
+      <input type="text" [(ngModel)]="evento.nombreevento" name="nombreevento" required #nombre="ngModel"
         [class.invalido]="nombre.invalid && nombre.touched">
 
       <small *ngIf="nombre.invalid && nombre.touched">
@@ -73,11 +60,7 @@
     <div class="form-group">
       <label>Descripción</label>
 
-      <textarea
-        [(ngModel)]="evento.descripcion"
-        name="descripcion"
-        required
-        #descripcion="ngModel"
+      <textarea [(ngModel)]="evento.descripcion" name="descripcion" required #descripcion="ngModel"
         [class.invalido]="descripcion.invalid && descripcion.touched">
       </textarea>
 
@@ -90,13 +73,8 @@
     <div class="form-group">
       <label>Fecha inicio</label>
 
-      <input
-        type="datetime-local"
-        [(ngModel)]="evento.fechainicio"
-        name="fechainicio"
-        [min]="fechaActual"
-        required
-        #inicio="ngModel"
+      <input type="datetime-local" [(ngModel)]="evento.fechainicio" name="fechainicio"
+        [min]="fechaActual" required #inicio="ngModel"
         [class.invalido]="inicio.invalid && inicio.touched">
     </div>
 
@@ -104,13 +82,8 @@
     <div class="form-group">
       <label>Fecha fin</label>
 
-      <input
-        type="datetime-local"
-        [(ngModel)]="evento.fechafin"
-        name="fechafin"
-        [min]="evento.fechainicio || fechaActual"
-        required
-        #fin="ngModel"
+      <input type="datetime-local" [(ngModel)]="evento.fechafin" name="fechafin"
+        [min]="evento.fechainicio || fechaActual" required #fin="ngModel"
         [class.invalido]="
           (fin.invalid && fin.touched) ||
           (evento.fechainicio && evento.fechafin && evento.fechafin <= evento.fechainicio)
@@ -125,12 +98,7 @@
     <div class="form-group">
       <label>Lugar</label>
 
-      <input
-        type="text"
-        [(ngModel)]="evento.lugar"
-        name="lugar"
-        required
-        #lugar="ngModel"
+      <input type="text" [(ngModel)]="evento.lugar" name="lugar" required #lugar="ngModel"
         [class.invalido]="lugar.invalid && lugar.touched">
     </div>
 
@@ -138,53 +106,88 @@
     <div class="form-group">
       <label>Aforo</label>
 
-      <input
-        type="number"
-        [(ngModel)]="evento.aforo"
-        name="aforo"
-        min="1"
-        required
-        #aforo="ngModel"
+      <input type="number" [(ngModel)]="evento.aforo" name="aforo" min="1" required #aforo="ngModel"
         [class.invalido]="aforo.invalid && aforo.touched">
     </div>
 
-    <!-- IMAGEN (MEJORADO) -->
+    <!-- ================= TIPO DE IMAGEN ================= -->
     <div class="form-group">
+      <label>Tipo de imagen</label>
+
+      <div>
+        <label>
+          <input type="radio" name="modoImagen" [(ngModel)]="modoImagen" value="upload"
+            (change)="cambiarModoImagen()">
+          Subir imagen
+        </label>
+
+        <label style="margin-left: 15px;">
+          <input type="radio" name="modoImagen" [(ngModel)]="modoImagen" value="ia"
+            (change)="cambiarModoImagen()">
+          Generar con IA
+        </label>
+      </div>
+    </div>
+
+    <!-- ================= SUBIR IMAGEN ================= -->
+    <div class="form-group" *ngIf="modoImagen === 'upload'">
       <label>Imagen del evento</label>
 
-      <label class="file-upload">
-        <input
-          type="file"
-          accept="image/*"
-          (change)="onImagenSeleccionada($event)">
-
-        <span>
-          {{ imagen ? imagen.name : 'Seleccionar imagen' }}
-        </span>
+      <label class="file-upload imagen-btn">
+        <input type="file" accept="image/*" (change)="onImagenSeleccionada($event)">
+        <span>{{ imagen ? imagen.name : 'Seleccionar imagen' }}</span>
       </label>
     </div>
 
-    <!-- PDF (MEJORADO) -->
+    <!-- ================= IA ================= -->
+    <div *ngIf="modoImagen === 'ia'">
+
+      <div class="form-group">
+        <label>Prompt para imagen (opcional)</label>
+
+        <textarea [(ngModel)]="promptIA" name="promptIA" rows="3"
+          placeholder="Ej: Evento tecnológico moderno con estudiantes">
+        </textarea>
+
+        <small>Si no escribes, se generará automáticamente</small>
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="btn-ia" (click)="generarImagenIA()">
+          Generar imagen
+        </button>
+
+        <small *ngIf="cargandoIA">Generando imagen...</small>
+      </div>
+
+    </div>
+
+    <!-- 🔥 PREVIEW GRANDE -->
+    <div *ngIf="imagenIA || imagenPreview" class="preview-grande">
+
+      <h4>Vista previa</h4>
+
+      <!-- IA -->
+      <img *ngIf="imagenIA" [src]="imagenIA">
+
+      <!-- Upload -->
+      <img *ngIf="imagenPreview && !imagenIA" [src]="imagenPreview">
+
+    </div>
+
+    <!-- PDF -->
     <div class="form-group">
       <label>Documento PDF</label>
 
-      <label class="file-upload pdf">
-        <input
-          type="file"
-          accept="application/pdf"
-          (change)="onPdfSeleccionado($event)">
-
-        <span>
-          {{ pdf ? pdf.name : 'Seleccionar PDF' }}
-        </span>
+      <label class="file-upload pdf-btn">
+        <input type="file" accept="application/pdf" (change)="onPdfSeleccionado($event)">
+        <span>{{ pdf ? pdf.name : 'Seleccionar PDF' }}</span>
       </label>
     </div>
 
     <!-- BOTÓN -->
     <div class="botones">
-      <button
-        type="submit"
-        class="btn-guardar"
+      <button type="submit" class="btn-guardar"
         [disabled]="
           formEvento.invalid ||
           evento.idambito === 0 ||
@@ -201,5 +204,17 @@
     </p>
 
   </form>
+</div>
 
+<!-- 🔥 MODAL -->
+<div class="modal-overlay" *ngIf="mostrarModal">
+  <div class="modal">
+    <h3>Confirmación</h3>
+    <p>{{ modalMensaje }}</p>
+
+    <div class="modal-buttons">
+      <button class="btn-confirmar" (click)="confirmarModal()">Confirmar</button>
+      <button class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
 </div>

@@ -51,6 +51,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+            if (requestURI.contains("/api/ia")) {
+            filterChain.doFilter(request, response);
+             return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
 
         String token = null;

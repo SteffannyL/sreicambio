@@ -59,39 +59,40 @@ public SecurityFilterChain securityFilterChain(
             .frameOptions(frame -> frame.disable())
         )
 
-        .authorizeHttpRequests(auth -> auth
+       .authorizeHttpRequests(auth -> auth
 
-            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+    // 🔥 Permitir preflight (CORS)
+    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-            // 📂 archivos
-            .requestMatchers("/uploads/**").permitAll()
+    // 📂 archivos
+    .requestMatchers("/uploads/**").permitAll()
 
-            // 🔓 públicos
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/sesiones/validar/**").permitAll()
+    // 🔓 públicos
+    .requestMatchers("/api/auth/**").permitAll()
+    .requestMatchers("/api/sesiones/validar/**").permitAll()
 
-            // 🎮 IA / juegos
-            .requestMatchers("/api/juegos/**").permitAll()
-            .requestMatchers("/juegos/**").permitAll()
+    // 🎮 IA / juegos
+    .requestMatchers("/api/juegos/**").permitAll()
+    .requestMatchers("/juegos/**").permitAll()
 
-            // 🤖 IA generación
-            .requestMatchers("/api/ia/**").permitAll()
+    // 🤖 IA generación
+    .requestMatchers("/api/ia/**").permitAll()
 
-            // 🔐 ADMIN
-            .requestMatchers("/api/admin/backup/**").permitAll()
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+    // 🔐 ADMIN
+    .requestMatchers("/api/admin/backup/**").permitAll()
+    .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-            // 👨‍🏫 DOCENTE
-            .requestMatchers("/api/docente/**").authenticated()
+    // 👨‍🏫 DOCENTE
+    .requestMatchers("/api/docente/**").authenticated()
 
-            // 👨‍💼 COORDINADOR
-            .requestMatchers("/api/coordinador/**").hasRole("COORDINADOR")
+    // 👨‍💼 COORDINADOR
+    .requestMatchers("/api/coordinador/**").hasRole("COORDINADOR")
 
-            // 🎓 DECANO
-            .requestMatchers("/api/decano/**").hasRole("DECANO")
+    // 🎓 DECANO
+    .requestMatchers("/api/decano/**").hasRole("DECANO")
 
-            .anyRequest().authenticated()
-        )
+    .anyRequest().authenticated()
+)
 
         .sessionManagement(session ->
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -111,10 +112,10 @@ public SecurityFilterChain securityFilterChain(
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+configuration.setAllowedOrigins(List.of("http://localhost:4200")); // 🔥 ESTA ES LA MEJOR
+configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+configuration.setAllowedHeaders(List.of("*"));
+configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source =

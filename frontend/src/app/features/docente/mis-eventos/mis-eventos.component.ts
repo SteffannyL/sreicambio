@@ -14,9 +14,7 @@ export class MisEventosComponent implements OnInit {
 
   eventos: any[] = [];
   cargando = true;
-  
 
-  // 🔥 URL base del backend (ajústalo si cambia)
   private baseUrl = 'http://localhost:8080/';
 
   constructor(
@@ -31,8 +29,7 @@ export class MisEventosComponent implements OnInit {
   cargarEventos() {
     this.eventoService.listarMisEventos().subscribe({
       next: (data) => {
-        console.log('EVENTOS BACKEND:', data); 
-        console.log('EVENTOS:', this.eventos);
+        console.log('EVENTOS BACKEND:', data);
         this.eventos = data;
         this.cargando = false;
       },
@@ -43,15 +40,25 @@ export class MisEventosComponent implements OnInit {
     });
   }
 
-  // 🔥 FORMATEAR IMAGEN
+  /* ================= IMAGEN (FIX IA + NORMAL) ================= */
+
   getImagen(url: string | null): string {
+
     if (!url) {
       return '/img/logo.png';
     }
+
+    // 🔥 IA (base64)
+    if (url.startsWith('data:image')) {
+      return url;
+    }
+
+    // 🔥 Archivo backend
     return this.baseUrl + url;
   }
 
-  // 🔥 FORMATEAR PDF
+  /* ================= PDF ================= */
+
   getPdf(url: string | null): string {
     if (!url) {
       return '#';
@@ -59,12 +66,12 @@ export class MisEventosComponent implements OnInit {
     return this.baseUrl + url;
   }
 
-  // 👇 NAVEGAR A DETALLE
+  /* ================= NAVEGACIÓN ================= */
+
   verDetalle(evento: any) {
     this.router.navigate(['/docente/evento', evento.idevento]);
   }
 
-  // 🔥 ABRIR PDF
   abrirPdf(url: string | null) {
     const pdfUrl = this.getPdf(url);
     if (pdfUrl !== '#') {
