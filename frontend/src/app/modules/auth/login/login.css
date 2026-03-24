@@ -1,150 +1,213 @@
-/* ===== CONTENEDOR ===== */
-.login-container {
-  min-height: calc(100vh - 70px);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 40px;
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { BackupService } from '../../../core/services/backup.service';
 
-  /* 🔥 EFECTO VERDE UTEQ */
-  background:
-    linear-gradient(
-      rgba(11, 122, 59, 0.75),  /* verde claro */
-      rgba(6, 61, 31, 0.85)     /* verde oscuro */
-    ),
-    url('/img/uteq-evento.jpg');
+@Component({
+  selector: 'app-backups',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './backups.component.html',
+  styleUrls: ['./backups.component.css']
+})
+export class BackupsComponent implements OnInit {
 
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
+  backups: any[] = [];
 
-/* ===== CARD ===== */
-.login-card {
-  background: #ffffff;
-  padding: 35px 45px;
-  border-radius: 18px;
-  width: 450px;
-  max-width: 100%;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-}
+  bases: any[] = [];
+  basesFiltradas: any[] = [];
+  mostrarTodas = false;
 
-/* ===== HEADER ===== */
-.header {
-  text-align: center;
-  margin-bottom: 25px;
-}
+  carpeta = 'G:/Mi unidad/backups_srei';
 
-/* 🔥 SREI GRANDE */
-.titulo {
-  font-size: 42px;
-  font-weight: 800;
-  color: #0b7a3b;
-  margin-bottom: 6px;
-  letter-spacing: 1px;
-}
+  fechaProgramada = '';
+  intervaloTiempo = 1;
+  intervaloTipo = 'dias';
 
-/* 🔥 SUBTÍTULO MÁS VISIBLE */
-.subtitulo {
-  font-size: 16px; /* 🔥 MÁS GRANDE */
-  color: #4b5563;
-  line-height: 1.5;
-  max-width: 340px;
-  margin: 0 auto;
-  font-weight: 500;
-}
+  mensaje = '';
+  creando = false;
 
-/* ===== CAMPOS ===== */
-.campo {
-  margin-bottom: 18px;
-}
+  nombreNuevaDb = '';
+  backupSeleccionado = '';
+  dbRestore = '';
+  dbCambiar = '';
 
-.campo label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #374151;
-}
+  dbActual: string = '';
 
-/* ===== INPUT ICON ===== */
-.input-icon {
-  display: flex;
-  align-items: center;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 6px 12px;
-  margin-top: 6px;
-  transition: all 0.2s ease;
-  background: #fff;
-}
+  constructor(public backupService: BackupService) {}
 
-.input-icon:focus-within {
-  border-color: #0b7a3b;
-  box-shadow: 0 0 0 2px rgba(11,122,59,0.15);
-}
+  ngOnInit(): void {
+    this.cargarHistorial();
+    this.cargarBases();
+    this.obtenerDbActual();
+  }
 
-.input-icon input {
-  border: none;
-  outline: none;
-  flex: 1;
-  padding: 12px;
-  font-size: 14px;
-  background: transparent;
-}
+  cargarBases() {
+    this.backupService.listarBases()
+      .subscribe((data: any) => {
+        this.bases = data;
+        this.filtrarBases();
+      });
+  }
 
-/* ICONOS */
-.material-icons {
-  color: #0b7a3b;
-  font-size: 22px;
-}
+  filtrarBases() {
+    if (this.mostrarTodas) {
+      this.basesFiltradas = this.bases;
+    } else {
+      this.basesFiltradas = this.bases.filter(b => b.vacia);
+    }
+  }
 
-/* ===== BOTON ===== */
-.btn-login {
-  width: 100%;
-  margin-top: 15px;
-  padding: 14px;
-  background: linear-gradient(135deg, #c59b2b, #b38a21);
-  color: #111;
-  font-weight: 700;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
-  transition: all 0.25s ease;
-}
+  toggleBases() {
+    this.mostrarTodas = !this.mostrarTodas;
+    this.filtrarBases();
+  }
 
-.btn-login:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
-}
+  crearBackup() {
+    this.creando = true;
+    this.mensaje = 'Creando backup...';
 
-/* ===== FOOTER ===== */
-.registro-link {
-  margin-top: 22px;
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  font-size: 14px;
-  color: #6b7280;
-}
+    this.backupService.crearBackup(this.carpeta)
+      .subscribe({
+        next: (res: any) => {
+          this.mensaje = 'Backup creado en: ' + res.ruta;
+          this.creando = false;
+          this.cargarHistorial();
+        },
+        error: () => {
+          this.mensaje = 'Error creando backup';
+          this.creando = false;
+        }
+      });
+  }
 
-.registro-link a {
-  color: #c59b2b;
-  font-weight: 700;
-  text-decoration: none;
-  position: relative;
-}
+  cargarHistorial() {
+    this.backupService.historial()
+      .subscribe((data: any) => {
+        this.backups = data;
+      });
+  }
 
-.registro-link a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0%;
-  height: 2px;
-  background: #c59b2b;
-  transition: width 0.3s ease;
-}
+  restaurar(nombre: string) {
+    if (confirm('¿Restaurar este backup?')) {
+      this.mensaje = 'Restaurando base de datos...';
+      this.backupService.restaurar(nombre)
+        .subscribe(() => {
+          this.mensaje = 'Base de datos restaurada correctamente';
+        });
+    }
+  }
 
-.registro-link a:hover::after {
-  width: 100%;
+  descargar(nombre: string) {
+    this.backupService.descargar(nombre)
+      .subscribe((blob: any) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = nombre;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }, () => {
+        this.mensaje = "Error descargando backup";
+      });
+  }
+
+  programarFecha() {
+    this.backupService.programarFecha(this.carpeta, this.fechaProgramada)
+      .subscribe(() => {
+        this.mensaje = 'Backup programado correctamente';
+      });
+  }
+
+  programarIntervalo() {
+    this.backupService.programarIntervalo(
+      this.carpeta,
+      this.intervaloTiempo,
+      this.intervaloTipo
+    ).subscribe(() => {
+      this.mensaje = 'Backup automático configurado';
+    });
+  }
+
+  cancelarProgramacion() {
+    this.backupService.cancelarProgramacion()
+      .subscribe(() => {
+        this.mensaje = "Backup automático cancelado";
+      });
+  }
+
+  crearDb() {
+    if (!this.nombreNuevaDb.trim()) {
+      this.mensaje = 'Ingrese nombre de base de datos';
+      return;
+    }
+
+    this.mensaje = 'Creando base...';
+
+    this.backupService.crearDb(this.nombreNuevaDb)
+      .subscribe({
+        next: () => {
+          this.mensaje = 'Base creada: ' + this.nombreNuevaDb;
+          this.cargarBases();
+        },
+        error: () => {
+          this.mensaje = 'Error creando base';
+        }
+      });
+  }
+
+  restaurarEnNuevaDb() {
+    if (!this.backupSeleccionado || !this.dbRestore) {
+      this.mensaje = 'Seleccione backup y base';
+      return;
+    }
+
+    const db = this.bases.find(b => b.nombre === this.dbRestore);
+
+    if (db && !db.vacia) {
+      const confirmar = confirm(
+        `⚠️ ATENCIÓN\n\nLa base "${this.dbRestore}" tiene datos.\nSe eliminarán completamente.\n\n¿Deseas continuar?`
+      );
+      if (!confirmar) return;
+    }
+
+    this.mensaje = 'Restaurando...';
+
+    this.backupService.restaurarEnDb(
+      this.backupSeleccionado,
+      this.dbRestore
+    ).subscribe({
+      next: () => {
+        this.mensaje = 'Restaurado en: ' + this.dbRestore;
+      },
+      error: () => {
+        this.mensaje = 'Error restaurando';
+      }
+    });
+  }
+
+  cambiarDb() {
+    if (!this.dbCambiar) {
+      this.mensaje = 'Seleccione base';
+      return;
+    }
+
+    this.backupService.cambiarDb(this.dbCambiar)
+      .subscribe(() => {
+        this.mensaje = 'Base cambiada. REINICIA BACKEND';
+      });
+  }
+
+  obtenerDbActual() {
+    this.backupService.obtenerDbActual()
+      .subscribe({
+        next: (resp) => {
+          this.dbActual = resp.database;
+        },
+        error: () => {
+          this.dbActual = 'Desconocida';
+        }
+      });
+  }
+
 }

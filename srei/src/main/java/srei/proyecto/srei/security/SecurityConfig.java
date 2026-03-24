@@ -42,69 +42,68 @@ public class SecurityConfig {
     }
 
     @Bean
-public SecurityFilterChain securityFilterChain(
-        HttpSecurity http,
-        JwtAuthenticationFilter jwtAuthFilter
-) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            JwtAuthenticationFilter jwtAuthFilter
+    ) throws Exception {
 
-    http
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .csrf(csrf -> csrf.disable())
+        http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
 
-        .httpBasic(httpBasic -> httpBasic.disable())
-        .formLogin(form -> form.disable())
+            .httpBasic(httpBasic -> httpBasic.disable())
+            .formLogin(form -> form.disable())
 
-        // 🔥 SOLUCIÓN: permitir iframe (NO rompe nada)
-        .headers(headers -> headers
-            .frameOptions(frame -> frame.disable())
-        )
+            // 🔥 permitir iframe
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.disable())
+            )
 
-        .authorizeHttpRequests(auth -> auth
+            .authorizeHttpRequests(auth -> auth
 
-            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // 🔓 preflight (CORS)
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-            // 📂 archivos
-            .requestMatchers("/uploads/**").permitAll()
+                // 📂 archivos
+                .requestMatchers("/uploads/**").permitAll()
 
-            // 🔓 públicos
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/sesiones/validar/**").permitAll()
+                // 🔓 públicos
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/sesiones/validar/**").permitAll()
 
-            // 🎮 IA / juegos
-            .requestMatchers("/api/juegos/**").permitAll()
-            .requestMatchers("/juegos/**").permitAll()
+                // 🎮 juegos / html
+                .requestMatchers("/api/juegos/**").permitAll()
+                .requestMatchers("/juegos/**").permitAll()
 
-            // 🤖 IA generación
-            .requestMatchers("/api/ia/**").permitAll()
+                // 🤖 IA
+                .requestMatchers("/api/ia/**").permitAll()
 
-            // 🔐 ADMIN
-            .requestMatchers("/api/admin/backup/**").permitAll()
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // 🔐 ADMIN
+                .requestMatchers("/api/admin/backup/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-            // 👨‍🏫 DOCENTE
-            .requestMatchers("/api/docente/**").authenticated()
+                // 👨‍🏫 DOCENTE
+                .requestMatchers("/api/docente/**").authenticated()
 
-            // 👨‍💼 COORDINADOR
-            .requestMatchers("/api/coordinador/**").hasRole("COORDINADOR")
+                // 👨‍💼 COORDINADOR
+                .requestMatchers("/api/coordinador/**").hasRole("COORDINADOR")
 
-            // 🎓 DECANO
-            .requestMatchers("/api/decano/**").hasRole("DECANO")
+                // 🎓 DECANO
+                .requestMatchers("/api/decano/**").hasRole("DECANO")
 
-            .anyRequest().authenticated()
-        )
+                .anyRequest().authenticated()
+            )
 
-        .sessionManagement(session ->
-            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
 
-        .authenticationProvider(authenticationProvider())
+            .authenticationProvider(authenticationProvider())
 
-        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-}
-
-
+        return http.build();
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

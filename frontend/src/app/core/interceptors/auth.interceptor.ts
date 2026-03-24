@@ -6,9 +6,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const authService = inject(AuthService);
   const token = authService.getToken();
+
+  console.log('URL REQUEST:', req.url);
   console.log('TOKEN INTERCEPTOR:', token);
 
-  // ❗ Solo saltar login y register
+  // 🔥 DETECCIÓN FUERTE (NO FALLA)
+  if (req.url.startsWith('http://localhost:8080/api/ia')) {
+    console.log('🚫 NO TOKEN PARA IA');
+    return next(req);
+  }
+
+  // ❗ login/register
   if (
     req.url.includes('/api/auth/login') ||
     req.url.includes('/api/auth/register')
@@ -16,9 +24,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  // Si existe token → agregar Authorization
   if (token) {
-
     const authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
