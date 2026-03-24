@@ -10,7 +10,7 @@ public class SesionDTO {
 
     private String nombres;
     private String apellidos;
-    private String correo; 
+    private String correo;
 
     private String nombrerol;
 
@@ -19,5 +19,4 @@ public class SesionDTO {
     private String sistemaoperativo;
 
     private String fechalogin;
-
 }

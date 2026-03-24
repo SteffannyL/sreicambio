@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JuegoService } from '../../core/services/juego.service';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-generar-juego',
@@ -16,30 +17,30 @@ export class GenerarJuegoComponent implements OnInit {
   urlJuego: string = '';
   cargando = false;
 
-  // modelos disponibles
   modelos: string[] = [];
   modeloSeleccionado: string = '';
 
-  // dominio público de ngrok
+  proveedor: string = 'ollama';
+
+  // 🔥 NUEVO
+  urlJuegoSeguro!: SafeResourceUrl;
+
   dominioPublico = "https://fully-noneducatory-noriko.ngrok-free.dev";
 
-  constructor(private juegoService: JuegoService){}
+  constructor(
+    private juegoService: JuegoService,
+    private sanitizer: DomSanitizer // 🔥 FALTABA ESTO
+  ){}
 
   ngOnInit(){
 
-    // obtener modelos de ollama automáticamente
     this.juegoService.obtenerModelos()
     .subscribe({
       next:(data)=>{
-
-        console.log("Modelos detectados:", data);
-
         this.modelos = data;
-
         if(this.modelos.length > 0){
           this.modeloSeleccionado = this.modelos[0];
         }
-
       },
       error:(err)=>{
         console.error("Error cargando modelos", err);
@@ -55,24 +56,25 @@ export class GenerarJuegoComponent implements OnInit {
       return;
     }
 
-    if(!this.modeloSeleccionado){
-      alert("Selecciona un modelo de IA");
-      return;
-    }
-
     this.cargando = true;
 
-    this.juegoService.generarJuego(this.prompt, this.modeloSeleccionado)
+    let modeloEnviar = this.modeloSeleccionado;
+
+    if(this.proveedor === 'openai'){
+      modeloEnviar = 'openai';
+    }
+
+    this.juegoService.generarJuego(this.prompt, modeloEnviar)
     .subscribe({
 
       next: (resp)=>{
 
-        console.log("Respuesta backend:", resp);
-
         this.urlJuego = this.dominioPublico + resp.url;
 
-        this.cargando = false;
+        // 🔥 CLAVE: convertir a seguro para iframe
+        this.urlJuegoSeguro = this.sanitizer.bypassSecurityTrustResourceUrl(this.urlJuego);
 
+        this.cargando = false;
       },
 
       error: (err)=>{
@@ -85,11 +87,34 @@ export class GenerarJuegoComponent implements OnInit {
   }
 
   copiarLink(){
-
     navigator.clipboard.writeText(this.urlJuego);
+    alert("Link copiado");
+  }
 
-    alert("Link copiado. Puedes compartirlo.");
+  compartir(){
+
+    if(navigator.share){
+      navigator.share({
+        title: 'Quiz generado con IA',
+        text: 'Mira este juego interactivo',
+        url: this.urlJuego
+      });
+    } else {
+      this.copiarLink();
+      alert("Se copió el link (tu navegador no soporta compartir directo)");
+    }
 
   }
 
+fullscreen: boolean = false;
+
+toggleFullscreen(){
+  this.fullscreen = !this.fullscreen;
+
+  if(this.fullscreen){
+    document.body.classList.add('fullscreen-active');
+  } else {
+    document.body.classList.remove('fullscreen-active');
+  }
+}
 }

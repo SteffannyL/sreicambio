@@ -1,52 +1,64 @@
 <div class="contenedor">
 
-<h2>Generador de Juegos con IA</h2>
+  <h2>🎮 Generador de Juegos con IA</h2>
 
-<label>Modelo de IA</label>
+  <div class="form-group">
+    <label>Proveedor IA</label>
+    <select [(ngModel)]="proveedor">
+      <option value="ollama">Ollama (local)</option>
+      <option value="openai">OpenAI (API)</option>
+    </select>
+  </div>
 
-<select [(ngModel)]="modeloSeleccionado">
-<option *ngFor="let m of modelos" [value]="m">
-{{m}}
-</option>
-</select>
+  <div class="form-group" *ngIf="proveedor === 'ollama'">
+    <label>Modelo</label>
+    <select [(ngModel)]="modeloSeleccionado">
+      <option *ngFor="let m of modelos" [value]="m">
+        {{m}}
+      </option>
+    </select>
+  </div>
 
-<textarea
-[(ngModel)]="prompt"
-placeholder="Describe el juego que quieres generar..."
-rows="5"
-></textarea>
+  <div class="form-group">
+    <label>Descripción del juego</label>
+    <textarea
+      [(ngModel)]="prompt"
+      placeholder="Ej: 8 preguntas sobre el Inti Raymi en Ecuador..."
+      rows="4">
+    </textarea>
+  </div>
 
-<button (click)="generar()">
-Generar Juego
-</button>
+  <button class="btn-generar" (click)="generar()">
+    🚀 Generar Juego
+  </button>
 
-<div *ngIf="cargando">
-Generando juego...
-</div>
+  <div *ngIf="cargando" class="loading">
+    ⏳ Generando juego...
+  </div>
 
-<div *ngIf="urlJuego" class="resultado">
-
-<p><strong>Juego generado:</strong></p>
-
-<input
-type="text"
-[value]="urlJuego"
-readonly
-style="width:100%; padding:8px;"
+<div 
+  *ngIf="urlJuego" 
+  class="preview-container"
+  [class.fullscreen-mode]="fullscreen"
 >
+    <div class="preview-header">
+      <h3>Vista previa</h3>
 
-<br><br>
-
-<button (click)="copiarLink()">
-Copiar link
+      <div class="acciones">
+        <button (click)="copiarLink()">🔗 Copiar</button>
+        <button (click)="compartir()">📤 Compartir</button>
+        <a [href]="urlJuego" target="_blank">🌐 Abrir</a>
+        <button (click)="toggleFullscreen()">
+  {{ fullscreen ? '❌ Salir' : '🖥️ Pantalla completa' }}
 </button>
+      </div>
+    </div>
 
-<br><br>
+  <iframe 
+  [src]="urlJuegoSeguro"
+  class="iframe-juego">
+</iframe>
 
-<a [href]="urlJuego" target="_blank">
-Abrir juego
-</a>
-
-</div>
+  </div>
 
 </div>
