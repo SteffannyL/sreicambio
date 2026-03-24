@@ -1,85 +1,213 @@
-.navbar{
-  height:60px;
-  background:#0b7a3b;
-  color:white;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 30px;
-  font-family:system-ui;
-}
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { BackupService } from '../../../core/services/backup.service';
 
-/* 🔥 LOGO CONTENEDOR */
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
+@Component({
+  selector: 'app-backups',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './backups.component.html',
+  styleUrls: ['./backups.component.css']
+})
+export class BackupsComponent implements OnInit {
 
-/* 🔥 IMAGEN LOGO */
-.logo-img{
-  height:64px;
-  width:auto;
-  object-fit:contain;
-}
+  backups: any[] = [];
 
-/* 🔥 TEXTO DEL LOGO */
-.logo-text{
-  font-size:14px;
-  font-weight:600;
-  white-space:nowrap;
-}
+  bases: any[] = [];
+  basesFiltradas: any[] = [];
+  mostrarTodas = false;
 
-/* MENU */
-.menu{
-  display:flex;
-  list-style:none;
-  gap:20px;
-  margin:0;
-  padding:0;
-  align-items:center;
-}
+  carpeta = 'G:/Mi unidad/backups_srei';
 
-/* LINKS */
-.menu a{
-  color:white;
-  text-decoration:none;
-  font-weight:500;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
+  fechaProgramada = '';
+  intervaloTiempo = 1;
+  intervaloTipo = 'dias';
 
-.menu a:hover{
-  text-decoration:underline;
-  opacity:0.9;
-}
+  mensaje = '';
+  creando = false;
 
-/* ICONOS */
-.material-icons {
-  font-size:18px;
-}
+  nombreNuevaDb = '';
+  backupSeleccionado = '';
+  dbRestore = '';
+  dbCambiar = '';
 
-/* USUARIO */
-.usuario {
-  display:flex;
-  align-items:center;
-  gap:6px;
-  font-weight:500;
-}
+  dbActual: string = '';
 
-/* 🔥 BOTÓN LOGOUT */
-.logout-btn{
-  background:#c59b2b;
-  padding:6px 12px;
-  border-radius:8px;
-  transition:0.3s;
-}
+  constructor(public backupService: BackupService) {}
 
-.logout-btn:hover{
-  background:#a88422;
-}
+  ngOnInit(): void {
+    this.cargarHistorial();
+    this.cargarBases();
+    this.obtenerDbActual();
+  }
 
-:root {
-  --navbar-height: 70px;
+  cargarBases() {
+    this.backupService.listarBases()
+      .subscribe((data: any) => {
+        this.bases = data;
+        this.filtrarBases();
+      });
+  }
+
+  filtrarBases() {
+    if (this.mostrarTodas) {
+      this.basesFiltradas = this.bases;
+    } else {
+      this.basesFiltradas = this.bases.filter(b => b.vacia);
+    }
+  }
+
+  toggleBases() {
+    this.mostrarTodas = !this.mostrarTodas;
+    this.filtrarBases();
+  }
+
+  crearBackup() {
+    this.creando = true;
+    this.mensaje = 'Creando backup...';
+
+    this.backupService.crearBackup(this.carpeta)
+      .subscribe({
+        next: (res: any) => {
+          this.mensaje = 'Backup creado en: ' + res.ruta;
+          this.creando = false;
+          this.cargarHistorial();
+        },
+        error: () => {
+          this.mensaje = 'Error creando backup';
+          this.creando = false;
+        }
+      });
+  }
+
+  cargarHistorial() {
+    this.backupService.historial()
+      .subscribe((data: any) => {
+        this.backups = data;
+      });
+  }
+
+  restaurar(nombre: string) {
+    if (confirm('¿Restaurar este backup?')) {
+      this.mensaje = 'Restaurando base de datos...';
+      this.backupService.restaurar(nombre)
+        .subscribe(() => {
+          this.mensaje = 'Base de datos restaurada correctamente';
+        });
+    }
+  }
+
+  descargar(nombre: string) {
+    this.backupService.descargar(nombre)
+      .subscribe((blob: any) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = nombre;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }, () => {
+        this.mensaje = "Error descargando backup";
+      });
+  }
+
+  programarFecha() {
+    this.backupService.programarFecha(this.carpeta, this.fechaProgramada)
+      .subscribe(() => {
+        this.mensaje = 'Backup programado correctamente';
+      });
+  }
+
+  programarIntervalo() {
+    this.backupService.programarIntervalo(
+      this.carpeta,
+      this.intervaloTiempo,
+      this.intervaloTipo
+    ).subscribe(() => {
+      this.mensaje = 'Backup automático configurado';
+    });
+  }
+
+  cancelarProgramacion() {
+    this.backupService.cancelarProgramacion()
+      .subscribe(() => {
+        this.mensaje = "Backup automático cancelado";
+      });
+  }
+
+  crearDb() {
+    if (!this.nombreNuevaDb.trim()) {
+      this.mensaje = 'Ingrese nombre de base de datos';
+      return;
+    }
+
+    this.mensaje = 'Creando base...';
+
+    this.backupService.crearDb(this.nombreNuevaDb)
+      .subscribe({
+        next: () => {
+          this.mensaje = 'Base creada: ' + this.nombreNuevaDb;
+          this.cargarBases();
+        },
+        error: () => {
+          this.mensaje = 'Error creando base';
+        }
+      });
+  }
+
+  restaurarEnNuevaDb() {
+    if (!this.backupSeleccionado || !this.dbRestore) {
+      this.mensaje = 'Seleccione backup y base';
+      return;
+    }
+
+    const db = this.bases.find(b => b.nombre === this.dbRestore);
+
+    if (db && !db.vacia) {
+      const confirmar = confirm(
+        `⚠️ ATENCIÓN\n\nLa base "${this.dbRestore}" tiene datos.\nSe eliminarán completamente.\n\n¿Deseas continuar?`
+      );
+      if (!confirmar) return;
+    }
+
+    this.mensaje = 'Restaurando...';
+
+    this.backupService.restaurarEnDb(
+      this.backupSeleccionado,
+      this.dbRestore
+    ).subscribe({
+      next: () => {
+        this.mensaje = 'Restaurado en: ' + this.dbRestore;
+      },
+      error: () => {
+        this.mensaje = 'Error restaurando';
+      }
+    });
+  }
+
+  cambiarDb() {
+    if (!this.dbCambiar) {
+      this.mensaje = 'Seleccione base';
+      return;
+    }
+
+    this.backupService.cambiarDb(this.dbCambiar)
+      .subscribe(() => {
+        this.mensaje = 'Base cambiada. REINICIA BACKEND';
+      });
+  }
+
+  obtenerDbActual() {
+    this.backupService.obtenerDbActual()
+      .subscribe({
+        next: (resp) => {
+          this.dbActual = resp.database;
+        },
+        error: () => {
+          this.dbActual = 'Desconocida';
+        }
+      });
+  }
+
 }

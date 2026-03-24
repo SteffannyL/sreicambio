@@ -4,6 +4,7 @@ public class GenerarJuegoRequestDTO {
 
     private String prompt;
     private String modelo;
+    private String proveedor;
 
     public String getPrompt() {
         return prompt;
@@ -19,5 +20,13 @@ public class GenerarJuegoRequestDTO {
 
     public void setModelo(String modelo) {
         this.modelo = modelo;
+    }
+
+    public String getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(String proveedor) {
+        this.proveedor = proveedor;
     }
 }

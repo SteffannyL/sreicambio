@@ -54,12 +54,15 @@ public class SecurityConfig {
             .httpBasic(httpBasic -> httpBasic.disable())
             .formLogin(form -> form.disable())
 
+            // 🔥 permitir iframe
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.disable())
+            )
+
             .authorizeHttpRequests(auth -> auth
 
+                // 🔓 preflight (CORS)
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                //IA/ GENERACIÓN
-                .requestMatchers("/api/ia/**").anonymous() 
 
                 // 📂 archivos
                 .requestMatchers("/uploads/**").permitAll()
@@ -68,13 +71,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/sesiones/validar/**").permitAll()
 
-                // 🎮 IA / juegos
+                // 🎮 juegos / html
                 .requestMatchers("/api/juegos/**").permitAll()
                 .requestMatchers("/juegos/**").permitAll()
 
-                
+                // 🤖 IA
+                .requestMatchers("/api/ia/**").permitAll()
 
                 // 🔐 ADMIN
+                .requestMatchers("/api/admin/backup/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                 // 👨‍🏫 DOCENTE
@@ -90,7 +95,7 @@ public class SecurityConfig {
             )
 
             .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
             .authenticationProvider(authenticationProvider())
@@ -105,10 +110,10 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-configuration.setAllowedOrigins(List.of("http://localhost:4200")); // 🔥 ESTA ES LA MEJOR
-configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-configuration.setAllowedHeaders(List.of("*"));
-configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source =

@@ -1,11 +1,13 @@
 # Backend
 srei/target/
 srei/.mvn/
+srei/uploads/
 *.log
 
 # Frontend
 frontend/node_modules/
 frontend/dist/
+*.zip
 
 # IDE
 .vscode/

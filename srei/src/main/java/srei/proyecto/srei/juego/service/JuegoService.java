@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import srei.proyecto.srei.juego.util.PromptValidator;
+import srei.proyecto.srei.ia.service.OpenAIService;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -19,6 +20,10 @@ public class JuegoService {
 
     @Autowired
     private WebClient.Builder webClientBuilder;
+
+    // 🔥 NUEVO (OpenAI)
+    @Autowired
+    private OpenAIService openAIService;
 
     public String generarJuego(String prompt, String modelo) throws IOException {
 
@@ -78,6 +83,19 @@ Formato:
 Tema:
 """ + promptUsuario;
 
+        // 🔥 NUEVO: SI ES OPENAI
+        if("openai".equalsIgnoreCase(modelo)){
+
+            String respuesta = openAIService.generarQuiz(promptIA);
+
+            if(respuesta == null){
+                return getJsonFallback();
+            }
+
+            return respuesta;
+        }
+
+        // 🔥 SI ES OLLAMA (LO ORIGINAL TUYO)
         Map<String,Object> options = new HashMap<>();
         options.put("temperature",0.2);
         options.put("top_p",0.9);
